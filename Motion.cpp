@@ -214,26 +214,12 @@ AnsiString fname,msg;
                // 2021 5 5 - chc 檢查: HSL_IO_OuStatus
                //if(MainForm->pnlStageLock->Color != clLime)
                //   MainForm->pnlStageLockClick(MainForm);
-               // 2023 8 25 - chc 取得DI再做初始設定
-               //if((HSL_IO_OuStatus & STAGE_LOCK) == 0) {
-               //   MainForm->WriteSystemLog(">DO0為0, 強制為1");
-               //   HSL_IO_OuStatus |= STAGE_LOCK;
-               //   MainForm->pnlStageLock->Color = clLime;
-               //   APS_set_field_bus_d_output(BoardHSL, HSL_BUS, IO1_ID, HSL_IO_OuStatus);
-               //}
-               int hslret = APS_get_field_bus_d_input(BoardHSL, HSL_BUS, IO1_ID, &input_IO1);
-               // Stage上有Wafer?
-               if((input_IO1 & STAGE_WAFER) != 0)
-                  HSL_IO_OuStatus |= STAGE_VACUUM;
-               // 門關?
-               if((input_IO1 & DOOR_LOCK) != 0) {
+               if((HSL_IO_OuStatus & STAGE_LOCK) == 0) {
+                  MainForm->WriteSystemLog(">DO0為0, 強制為1");
                   HSL_IO_OuStatus |= STAGE_LOCK;
                   MainForm->pnlStageLock->Color = clLime;
+                  APS_set_field_bus_d_output(BoardHSL, HSL_BUS, IO1_ID, HSL_IO_OuStatus);
                }
-               else {
-                  MainForm->pnlStageLock->Color = clSilver;
-               }
-               APS_set_field_bus_d_output(BoardHSL, HSL_BUS, IO1_ID, HSL_IO_OuStatus);
 
             }
             // Set Transfer rate
@@ -486,7 +472,6 @@ static boolEFEMRightDoorAlarm = false;
                      // Code,Set/Reset,Level,Message
                      MainForm->SetSECSAlarm(18002,0,0,"Stage Door Open");
                   }
-
                }
 
                // PC門檢
@@ -1866,13 +1851,6 @@ homeerr:
 
 allhomedone:
 
-   // 2023 8 21 - chc L上去再下來到-EL(設為0)
-   MainForm->WriteSystemLog(">HomeAll L上再下到-EL");
-   ResetPositionAxis(L_AXIS);
-   ResetCommandAxis(L_AXIS);
-   MoveToL(5000, false);
-   MoveToL(-3000, false);
-
    MainForm->WriteSystemLog(">HomeAll Completed");
    MainForm->pnlSystemMessage->Caption = "Home Completed.";
    MainForm->pnlSystemMessage->Caption = "Home Completed.";
@@ -2749,7 +2727,7 @@ bool booloffset = false;
    // 2021 5 4 - chc 若是在水平位置, 要補償X/Y/Z
    // 因MoveToXYZT()不會動X/Y/Z
    if(booloffset == true) {
-      msg.sprintf("Low speed compensation: dx,dy,dz=%d,%d,%d",dx,dy,dz);
+      msg.sprintf("低速補償: dx,dy,dz=%d,%d,%d",dx,dy,dz);
       MainForm->WriteSystemLog(msg);
       MainForm->pnlSystemMessage->Caption = msg;
       int oldspeed = MainForm->rgSpeed->ItemIndex;
@@ -3747,7 +3725,7 @@ F64 lowdistance;
             MainForm->MoveIgnore = false;
       }
       moveflag = true;
-      MainForm->pnlSystemMessage->Caption = "Moving...";
+      MainForm->pnlSystemMessage->Caption = "移動中...";
 
       // Wait
       WaitRoutine1(10);
@@ -3821,7 +3799,7 @@ F64 tmaxvel;
    if(MainForm->iAxisMove[axisno] != NO_MOVE) {
 
       // 2019 11 27 - chc Message
-      MainForm->pnlSystemMessage->Caption = "The previous action has not been completed(F), unable to move! " + IntToStr(axisno+1);
+      MainForm->pnlSystemMessage->Caption = "上一個動作尚未完成(F), 無法移動! " + IntToStr(axisno+1);
       MainForm->WriteSystemLog(str);
 
       return ;
@@ -3854,7 +3832,7 @@ F64 tmaxvel;
    MainForm->WriteSystemLog(str);
 
    // 等Motion done
-   MainForm->pnlSystemMessage->Caption = "Axis+ moving...";
+   MainForm->pnlSystemMessage->Caption = "軸控+移動中...";
 
    int counter = 1;
    I32 cmd;
@@ -3949,7 +3927,7 @@ F64 tmaxvel;
    if(MainForm->iAxisMove[axisno] != NO_MOVE) {
 
       // 2019 11 27 - chc Message
-      MainForm->pnlSystemMessage->Caption = "The previous action has not been completed(B), unable to move! " + IntToStr(axisno+1);
+      MainForm->pnlSystemMessage->Caption = "上一個動作尚未完成(B), 無法移動! " + IntToStr(axisno+1);
 
       return;
    }
@@ -3971,7 +3949,7 @@ F64 tmaxvel;
    // 等Motion done
    // 2016 7 22 - chc change to "Motion Moving..."
    //MainForm->pnlSystemMessage->Caption = "Motion Done...";
-   MainForm->pnlSystemMessage->Caption = "Axis- moving...";
+   MainForm->pnlSystemMessage->Caption = "軸控-移動中...";
 
    int counter = 1;
    I32 cmd;
@@ -5252,7 +5230,7 @@ bool booloffset = false;
    // 2021 5 4 - chc 若是在傾斜位置, 要補償X/Y/Z
    // 因MoveToXYZT()不會動X/Y/Z
    if(booloffset == true) {
-      msg.sprintf("Low speed compensation: dx,dy,dz=%d,%d,%d",dx,dy,dz);
+      msg.sprintf("低速補償: dx,dy,dz=%d,%d,%d",dx,dy,dz);
       MainForm->WriteSystemLog(msg);
       MainForm->pnlSystemMessage->Caption = msg;
       int oldspeed = MainForm->rgSpeed->ItemIndex;
@@ -6761,32 +6739,28 @@ int waitmode = MOVE_WAIT;
       return;
    }
 
-   // 2023 8 6 - chc MoveToXYZT不用改變Z/Z1
-   if(MainForm->boolMoveToXYZT_DoZ == true) {
-
-      // 先將Z/Z1移到安全位置 - 動XY - 將Z/Z1移到指定位置
-      //  Z/Z1安全位置: Limit再往上Num
-      int zsafe;
-      APS_get_position(Z_AXIS+StartAxisNo,&ipos);
-      zsafe = MainForm->GetZZ1Safe(Z_AXIS);
-      if(ipos > zsafe) {
-         if(MoveToZ(zsafe,MOVE_WAIT) == false) {
-            MainForm->pnlAlarmMessage->Caption = "Z軸安全位置移動失敗!";
-            goto end;
-         }
-         msg.sprintf("MoveToXYZT: ZMove移動安全位置 = %d,%d",z,zsafe);
-         MainForm->WriteSystemLog(msg);
+   // 先將Z/Z1移到安全位置 - 動XY - 將Z/Z1移到指定位置
+   //  Z/Z1安全位置: Limit再往上Num
+   int zsafe;
+   APS_get_position(Z_AXIS+StartAxisNo,&ipos);
+   zsafe = MainForm->GetZZ1Safe(Z_AXIS);
+   if(ipos > zsafe) {
+      if(MoveToZ(zsafe,MOVE_WAIT) == false) {
+         MainForm->pnlAlarmMessage->Caption = "Z軸安全位置移動失敗!";
+         goto end;
       }
-      APS_get_position(T_AXIS+StartAxisNo,&ipos);
-      zsafe = MainForm->GetZZ1Safe(T_AXIS);
-      if(ipos > zsafe) {
-         if(MoveToT(zsafe) == false) {
-            MainForm->pnlAlarmMessage->Caption = "Z1軸安全位置移動失敗!";
-            goto end;
-         }
-         msg.sprintf("MoveToXYZT: Z1Move移動安全位置 = %d,%d",t,zsafe);
-         MainForm->WriteSystemLog(msg);
+      msg.sprintf("MoveToXYZT: ZMove移動安全位置 = %d,%d",z,zsafe);
+      MainForm->WriteSystemLog(msg);
+   }
+   APS_get_position(T_AXIS+StartAxisNo,&ipos);
+   zsafe = MainForm->GetZZ1Safe(T_AXIS);
+   if(ipos > zsafe) {
+      if(MoveToT(zsafe) == false) {
+         MainForm->pnlAlarmMessage->Caption = "Z1軸安全位置移動失敗!";
+         goto end;
       }
+      msg.sprintf("MoveToXYZT: Z1Move移動安全位置 = %d,%d",t,zsafe);
+      MainForm->WriteSystemLog(msg);
    }
 
    // XY Move
@@ -6799,28 +6773,24 @@ int waitmode = MOVE_WAIT;
       goto end;
    }
 
-   // 2023 8 6 - chc MoveToXYZT不用改變Z/Z1
-   if(MainForm->boolMoveToXYZT_DoZ == true) {
-
-      // Z到定位
-      msg.sprintf("MoveToXYZT: Z移動位置 = %d",z);
-      MainForm->WriteSystemLog(msg);
-      if(MoveToZ(z,MOVE_WAIT) == false) {
-         MainForm->pnlAlarmMessage->Caption = "Z軸位置移動失敗!";
-         goto end;
-      }
-
-      // Z1到定位
-      msg.sprintf("MoveToXYZT: Z1移動位置 = %d",t);
-      MainForm->WriteSystemLog(msg);
-      if(MoveToT(t) == false) {
-         MainForm->pnlAlarmMessage->Caption = "Z1軸位置移動失敗!";
-         goto end;
-      }
-      // 記錄目前T位置
-      APS_get_position(T_AXIS+StartAxisNo,&ipos);
-      MainForm->WriteSystemLog("MoveToXYZT: 移動T. 標準位置,目前位置= " + IntToStr(t) + "," + IntToStr(ipos));
+   // Z到定位
+   msg.sprintf("MoveToXYZT: Z移動位置 = %d",z);
+   MainForm->WriteSystemLog(msg);
+   if(MoveToZ(z,MOVE_WAIT) == false) {
+      MainForm->pnlAlarmMessage->Caption = "Z軸位置移動失敗!";
+      goto end;
    }
+
+   // Z1到定位
+   msg.sprintf("MoveToXYZT: Z1移動位置 = %d",t);
+   MainForm->WriteSystemLog(msg);
+   if(MoveToT(t) == false) {
+      MainForm->pnlAlarmMessage->Caption = "Z1軸位置移動失敗!";
+      goto end;
+   }
+   // 記錄目前T位置
+   APS_get_position(T_AXIS+StartAxisNo,&ipos);
+   MainForm->WriteSystemLog("MoveToXYZT: 移動T. 標準位置,目前位置= " + IntToStr(t) + "," + IntToStr(ipos));
 
    Sleep(100);
    if(WaitMotionXYZTDone(90000) == false) {
@@ -6890,7 +6860,7 @@ end:
       boolxyzt = true;
       // 原點
       if(mode == 0) {
-         MainForm->pnlSystemMessage->Caption = "Move to Load point Done.";
+         MainForm->pnlSystemMessage->Caption = "移動到入料點 完成.";
          MainForm->pnlToLoadPosition->Color = clLime;
          MainForm->pnlLoad->Color = clLime;
 
@@ -7349,7 +7319,7 @@ F64 lowdistance;
    posi = edit->Text.ToInt();
    fpos = posi;
 
-   MainForm->pnlSystemMessage->Caption = "W-Axis moving: " + IntToStr(no) + "...";
+   MainForm->pnlSystemMessage->Caption = "W軸點位移動: " + IntToStr(no) + "...";
 
    // 2021 8 10 - chc Log
    MainForm->WriteSystemLog(MainForm->pnlSystemMessage->Caption);
@@ -7375,7 +7345,7 @@ recheck:
       APS_get_position(axisno+StartAxisNo,&wpos);
    }
    if(abs(posi - wpos) > tolerance) {
-      MainForm->pnlSystemMessage->Caption = "W-Axis move failed- incorrect location! now(W)=" + IntToStr(wpos) + ", set(W)=" + IntToStr(posi) + ", test times:" + IntToStr(retry);
+      MainForm->pnlSystemMessage->Caption = "W軸點位移動失敗- 位置不對! 目前W=" + IntToStr(wpos) + ", 設定W=" + IntToStr(posi) + ", 測試次數:" + IntToStr(retry);
       MainForm->pnlToWStatus->Color = clRed;
       DelayTimeM1(100);
       retry++;
@@ -7388,7 +7358,7 @@ recheck:
       }
    }
    else {
-      MainForm->pnlSystemMessage->Caption = "W-Axis move succ. now(W)= " + IntToStr(wpos) + ", set(W)=" + IntToStr(posi) + ", test times:" + IntToStr(retry);
+      MainForm->pnlSystemMessage->Caption = "W軸點位移動成功. 目前W= " + IntToStr(wpos) + ", 設定W=" + IntToStr(posi) + ", 測試次數:" + IntToStr(retry);
       MainForm->pnlToWStatus->Color = clLime;
    }
 
@@ -7425,11 +7395,8 @@ F64 lowdistance;
    pos = position;
 
    // 2021 9 11 - chc 是否加速
-   // 2023 8 21 - chc LiftPin表面要降速: false(1000), 高速為5000
-   //if(boolspeedup == true)
-   //   maxvel += (maxvel*2/3);
-   if(boolspeedup == false)
-      maxvel = maxvel / 5;
+   if(boolspeedup == true)
+      maxvel += (maxvel*2/3);
 
    // Home中要用HomeSpeed
    // 2021 4 29 - chc 強制為最高速
@@ -7651,7 +7618,7 @@ TPanel *panel;
    Sleep(500);
    // 用WaitMotionXYDone(ms,x,y)
    if(WaitMotionXYDone(30000,x,y) == false) {
-      MainForm->pnlSystemMessage->Caption = "12Edge move failed!";
+      MainForm->pnlSystemMessage->Caption = "12Edge點移動失敗!";
       panel->Color = clRed;
    }
 
@@ -7753,7 +7720,7 @@ TPanel *panel;
    // 先等500ms
    Sleep(500);
    if(WaitMotionXYDone(30000,x,y) == false) {
-      MainForm->pnlSystemMessage->Caption = "8Edge move failed!";
+      MainForm->pnlSystemMessage->Caption = "8Edge點移動失敗!";
       panel->Color = clRed;
    }
 
@@ -7886,7 +7853,7 @@ I32 px,py;
          DelayTimeM4(10);
          counter++;
          if(counter > max) {
-            MainForm->pnlSystemMessage->Caption = "Do WaitMotionXYDone, Timeout!";
+            MainForm->pnlSystemMessage->Caption = "做WaitMotionXYDone, Timeout!";
             MainForm->WriteSystemLog(MainForm->pnlSystemMessage->Caption);
             return false;
          }
@@ -8045,10 +8012,7 @@ I32 MOD_No = 0;
    //#define TG_TRG3_PWD           (0x17)
    int nsno;
    nsno = MainForm->edTriggerTime->Text.ToInt();                                          // 200ns
-
-   // (N+5)*10ns: DFK(1150ns-105), Vieworks(150ns-10)
-   //nsno /= 20;                                                                  // 10
-   nsno = (nsno / 10) - 5;
+   nsno /= 20;                                                                  // 10
    APS_set_field_bus_trigger_param(BoardMNET, MNET_BUS, MOD_No, (I32)TG_TRG0_PWD     ,nsno);
 
    // 0- Pulse ( not Inverse )

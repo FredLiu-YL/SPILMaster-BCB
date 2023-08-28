@@ -35,7 +35,6 @@ __fastcall VworksCCD::VworksCCD()
 //static void VworksCCD::DrawImage( VWSDK::OBJECT_INFO* pObjectInfo, VWSDK::IMAGE_INFO* pImageInfo )
 //void VworksCCD::DrawImage( VWSDK::OBJECT_INFO* pObjectInfo, VWSDK::IMAGE_INFO* pImageInfo )
 //static void DrawImage( VWSDK::OBJECT_INFO* pObjectInfo, VWSDK::IMAGE_INFO* pImageInfo )
-bool VWActive = false;
 void DrawImage( VWSDK::OBJECT_INFO* pObjectInfo, VWSDK::IMAGE_INFO* pImageInfo )
 {
 static int cnt = 0;
@@ -44,27 +43,17 @@ unsigned char *dptr,*sptr;
 int sindex,dindex;
 static bfirst = true;
 
-   MainForm->pnlDisplayCount->Caption = "0";
-
 // Re-Entrant
 int sum = 0;
 static int incnt = 0;
 static bool active = false;
-   if(VWActive == true) {
+   if(active == true) {
       incnt++;
       MainForm->pnlInCnt->Caption = IntToStr(incnt);
       MainForm->WriteSystemLog("Re-Entrant: DrawImage()");
       return;
    }
-   VWActive = true;
-
-   MainForm->pnlDisplayCount->Caption = "1";
-   MainForm->pnlCCDCount->Color = clNavy;
-
-   // 2023 8 18 - chc 先關掉
-   //=> 會太慢
-   //VWSDK::CameraAbort(VieworksCCD->m_pCamera);
-   //VieworksCCD->boolVWLive = false;
+   active = true;
 
    // 2023 8 9 - chc 不log
    //MainForm->pnlCCDRun->Caption = "1:" + IntToStr(VieworksCCD->m_Width) + "," + IntToStr(VieworksCCD->m_Height);
@@ -80,15 +69,10 @@ static bool active = false;
       MainForm->pnlTriggerCaptureNo->Refresh();
    }
 
-   MainForm->pnlDisplayCount->Caption = "2";
-
    cnt++;
    MainForm->pnlCCDCount->Caption = IntToStr(cnt);
-   MainForm->pnlCCDCount->Refresh();
    //msg.sprintf("%ld", pObjectInfo->pUserPointer);
    //MainForm->pnlVieworksMessage->Caption = msg;
-
-   MainForm->pnlDisplayCount->Caption = "3";
 
    if(bfirst == true) {
       bfirst = false;
@@ -101,23 +85,14 @@ static bool active = false;
       MainForm->imVieworks->Picture->Bitmap->Height = VieworksCCD->m_Height;
       // eVsion
       MainForm->EImageAry.SetSize(VieworksCCD->m_Width,VieworksCCD->m_Height);
-      //MainForm->usb_ImageAry[2].SetSize(VieworksCCD->m_Width,VieworksCCD->m_Height);
 
       // 2023 8 2 - chc ROI
       MainForm->EImageAryROI.Attach(&MainForm->EImageAry);
-
-      MainForm->pnlDisplayCount->Caption = "4";
-
    }
-
-   MainForm->pnlDisplayCount->Caption = "5";
-
    sptr = (unsigned char *)pImageInfo->pImage;
    svptr = (unsigned char *)pImageInfo->pImage;
    MainForm->pnlW->Caption = IntToStr(pImageInfo->width);
    MainForm->pnlH->Caption = IntToStr(pImageInfo->height);
-
-   MainForm->pnlDisplayCount->Caption = "6";
 
    /*
    sindex = 0;
@@ -174,18 +149,10 @@ static bool active = false;
    MainForm->imVieworks->Refresh();
    MainForm->pnlSum->Caption = IntToStr(sum);
    */
-   MainForm->pnlDisplayCount->Caption = "7";
-   MainForm->pnlCCDCount->Color = clTeal;
    VieworksCCD->DisplayVCCD(cnt);
-   MainForm->pnlCCDCount->Color = clBlack;
 
 end:
-   VWActive = false;
-
-   // 2023 8 18 - chc 再打開
-   //=> 會太慢
-   //VWSDK::CameraGrab(VieworksCCD->m_pCamera);
-   //VieworksCCD->boolVWLive = true;
+   active = false;
 
 }
 //---------------------------------------------------------------------------
@@ -210,9 +177,6 @@ int ccdindex = 1;
       //Application->MessageBox("VworkCCD Open Succ.", MB_OK);
    }
 
-   // 2023 8 21 - chc info
-   VWSDK::VwDiscoveryCameraInfo( m_pvwGigE, ccdindex, &m_stInfo );
-
    //VWSDK::VwUserLogging(m_pvwGigE, "Sample Code", __VWFILE__, __VWFUNCTION__, __VWLINE__,
    //		"You can see this message in a tool called SpiderLogger.exe");
 
@@ -220,11 +184,7 @@ int ccdindex = 1;
    //		UINT nPacketSize, void* pUserPointer, ImageCallbackFn* pImageCallbackFn, DisconnectCallbackFn* pDisconnectCallbackFn = NULL);
 
    //result = VWSDK::VwOpenCameraByIndex( m_pvwGigE, ccdindex, &m_pCamera, m_imagebuffernumber, 0, 0, 0, m_pobjectInfo, DrawImage, NULL);
-   // 2023 8 21 - chc 改用Name
-   //result = VWSDK::VwOpenCameraByIndex( m_pvwGigE, ccdindex, &m_pCamera, m_imagebuffernumber, 0, 0, 0, m_pobjectInfo, DrawImage);
-   //result = VWSDK::VwOpenCameraByName( m_pvwGigE, "VQ-5MG2-C24H", &m_pCamera, m_imagebuffernumber, 0, 0, 0, m_pobjectInfo, DrawImage);
-   MainForm->WriteSystemLog("Name: " + AnsiString(m_stInfo.name));
-   result = VWSDK::VwOpenCameraByName( m_pvwGigE, m_stInfo.name, &m_pCamera, m_imagebuffernumber, 0, 0, 0, m_pobjectInfo, DrawImage);
+   result = VWSDK::VwOpenCameraByIndex( m_pvwGigE, ccdindex, &m_pCamera, m_imagebuffernumber, 0, 0, 0, m_pobjectInfo, DrawImage);
 
    //Application->MessageBox((AnsiString("VworkCCD Open= ") + IntToStr(result)).c_str() , MB_OK);
 
@@ -286,14 +246,6 @@ int ccdindex = 1;
    str.sprintf("%.2f",MainForm->ed45Gain->Text.ToDouble());
    VWSDK::RESULT ret5 = VWSDK::CameraSetCustomCommand(m_pCamera, "Gain", str.c_str());
 
-   // 2023 8 15 - chc Set TargetBrightness,ExposureAuto
-   str.sprintf("%d",MainForm->ed45TargetBrightness->Text.ToInt());
-   VWSDK::RESULT ret6 = VWSDK::CameraSetCustomCommand(m_pCamera, "TargetBrightness", str.c_str());
-   if(MainForm->cb45ExposureAuto->Checked == false)
-      VWSDK::RESULT ret7 = VWSDK::CameraSetCustomCommand(m_pCamera, "TargetBrightness", "Off");
-   else
-      VWSDK::RESULT ret7 = VWSDK::CameraSetCustomCommand(m_pCamera, "TargetBrightness", "Continuous");
-
    // 直接設為"RGB8"
    VWSDK::RESULT ret = VWSDK::CameraSetCustomCommand(m_pCamera, "PixelFormat", "BGR8");
    //VWSDK::RESULT ret = VWSDK::CameraSetCustomCommand(m_pCamera, "PixelFormat", "BayerRG8");
@@ -336,9 +288,9 @@ int ccdindex = 1;
 void __fastcall VworksCCD::SetupVieworksView()
 {
 
-   MainForm->pnlVieworks->Left = 103;
+   MainForm->pnlVieworks->Left = 104;
    MainForm->pnlVieworks->Top = 11;
-   MainForm->pnlVieworks->Width = 1102;
+   MainForm->pnlVieworks->Width = 1065;
    MainForm->pnlVieworks->Height = 910;
 
    MainForm->imVieworks->Left = 8;
@@ -417,12 +369,6 @@ void VworksCCD::GetDeviceInfo(int nIndex, AnsiString *strVenderName, AnsiString 
    if(VWSDK::CameraGetDeviceID( m_pCamera, nIndex, szID, &cbID ) == VWSDK::RESULT_SUCCESS ) {
       *strDeviceID = szID;
    }
-
-   // 2023 8 21 - chc Info
-   *strModelName = m_stInfo.model;
-   *strDeviceID = m_stInfo.name;
-   *strVenderName = m_stInfo.vendor;
-
 }
 //---------------------------------------------------------------------------
 // 2023 8 1 - chc Vieworks CCD
@@ -441,12 +387,7 @@ void __fastcall VworksCCD::CCDLive()
       return;
    }
 
-   // 2023 8 20 - chc Log
-   MainForm->WriteSystemLog("啟動Vieworks CCD live mode: CCDLive-1");
-
-   // 2023 8 20 - chc 放到最後
-   //boolVWLive = true;
-
+   boolVWLive = true;
    UINT nWidth = 0;
    UINT nHeight = 0;
    UINT nInputWidth = 0;
@@ -459,9 +400,6 @@ void __fastcall VworksCCD::CCDLive()
    MainForm->pnlHeight->Caption = IntToStr(nHeight);
    m_Width = nWidth;
    m_Height = nHeight;
-
-   // 2023 8 20 - chc Log
-   MainForm->WriteSystemLog("啟動Vieworks CCD live mode: CCDLive-2");
 
    {
       // CameraSetReadoutMode
@@ -481,9 +419,6 @@ void __fastcall VworksCCD::CCDLive()
       str.sprintf("%d",1);
       VWSDK::RESULT ret = VWSDK::CameraSetCustomCommand(m_pCamera, "ReadoutMode", str.c_str());
    }
-
-   // 2023 8 20 - chc Log
-   MainForm->WriteSystemLog("啟動Vieworks CCD live mode: CCDLive-3");
 
    {
       // CameraSetHorizontalStart/End
@@ -505,9 +440,6 @@ void __fastcall VworksCCD::CCDLive()
       VWSDK::CameraSetCustomCommand(m_pCamera, "VerticalEnd", str.c_str());
    }
 
-   // 2023 8 20 - chc Log
-   MainForm->WriteSystemLog("啟動Vieworks CCD live mode: CCDLive-4");
-
    VWSDK::PIXEL_FORMAT pixelFormat = VWSDK::PIXEL_FORMAT_BGR8;
    //VWSDK::PIXEL_FORMAT pixelFormat = VWSDK::PIXEL_FORMAT_BAYRG8;
 
@@ -521,19 +453,12 @@ void __fastcall VworksCCD::CCDLive()
       MakeUnPackedBuffer();
    }
 
-   // 2023 8 20 - chc Log
-   MainForm->WriteSystemLog("啟動Vieworks CCD live mode: CCDLive-5");
-
    if(VWSDK::CameraGrab( m_pCamera ) == VWSDK::RESULT_SUCCESS) {
 
    }
    else {
       return;
    }
-
-   // 2023 8 20 - chc 放到最後
-   boolVWLive = true;
-
 }
 //---------------------------------------------------------------------------
 // 2023 8 1 - chc Vieworks CCD
@@ -589,10 +514,6 @@ int sum = 0;
 int w,h;
 AnsiString fname,path;
 
-   // 2023 8 20 - chc true: 由MainForm 的timer來做
-   MainForm->boolInVieworksDisplay = true;
-
-   MainForm->pnlDisplayCount->Caption = "8";
    sindex = 0;
    w = MainForm->EImageAry.GetWidth();
    h = MainForm->EImageAry.GetHeight();
@@ -602,8 +523,6 @@ AnsiString fname,path;
    if(h != m_Height) {
       MainForm->WriteSystemLog("Height(Err): " + IntToStr(m_Height) + "," + IntToStr(h));
    }
-
-   MainForm->pnlDisplayCount->Caption = "9";
 
    for(int row=0; row<m_Height ; row++) {
       // bitmap
@@ -621,10 +540,7 @@ AnsiString fname,path;
       }
       // eVision
       else if(MainForm->rgImageType->ItemIndex == 1 || MainForm->rgImageType->ItemIndex == 2) {
-         //if(MainForm->rgImageType->ItemIndex == 1)
-         //   dptr = (unsigned char *)MainForm->usb_ImageAry[2].GetImagePtr(0,row);
-         //else
-            dptr = (unsigned char *)MainForm->EImageAry.GetImagePtr(0,row);
+         dptr = (unsigned char *)MainForm->EImageAry.GetImagePtr(0,row);
          memcpy(dptr, svptr,m_Width*3);
       }
       // pattern
@@ -642,55 +558,24 @@ AnsiString fname,path;
 
    }
 
-   // 2023 8 20 - chc true: 由MainForm 的timer來做
-   MainForm->boolInVieworksDisplay = false;
-
-   MainForm->pnlDisplayCount->Caption = "10";
-
    // 2023 8 9 - chc 不log
    //MainForm->pnlCCDRun->Caption = "3:" + IntToStr(m_Width) + "," + IntToStr(m_Height);
    //MainForm->WriteSystemLog(MainForm->pnlCCDRun->Caption);
 
    if(MainForm->rgImageType->ItemIndex == 1) {
-
-      // 先做Save & Load 再做Draw, 直接Draw不會顯示出來!
-      if(MainForm->cbLoadFirst->Checked == true) {
-         MainForm->EImageAry.Save("D:\\Test.bmp",E_FILE_FORMAT_COLOR_BMP);
-         MainForm->EImageAry.Load("D:\\test.bmp");
-      }
-
-      // 2023 8 20 - chc true: 由MainForm 的timer來做
-      if(MainForm->cbTimerDisplay->Checked == false)
-
-         MainForm->EImageAry.Draw(MainForm->imVieworks->Canvas->Handle);
-      //MainForm->usb_ImageAry[2].Draw(MainForm->imVieworks->Canvas->Handle);
-      //MainForm->EImageAryROI.SetPlacement(0,0,m_Width,m_Height);
-      //MainForm->EImageAryROI.Draw(MainForm->imVieworks->Canvas->Handle);
-      //MainForm->PutVieworksImage();
-      if(VieworksCCD->boolInTrigger == true) {
-         path = MainForm->SystemConfig.ImagePath;
-         if(!DirectoryExists(path))
-            mkdir(path.c_str());
-         fname.sprintf("%s\\%03d.bmp",path.c_str(),VieworksCCD->TriggerFrameNo);
-         MainForm->EImageAry.Save(fname.c_str(),E_FILE_FORMAT_COLOR_BMP);
-      }
+      //MainForm->EImageAry.Draw(MainForm->imVieworks->Canvas->Handle);
+      MainForm->EImageAryROI.SetPlacement(0,0,m_Width,m_Height);
+      MainForm->EImageAryROI.Draw(MainForm->imVieworks->Canvas->Handle);
    }
    // file
    else if(MainForm->rgImageType->ItemIndex == 2 || MainForm->rgImageType->ItemIndex == 3) {
       if(VieworksCCD->boolInTrigger == true) {
-
-         // 2023 8 17 - chc ImagePath
-         //path = "D:\\Vieworks";
-         path = MainForm->SystemConfig.ImagePath;
-
+         path = "D:\\Vieworks";
          if(!DirectoryExists(path))
             mkdir(path.c_str());
-         fname.sprintf("%s\\%03d.bmp",path.c_str(),VieworksCCD->TriggerFrameNo);
+         fname.sprintf("%s\\%d.bmp",path.c_str(),VieworksCCD->TriggerFrameNo);
          MainForm->EImageAry.Save(fname.c_str(),E_FILE_FORMAT_COLOR_BMP);
-         if(MainForm->rgPictureBitmap->ItemIndex == 0)
-            MainForm->imVieworks->Picture->LoadFromFile(fname);
-         else
-            MainForm->imVieworks->Picture->Bitmap->LoadFromFile(fname);
+         MainForm->imVieworks->Picture->LoadFromFile(fname);
       }
       else {
 
@@ -711,28 +596,13 @@ AnsiString fname,path;
             //MainForm->imVieworks->Picture->Bitmap->Width = VieworksCCD->m_Width;
             //MainForm->imVieworks->Picture->Bitmap->Height = VieworksCCD->m_Height;
 
-            MainForm->pnlDisplayCount->Caption = "11";
             MainForm->EImageAry.Save("D:\\Test.bmp",E_FILE_FORMAT_COLOR_BMP);
-            MainForm->pnlDisplayCount->Caption = "12";
          }
-         MainForm->pnlDisplayCount->Caption = "13";
-         try {
-            if(MainForm->rgPictureBitmap->ItemIndex == 0)
-               MainForm->imVieworks->Picture->LoadFromFile("D:\\Test.bmp");
-            else
-               MainForm->imVieworks->Picture->Bitmap->LoadFromFile("D:\\Test.bmp");
-         }
-         catch(Exception &e) {
-            MainForm->WriteSystemLog("Error(DisplayVCCD): " + e.Message);
-         }
-         MainForm->pnlDisplayCount->Caption = "14";
+         MainForm->imVieworks->Picture->LoadFromFile("D:\\Test.bmp");
       }
    }
-   MainForm->pnlDisplayCount->Caption = "15";
    MainForm->imVieworks->Refresh();
    MainForm->pnlSum->Caption = IntToStr(sum);
-   MainForm->pnlDisplayCount->Caption = "16";
-
 }
 //---------------------------------------------------------------------------
 // 2023 8 13 - chc set NULL
@@ -835,37 +705,7 @@ __fastcall VworksCCD::CloseCCD()
 
    VWSDK::CloseVwGigE(m_pvwGigE);
 }
-//---------------------------------------------------------------------------
-__fastcall VworksCCD::SetTriggerTargerBrightness(int targetbrightness)
-{
-AnsiString str;
 
-   str.sprintf("%d",targetbrightness);
-   VWSDK::RESULT ret4 = VWSDK::CameraSetCustomCommand(m_pCamera, "TargetBrightness", str.c_str());
-}
-//---------------------------------------------------------------------------
-__fastcall VworksCCD::SetTriggerExposureAuto(bool mode)
-{
-AnsiString str;
-
-   if(mode == false)
-      VWSDK::RESULT ret7 = VWSDK::CameraSetCustomCommand(m_pCamera, "TargetBrightness", "Off");
-   else
-      VWSDK::RESULT ret7 = VWSDK::CameraSetCustomCommand(m_pCamera, "TargetBrightness", "Continuous");
-}
-//---------------------------------------------------------------------------
-__fastcall VworksCCD::ClearActive()
-{
-
-   VWActive = false;
-}
-//---------------------------------------------------------------------------
-__fastcall VworksCCD::Grab()
-{
-
-   VWSDK::CameraGrab(VieworksCCD->m_pCamera);
-   boolVWLive = true;
-}
 //---------------------------------------------------------------------------
 
 

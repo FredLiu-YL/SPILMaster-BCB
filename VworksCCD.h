@@ -19,7 +19,7 @@ private:	// User declarations
    // init ViewWorks CCD
    UINT		           m_imagebuffernumber;
    VWSDK::VWGIGE_HANDLE    m_pvwGigE;
-   //VWSDK::HCAMERA	   m_pCamera;
+   VWSDK::HCAMERA	   m_pCamera;
    VWSDK::OBJECT_INFO*     m_pobjectInfo;
    VWSDK::IMAGE_INFO*      pImageInfo;
    BITMAPINFO*		   m_pBmpInfo1;    				  //Bitmap object : 1
@@ -28,9 +28,6 @@ private:	// User declarations
    HDC			   m_hdc1;
    //UINT                    m_Width,m_Height;
    UINT                    m_nFrame;
-
-   // 2023 8 21 - chc info
-   VWSDK::CAMERA_INFO_STRUCT     m_stInfo;
 
 protected:
    int GetCustomCommand(VWSDK::HCAMERA hCamera, char* cpFeatureName, UINT* unValue, VWSDK::GET_CUSTOM_COMMAND eCmdType);
@@ -59,12 +56,6 @@ public:		// User declarations
    __fastcall VworksCCD::SetTriggerGain(double fgain);
    // 2023 8 11 - chc Close
    __fastcall VworksCCD::CloseCCD();
-
-   __fastcall VworksCCD::SetTriggerTargerBrightness(int targetbrightness);
-   __fastcall VworksCCD::SetTriggerExposureAuto(bool mode);
-   __fastcall VworksCCD::ClearActive();
-   VWSDK::HCAMERA	   m_pCamera;
-   __fastcall VworksCCD::Grab();
 
 };
 

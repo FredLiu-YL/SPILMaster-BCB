@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = -42
-  Top = 32
+  Left = -7
+  Top = 15
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Measure Motion'
@@ -1768,7 +1768,7 @@ object MainForm: TMainForm
       Font.Charset = ANSI_CHARSET
       Font.Color = clWhite
       Font.Height = -27
-      Font.Name = 'Arial'
+      Font.Name = #27161#26999#39636
       Font.Style = [fsBold]
       ParentFont = False
       ParentShowHint = False
@@ -1908,7 +1908,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Y'#36600#24448#21069#36899#32396#31227#21205
         Caption = 'Fore'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 213
         Font.Height = -16
@@ -1983,7 +1982,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Y: 100x '#21934#20301#36317#38626#24448#21069#31227#21205
         Caption = 'Y...'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -2086,7 +2084,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Y: 10x '#21934#20301#36317#38626#24448#21069#31227#21205
         Caption = 'Y..'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -2189,7 +2186,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Y: 1x '#21934#20301#36317#38626#24448#21069#31227#21205
         Caption = 'Y.'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -2262,7 +2258,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Y: 1x '#21934#20301#36317#38626#24448#24460#31227#21205
         Caption = 'Y.'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -2335,7 +2330,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Y: 10x '#21934#20301#36317#38626#24448#24460#31227#21205
         Caption = 'Y..'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -2438,7 +2432,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Y: 100x '#21934#20301#36317#38626#24448#24460#31227#21205
         Caption = 'Y...'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -2541,7 +2534,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Y'#36600#24448#24460#36899#32396#31227#21205
         Caption = 'Back'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 213
         Font.Height = -16
@@ -2645,7 +2637,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: '#24448#19978#36899#32396#31227#21205
         Caption = 'Up'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 213
         Font.Height = -19
@@ -2720,7 +2711,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: 1000x '#21934#20301#36317#38626#24448#19978#31227#21205
         Caption = 'Z....'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -2899,7 +2889,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: 100x '#21934#20301#36317#38626#24448#19978#31227#21205
         Caption = 'Z...'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -3061,7 +3050,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: 10x '#21934#20301#36317#38626#24448#19978#31227#21205
         Caption = 'Z..'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -3222,7 +3210,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: 1x '#21934#20301#36317#38626#24448#19978#31227#21205
         Caption = 'Z.'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -3383,7 +3370,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: 1x '#21934#20301#36317#38626#24448#19979#31227#21205
         Caption = 'Z.'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -3544,7 +3530,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: 10x '#21934#20301#36317#38626#24448#19979#31227#21205
         Caption = 'Z..'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -3705,7 +3690,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: 100x '#21934#20301#36317#38626#24448#19979#31227#21205
         Caption = 'Z...'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -3867,7 +3851,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: 1000x '#21934#20301#36317#38626#24448#19979#31227#21205
         Caption = 'Z....'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -4046,7 +4029,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Z: '#24448#19979#36899#32396#31227#21205
         Caption = 'Dn'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 213
         Font.Height = -19
@@ -4159,7 +4141,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'X'#36600#24448#24038#36899#32396#31227#21205
         Caption = 'Left'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 213
         Font.Height = -19
@@ -4233,7 +4214,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'X: 100x '#21934#20301#36317#38626#24448#19978#31227#21205
         Caption = 'X...'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 4210688
         Font.Height = -19
@@ -4333,7 +4313,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'X: 10x '#21934#20301#36317#38626#24448#19978#31227#21205
         Caption = 'X..'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 4227072
         Font.Height = -19
@@ -4433,7 +4412,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'X: 1x '#21934#20301#36317#38626#24448#19978#31227#21205
         Caption = 'X.'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -4505,7 +4483,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'X: 1x '#21934#20301#36317#38626#24448#19979#31227#21205
         Caption = 'X.'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -4578,7 +4555,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'X: 10x '#21934#20301#36317#38626#24448#19979#31227#21205
         Caption = 'X..'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 4227072
         Font.Height = -19
@@ -4679,7 +4655,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'X: 100x '#21934#20301#36317#38626#24448#19979#31227#21205
         Caption = 'X...'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 4210688
         Font.Height = -19
@@ -4780,7 +4755,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'X'#36600#24448#21491#36899#32396#31227#21205
         Caption = 'Right'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 213
         Font.Height = -19
@@ -4898,7 +4872,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'Set Center Position'
         Caption = 'Auto Focus'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -21
@@ -5552,8 +5525,8 @@ object MainForm: TMainForm
       DragCursor = crHandPoint
       Font.Charset = ANSI_CHARSET
       Font.Color = 9769222
-      Font.Height = -48
-      Font.Name = 'Arial'
+      Font.Height = -40
+      Font.Name = #27161#26999#39636
       Font.Style = [fsBold]
       ParentFont = False
       ParentShowHint = False
@@ -5790,12 +5763,12 @@ object MainForm: TMainForm
       Height = 114
       Cursor = crHandPoint
       Hint = #20013#26039#37327#28204#20316#26989
-      Caption = 'Stop Measuring'
+      Caption = #20013#26039#37327#28204
       DragCursor = crHandPoint
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -35
-      Font.Name = 'Arial'
+      Font.Height = -64
+      Font.Name = #27161#26999#39636
       Font.Style = [fsBold]
       ParentFont = False
       ParentShowHint = False
@@ -6036,7 +6009,7 @@ object MainForm: TMainForm
       Font.Charset = ANSI_CHARSET
       Font.Color = clWhite
       Font.Height = -27
-      Font.Name = 'Arial'
+      Font.Name = #27161#26999#39636
       Font.Style = [fsBold]
       ParentFont = False
       ParentShowHint = False
@@ -6104,7 +6077,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'T'#36600#24448#21069#36899#32396#31227#21205
         Caption = 'Up'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 213
         Font.Height = -19
@@ -6178,7 +6150,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'CCW 100x (Distance)'
         Caption = 'Z1...'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 4210688
         Font.Height = -19
@@ -6270,7 +6241,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'CCW 10x (Distance)'
         Caption = 'Z1..'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 4227072
         Font.Height = -19
@@ -6362,7 +6332,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'CCW 1x (Distance)'
         Caption = 'Z1.'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -6465,7 +6434,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'CW 1x (Distance)'
         Caption = 'Z1.'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clTeal
         Font.Height = -19
@@ -6558,7 +6526,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'CW 10x (Distance)'
         Caption = 'Z1..'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 4227072
         Font.Height = -19
@@ -6651,7 +6618,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'CW 100x (Distance)'
         Caption = 'Z1...'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 4210688
         Font.Height = -19
@@ -6744,7 +6710,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = 'T'#36600#24448#24460#36899#32396#31227#21205
         Caption = 'Dn'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = 213
         Font.Height = -19
@@ -6887,7 +6852,7 @@ object MainForm: TMainForm
     TabOrder = 1
     Options = [toNoTabIfEmpty, toShowBorder, toShowFocusRect, toShowAccelChar]
     DockOrientation = doNoOrient
-    ActivePage = tsMotion
+    ActivePage = tsOlympus
     object tsSystem: TLMDTabSheet
       Left = 4
       Top = 30
@@ -7389,11 +7354,11 @@ object MainForm: TMainForm
       object pnlMessage: TPanel
         Left = 407
         Top = 0
-        Width = 266
-        Height = 205
+        Width = 258
+        Height = 203
         TabOrder = 3
         object Label302: TLabel
-          Left = 191
+          Left = 176
           Top = 57
           Width = 71
           Height = 16
@@ -7409,7 +7374,7 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label41: TLabel
-          Left = 192
+          Left = 164
           Top = 99
           Width = 27
           Height = 16
@@ -7427,13 +7392,13 @@ object MainForm: TMainForm
         object pnlClip: TPanel
           Left = 5
           Top = 5
-          Width = 180
+          Width = 167
           Height = 85
           TabOrder = 0
           object btnYuanliConnect: TLMDButton
             Left = 6
             Top = 4
-            Width = 52
+            Width = 51
             Height = 29
             Cursor = crHandPoint
             Hint = #20803#21033#37327#28204#31995#32113#37325#36899#32218
@@ -7453,7 +7418,7 @@ object MainForm: TMainForm
           object pnlOlympusStatus: TPanel
             Left = 6
             Top = 36
-            Width = 52
+            Width = 51
             Height = 13
             BevelOuter = bvLowered
             BevelWidth = 2
@@ -7463,7 +7428,7 @@ object MainForm: TMainForm
           object btnVacuum: TLMDButton
             Left = 6
             Top = 52
-            Width = 59
+            Width = 53
             Height = 29
             Cursor = crHandPoint
             Caption = 'Vacuum'
@@ -7478,9 +7443,9 @@ object MainForm: TMainForm
             OnClick = btnVacuumClick
           end
           object btnSECSConnect: TLMDButton
-            Left = 63
+            Left = 59
             Top = 4
-            Width = 52
+            Width = 51
             Height = 29
             Cursor = crHandPoint
             Hint = 'SECS'#31995#32113#37325#36899#32218
@@ -7498,9 +7463,9 @@ object MainForm: TMainForm
             OnClick = btnSECSReConnectClick
           end
           object pnlSECSStatus: TPanel
-            Left = 63
+            Left = 59
             Top = 36
-            Width = 52
+            Width = 51
             Height = 13
             BevelOuter = bvLowered
             BevelWidth = 2
@@ -7508,7 +7473,7 @@ object MainForm: TMainForm
             TabOrder = 4
           end
           object cbTableDirection: TLMDCheckBox
-            Left = 70
+            Left = 63
             Top = 56
             Width = 80
             Height = 20
@@ -7539,9 +7504,9 @@ object MainForm: TMainForm
             State = cbChecked
           end
           object btnOLS5000Connect1: TLMDButton
-            Left = 120
+            Left = 112
             Top = 4
-            Width = 52
+            Width = 51
             Height = 29
             Cursor = crHandPoint
             Hint = 'SECS'#31995#32113#37325#36899#32218
@@ -7559,53 +7524,35 @@ object MainForm: TMainForm
             OnClick = btnOLS5000ReConnectClick
           end
           object pnlOLS5000Connect2: TPanel
-            Left = 120
+            Left = 112
             Top = 36
-            Width = 52
+            Width = 51
             Height = 13
             BevelOuter = bvLowered
             BevelWidth = 2
             Color = clSilver
             TabOrder = 7
           end
-          object pnlSpeed: TPanel
-            Left = 155
-            Top = 56
-            Width = 17
-            Height = 20
-            BevelOuter = bvNone
-            BevelWidth = 2
-            Caption = 'L'
-            Color = clGray
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clWhite
-            Font.Height = -13
-            Font.Name = 'Arial'
-            Font.Style = []
-            ParentFont = False
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 8
-          end
         end
         object pnlISCCDInfo: TPanel
           Left = 5
-          Top = 119
-          Width = 256
-          Height = 14
+          Top = 120
+          Width = 249
+          Height = 29
+          BevelWidth = 2
           Color = clSilver
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -11
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
           TabOrder = 1
         end
         object pnlUnit: TPanel
-          Left = 192
+          Left = 176
           Top = 5
-          Width = 70
+          Width = 78
           Height = 52
           BevelOuter = bvNone
           BevelWidth = 2
@@ -7613,7 +7560,7 @@ object MainForm: TMainForm
           Color = 7566195
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -37
+          Font.Height = -48
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -7623,21 +7570,21 @@ object MainForm: TMainForm
         object rgSpeed: TLMDRadioGroup
           Left = 5
           Top = 158
-          Width = 191
-          Height = 43
+          Width = 249
+          Height = 38
           Bevel.Mode = bmWindows
           BtnAlignment.Alignment = agCenterLeft
           Caption = 'Speed(L/M/H)'
           CaptionFont.Charset = ANSI_CHARSET
           CaptionFont.Color = clWindowText
-          CaptionFont.Height = -12
+          CaptionFont.Height = -13
           CaptionFont.Name = 'Arial'
           CaptionFont.Style = []
           CaptionParentFont = False
           Columns = 3
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -11
+          Font.Height = -13
           Font.Name = 'Arial'
           Font.Style = []
           Items.Strings = (
@@ -7651,9 +7598,9 @@ object MainForm: TMainForm
           ItemIndex = 0
         end
         object pnlOlympusLensPrecision: TPanel
-          Left = 192
+          Left = 176
           Top = 73
-          Width = 70
+          Width = 78
           Height = 24
           Hint = 'Olympus Lens Precision(#3 Lens: 50x)'
           BevelOuter = bvNone
@@ -7662,7 +7609,7 @@ object MainForm: TMainForm
           Color = 7566195
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -16
+          Font.Height = -19
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -7671,20 +7618,20 @@ object MainForm: TMainForm
           TabOrder = 4
         end
         object pnlISCCDStaus: TPanel
-          Left = 222
-          Top = 99
-          Width = 19
-          Height = 10
+          Left = 194
+          Top = 102
+          Width = 28
+          Height = 12
           BevelOuter = bvLowered
           BevelWidth = 2
           Color = clSilver
           TabOrder = 5
         end
         object pnlISCCDCapture: TPanel
-          Left = 243
-          Top = 99
-          Width = 19
-          Height = 10
+          Left = 226
+          Top = 102
+          Width = 28
+          Height = 12
           BevelOuter = bvLowered
           BevelWidth = 2
           Color = clSilver
@@ -7693,7 +7640,7 @@ object MainForm: TMainForm
         object cbJoystick: TLMDCheckBox
           Left = 5
           Top = 96
-          Width = 72
+          Width = 76
           Height = 20
           Hint = 'Enalble Control Panel'
           Caption = 'Joystick'
@@ -7720,193 +7667,6 @@ object MainForm: TMainForm
           Checked = True
           State = cbChecked
         end
-        object btnSaveImage: TBitBtn
-          Left = 200
-          Top = 150
-          Width = 62
-          Height = 51
-          Hint = 'CCD'#24433#20687#23384#27284'(*.bmp)'
-          Caption = 'Capture'
-          DragCursor = crHandPoint
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clBlack
-          Font.Height = -15
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 8
-          OnClick = btnReviewSaveClick
-          Glyph.Data = {
-            32090000424D320900000000000036000000280000001E000000190000000100
-            180000000000FC080000C40E0000C40E00000000000000000000B9B9B9AFAFAF
-            AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAF
-            AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAF
-            AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFA5A5A50000C8C8C8C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000C8C8C8C0C0C0A7A7A77272725555
-            5555555555555555555555555555555555555555555555555555555555555555
-            5555555555555555555555555555555555555555555555555555555555555555
-            5555555555555555555D5D5D0000C8C8C8C0C0C0BBBBBB6F6F6F1D1D1D171717
-            2828280D0D0D3333330000003838380808082D2D2D1313133333335959595959
-            593D3D3D0C0C0C3333330101013737370808082D2D2D1313132121211E1E1E17
-            17172929291B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B45757573C3C3C45454536
-            36364B4B4B2F2F2F4E4E4E3333337E7E7E616161636363787878787878686868
-            5858588989893030304D4D4D3434344848483A3A3A4141413F3F3F3C3C3C3737
-            371B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B46E6E6E4444443535354F4F4F2A2A
-            2A5C5C5C2626268181818B8B8B8A8A8A3939390000000000002A2A2A8A8A8A8A
-            8A8A8D8D8D2929295353533030304848483B3B3B3E3E3E4545451818181B1B1B
-            0000C8C8C8C0C0C0EAEAEAB4B4B44C4C4C3737374E4E4E2929295D5D5D181818
-            636363B2B2B22D2D2D000000000000000000000000000000000000181818BCBC
-            BC6C6C6C2323235454543232324545454040403737374848481B1B1B0000C8C8
-            C8C0C0C0EAEAEAB4B4B47979794949492C2C2C5C5C5C19191973737316161696
-            9696282828000000000000000000000000000000000000151515A7A7A71A1A1A
-            6464642424245050503737373E3E3E4A4A4A0808081B1B1B0000C8C8C8C0C0C0
-            EAEAEAB4B4B44040403333335656561C1C1C6E6E6E000000B6B6B61B1B1B0000
-            00000000000000000000000000000000000000000000060606B5B5B51C1C1C60
-            60602A2A2A4848484040403232325858581B1B1B0000C8C8C8C0C0C0EAEAEAB4
-            B4B47A7A7A4949492C2C2C5C5C5C181818747474BBBBBB1B1B1B000000000000
-            000000000000000000000000323232CACACA060606B5B5B57F7F7F2323235151
-            513737373E3E3E4A4A4A0707071B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B44B4B
-            4B3737374E4E4E2828285D5D5D171717E7E7E722222200000000000000000000
-            0000000000000000090909282828060606B5B5B52F2F2F545454313131454545
-            4040403636364848481B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B46E6E6E454545
-            3434344F4F4F2929295D5D5D464646A8A8A82A2A2A0000000000000000000000
-            003838389090901111118888883838385656563030304949493B3B3B3E3E3E45
-            45451818181B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B45757573C3C3C45454535
-            35354C4C4C2E2E2E4E4E4EE5E5E53B3B3B0000000000000000000000001C1C1C
-            484848181818BBBBBB5656563333334848483939394242423F3F3F3B3B3B3838
-            381B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B46262624040403D3D3D4242423B3B
-            3B4545453A3A3AA7A7A79595958A8A8A3939390000000000002020206868686E
-            6E6E9999993F3F3F4343433C3C3C4141413E3E3E3F3F3F4040402828281B1B1B
-            0000C8C8C8C0C0C0EAEAEAB4B4B46363634040403D3D3D4343433A3A3A464646
-            393939444444A7A7A79E9E9E7C7C7C7272726767675B5B5B7575759696964545
-            453939394343433C3C3C4141413E3E3E3F3F3F4040402828281B1B1B0000C8C8
-            C8C0C0C0EAEAEACECECE8484847C7C7C9393936D6D6DA2A2A25B5B5BA8A8A866
-            6666999999757575BABABAFFFFFFEEEEEEB0B0B06C6C6CA2A2A25D5D5DA8A8A8
-            6767679999997676768A8A8A8585857B7B7B8686863F3F3F0000C8C8C8C0C0C0
-            DEDEDEEEEEEEF6F6F6FFFFFFF4F4F4E0E0E0EEEEEEEEEEEEFDFDFDC4C4C4D4D4
-            D4C6C6C6CECECECCCCCCC8C8C8D2D2D2C2C2C2D8D8D8BCBCBCDBDBDBEBEBEBEE
-            EEEEEEEEEEF7F7F7EEEEEEE3E3E3D1D1D18D8D8D0000C8C8C8C0C0C0C0C0C0C0
-            C0C0D9D9D9F4F4F4D3D3D3969696C0C0C0C0C0C0E6E6E64646467C7C7C4E4E4E
-            696969626262565656757575424242858585191919797979B6B6B6C0C0C0C0C0
-            C0DDDDDDC0C0C09F9F9FC0C0C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0878787E8E8E8F9F9F9FDFDFDF8F8F8F4
-            F4F4F4F4F4F4F4F4F2F2F2DDDDDD858585858585B6B6B6C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0BFBFBFC0C0C0C0C0C0EAEAEAB5B5B58181818181
-            818181816565651A1A1ABFBFBFBFBFBFBFBFBFC0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C4C4C4BEBEBEB9B9B9B9B9B9B9B9B9
-            B6B6B6AEAEAEC0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B2
-            0000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000C8C8
-            C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000C8C8C8C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000}
-          Layout = blGlyphTop
-          Spacing = 0
-        end
-        object pnlJX: TPanel
-          Left = 80
-          Top = 95
-          Width = 33
-          Height = 20
-          BevelOuter = bvNone
-          BevelWidth = 2
-          Caption = '0'
-          Color = clGray
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 9
-        end
-        object pnlJY: TPanel
-          Left = 116
-          Top = 95
-          Width = 33
-          Height = 20
-          BevelOuter = bvNone
-          BevelWidth = 2
-          Caption = '0'
-          Color = clGray
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 10
-        end
-        object pnlJZ: TPanel
-          Left = 152
-          Top = 95
-          Width = 33
-          Height = 20
-          BevelOuter = bvNone
-          BevelWidth = 2
-          Caption = '0'
-          Color = clGray
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 11
-        end
-        object pnlISCCD2Info: TPanel
-          Left = 5
-          Top = 134
-          Width = 256
-          Height = 14
-          Color = clSilver
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 12
-        end
-        object pnlISCCD2Staus: TPanel
-          Left = 222
-          Top = 109
-          Width = 19
-          Height = 10
-          BevelOuter = bvLowered
-          BevelWidth = 2
-          Color = clSilver
-          TabOrder = 13
-        end
-        object pnlISCCD2Capture: TPanel
-          Left = 243
-          Top = 109
-          Width = 19
-          Height = 10
-          BevelOuter = bvLowered
-          BevelWidth = 2
-          Color = clSilver
-          TabOrder = 14
-        end
       end
       object mmMeasure: TMemo
         Left = 7
@@ -7929,7 +7689,7 @@ object MainForm: TMainForm
       object pcOP: TLMDPageControl
         Left = 7
         Top = 235
-        Width = 667
+        Width = 657
         Height = 454
         Transparent = True
         OnChange = pcOPChange
@@ -7942,11 +7702,11 @@ object MainForm: TMainForm
         TabOrder = 2
         Options = [toNoTabIfEmpty, toShowBorder, toShowFocusRect, toShowAccelChar]
         DockOrientation = doNoOrient
-        ActivePage = tsRun
+        ActivePage = tsSystemConfig
         object tsRun: TLMDTabSheet
           Left = 4
           Top = 33
-          Width = 659
+          Width = 649
           Height = 417
           Bevel.Mode = bmCustom
           Caption = 'Run'
@@ -7964,15 +7724,29 @@ object MainForm: TMainForm
             ParentFont = False
             Transparent = True
           end
+          object Label318: TLabel
+            Left = 11
+            Top = 283
+            Width = 41
+            Height = 18
+            Caption = 'Count'
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Arial'
+            Font.Style = []
+            ParentFont = False
+            Transparent = True
+          end
           object Label332: TLabel
             Left = 32
-            Top = 83
-            Width = 40
-            Height = 17
+            Top = 91
+            Width = 41
+            Height = 18
             Caption = 'Offset'
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
-            Font.Height = -15
+            Font.Height = -16
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
@@ -7980,41 +7754,41 @@ object MainForm: TMainForm
           end
           object Label334: TLabel
             Left = 27
-            Top = 147
-            Width = 43
-            Height = 17
+            Top = 155
+            Width = 46
+            Height = 18
             Caption = 'Rotate'
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
-            Font.Height = -15
+            Font.Height = -16
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
             Transparent = True
           end
           object Label335: TLabel
-            Left = 271
-            Top = 83
+            Left = 275
+            Top = 91
             Width = 21
-            Height = 17
+            Height = 18
             Caption = 'um'
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
-            Font.Height = -15
+            Font.Height = -16
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
             Transparent = True
           end
           object Label337: TLabel
-            Left = 271
-            Top = 147
-            Width = 45
-            Height = 17
+            Left = 275
+            Top = 155
+            Width = 50
+            Height = 18
             Caption = 'degree'
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
-            Font.Height = -15
+            Font.Height = -16
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
@@ -8022,27 +7796,41 @@ object MainForm: TMainForm
           end
           object Label338: TLabel
             Left = 11
-            Top = 115
-            Width = 59
-            Height = 17
+            Top = 123
+            Width = 62
+            Height = 18
             Caption = 'Offset(A)'
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
-            Font.Height = -15
+            Font.Height = -16
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
             Transparent = True
           end
           object Label339: TLabel
-            Left = 271
-            Top = 115
+            Left = 275
+            Top = 123
             Width = 21
-            Height = 17
+            Height = 18
             Caption = 'um'
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
-            Font.Height = -15
+            Font.Height = -16
+            Font.Name = 'Arial'
+            Font.Style = []
+            ParentFont = False
+            Transparent = True
+          end
+          object Label312: TLabel
+            Left = 283
+            Top = 283
+            Width = 95
+            Height = 18
+            Caption = 'XYZ(Joystick)'
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
@@ -8050,7 +7838,7 @@ object MainForm: TMainForm
           end
           object Label535: TLabel
             Left = 547
-            Top = 179
+            Top = 131
             Width = 72
             Height = 18
             Caption = 'In Position'
@@ -8064,7 +7852,7 @@ object MainForm: TMainForm
           end
           object Label90: TLabel
             Left = 195
-            Top = 206
+            Top = 182
             Width = 9
             Height = 19
             Caption = '2'
@@ -8077,7 +7865,7 @@ object MainForm: TMainForm
           end
           object pnlAreaNoRun: TPanel
             Left = 488
-            Top = 204
+            Top = 156
             Width = 75
             Height = 69
             BevelOuter = bvNone
@@ -8096,7 +7884,7 @@ object MainForm: TMainForm
           end
           object pnlDotNoRun: TPanel
             Left = 569
-            Top = 204
+            Top = 156
             Width = 75
             Height = 69
             BevelOuter = bvNone
@@ -8202,9 +7990,71 @@ object MainForm: TMainForm
             ShowHint = True
             TabOrder = 6
           end
+          object edRunLoop: TLMDEdit
+            Left = 55
+            Top = 276
+            Width = 50
+            Height = 28
+            Bevel.Mode = bmWindows
+            Caret.BlinkRate = 530
+            Caret.Style = csUnder
+            Color = 16311512
+            Enabled = False
+            ImeMode = imDisable
+            ImeName = #20013#25991' ('#32321#39636') - '#27880#38899
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 7
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -21
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            CustomButtons = <>
+            PasswordChar = #0
+            Text = '1'
+          end
+          object btnRunStop: TLMDButton
+            Left = 184
+            Top = 276
+            Width = 66
+            Height = 28
+            Caption = 'Stop'
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clMaroon
+            Font.Height = -21
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 8
+            Visible = False
+            OnClick = btnRunStopClick
+          end
+          object pnlRunDoneNo: TPanel
+            Left = 110
+            Top = 276
+            Width = 67
+            Height = 28
+            BevelOuter = bvNone
+            BevelWidth = 2
+            Caption = '0'
+            Color = clGray
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWhite
+            Font.Height = -21
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 9
+          end
           object pnlElapsedTime: TPanel
             Left = 488
-            Top = 276
+            Top = 228
             Width = 156
             Height = 28
             BevelOuter = bvNone
@@ -8219,7 +8069,7 @@ object MainForm: TMainForm
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 7
+            TabOrder = 10
           end
           object Panel72: TPanel
             Left = 8
@@ -8237,7 +8087,7 @@ object MainForm: TMainForm
             Font.Name = 'Calibri'
             Font.Style = []
             ParentFont = False
-            TabOrder = 8
+            TabOrder = 11
           end
           object pnlRunDatabase: TPanel
             Left = 128
@@ -8254,11 +8104,11 @@ object MainForm: TMainForm
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
-            TabOrder = 9
+            TabOrder = 12
           end
           object pnlOffsetXBase: TPanel
-            Left = 74
-            Top = 76
+            Left = 78
+            Top = 84
             Width = 96
             Height = 28
             BevelOuter = bvNone
@@ -8273,11 +8123,11 @@ object MainForm: TMainForm
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 10
+            TabOrder = 13
           end
           object pnlOffsetYBase: TPanel
-            Left = 173
-            Top = 76
+            Left = 177
+            Top = 84
             Width = 96
             Height = 28
             BevelOuter = bvNone
@@ -8292,11 +8142,11 @@ object MainForm: TMainForm
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 11
+            TabOrder = 14
           end
           object pnlRotate: TPanel
-            Left = 74
-            Top = 140
+            Left = 78
+            Top = 148
             Width = 195
             Height = 28
             BevelOuter = bvNone
@@ -8311,10 +8161,10 @@ object MainForm: TMainForm
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 12
+            TabOrder = 15
           end
           object cbAutoFocus: TCheckBox
-            Left = 322
+            Left = 306
             Top = 88
             Width = 193
             Height = 20
@@ -8332,11 +8182,11 @@ object MainForm: TMainForm
             ParentShowHint = False
             ShowHint = True
             State = cbChecked
-            TabOrder = 13
+            TabOrder = 16
           end
           object pnlOffsetXArea: TPanel
-            Left = 74
-            Top = 108
+            Left = 78
+            Top = 116
             Width = 96
             Height = 28
             Hint = #35492#24046#37327'>500um'#35686#31034'.'
@@ -8352,11 +8202,11 @@ object MainForm: TMainForm
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 14
+            TabOrder = 17
           end
           object pnlOffsetYArea: TPanel
-            Left = 173
-            Top = 108
+            Left = 177
+            Top = 116
             Width = 96
             Height = 28
             Hint = #35492#24046#37327'>500um'#35686#31034'.'
@@ -8372,12 +8222,12 @@ object MainForm: TMainForm
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 15
+            TabOrder = 18
           end
           object btnDisplayResult: TLMDButton
-            Left = 536
-            Top = 84
-            Width = 107
+            Left = 306
+            Top = 116
+            Width = 113
             Height = 28
             Cursor = crHandPoint
             Caption = 'Result table'
@@ -8389,12 +8239,165 @@ object MainForm: TMainForm
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 16
+            TabOrder = 19
             OnClick = btnDisplayResultClick
+          end
+          object pnlJX: TPanel
+            Left = 382
+            Top = 276
+            Width = 67
+            Height = 28
+            BevelOuter = bvNone
+            BevelWidth = 2
+            Caption = '0'
+            Color = clGray
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWhite
+            Font.Height = -21
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 20
+          end
+          object pnlJY: TPanel
+            Left = 454
+            Top = 276
+            Width = 67
+            Height = 28
+            BevelOuter = bvNone
+            BevelWidth = 2
+            Caption = '0'
+            Color = clGray
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWhite
+            Font.Height = -21
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 21
+          end
+          object pnlJZ: TPanel
+            Left = 526
+            Top = 276
+            Width = 67
+            Height = 28
+            BevelOuter = bvNone
+            BevelWidth = 2
+            Caption = '0'
+            Color = clGray
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWhite
+            Font.Height = -21
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 22
+          end
+          object pnlSpeed: TPanel
+            Left = 600
+            Top = 276
+            Width = 41
+            Height = 28
+            BevelOuter = bvNone
+            BevelWidth = 2
+            Caption = 'Low'
+            Color = clGray
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWhite
+            Font.Height = -16
+            Font.Name = 'Arial'
+            Font.Style = []
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 23
+          end
+          object btnSaveImage: TBitBtn
+            Left = 13
+            Top = 192
+            Width = 156
+            Height = 34
+            Hint = 'CCD'#24433#20687#23384#27284'(*.bmp)'
+            Caption = 'Capture Image'
+            DragCursor = crHandPoint
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -16
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 24
+            OnClick = btnReviewSaveClick
+            Glyph.Data = {
+              F6060000424DF606000000000000360000002800000018000000180000000100
+              180000000000C0060000130B0000130B00000000000000000000FFFFFFFEFEFE
+              F7F7F7EAEAEAE0E0E0DFDFDFE0DFDFE0DFDFE0DFDFDFDFDFE0DFDFE0DFDFE0E0
+              DFE0E0DFE0DFDFE0DFDFE0E0DFE0E0DFE0E0E0E0E0E0E8E8E8F4F4F4FCFCFCFF
+              FFFFFEFEFEEDEDEDC5C5C49B9B997E7D7B7E7D7B7E7E7C7F7E7D7F7E7D7E7E7C
+              7F7E7C7F7E7D807F7E81817E80807E807F7E80807E81807E81817F80807E9999
+              97C1C1C1E9E9E9FCFCFCF9F9F9BBBBB96866624A49433C3B363E3D38403F3A44
+              433F46454143423E42413E42423E48484450514D51514E4E4E4B4F504C51524F
+              4F514D4D4E4B53524F6E6F6CBABAB9F5F5F5F3F3F39393903D3C363A39333B3A
+              353C3B363E3D3842413D47474344454141423E40413D535450696B686D6E6B68
+              69676869666B6D6B67696765676550524E4C4E4A959593F0F0F0F4F4F49D9D9B
+              6465617779757A7B78797B787A7B797C7E7A7F817E7F817E7D7F7C7B7E7B8688
+              859395939497959296939294929396949295939094928285826C6E6B9B9B99F2
+              F2F2F8F9F8C4C6C5B8BBB9CBCECDCACDCCC7CBC9C9CDCCCACECDCBCECECDD0CF
+              CED1D0CED1D0CDD0CFCCCFCECACDCCC8CCCBC7CAC9C5C9C8C3C8C6BEC2C0BEC2
+              C1B4B7B5C2C3C2F7F7F7FCFCFCDEDFDED5D8D6D2D5D3CBCFCECFD4D2D3D7D6D3
+              D7D6D7DADADDE0DFE0E3E2E2E5E4E3E5E4E1E4E3DDE0E0D7DADAD3D7D5D0D5D3
+              CACECDB8BDBBB9BDBCCACDCCDCDDDDFCFCFCFEFEFEE7E8E8D3D5D4D1D4D3CFD2
+              D1D6DAD9DCDFDEE0E2E2E2E5E4E5E8E7E6E8E8E5E9E8E6E8E8E6E9E8E4E7E6DB
+              DEDDD0D3D2CCD0CFCFD3D2C7CCCAC6CBC9CDD0CFE7E8E8FEFEFEFFFFFFF3F4F4
+              D1D4D3D2D6D4D3D7D6E2E5E4E7E9E9E4E7E6E3E5E5E2E4E4E1E4E3E0E3E2E0E3
+              E2E0E3E2E0E3E2DFE1E1D7DADAC8CCCBC1C5C4CACFCCD5D8D7D1D4D3F4F5F4FF
+              FFFFFFFFFFFAFAFAD6D8D8D2D5D4D9DCDBE3E5E5DFE2E2DDE1E0DDE0E0DDE0E0
+              DDE0DFDDE0DFDDDFDFDCDFDEDCDFDEDBDFDEDBDEDDD5D8D7C2C6C5C0C5C3D1D5
+              D4D6D8D7FAFAFAFFFFFFFFFFFFFCFCFCE3E4E3CCCFCEDADEDDDBDFDED9DDDCD9
+              DDDCD8DCDBD8DBDADADBDBC7D0CCC9D1CDDBDDDDD7DBDAD5D9D8D7DBD9D6DAD9
+              CCD1CFCACECCCBCFCEE3E4E3FCFCFCFFFFFFFFFFFFFEFEFEEFF0EFC6C9C8D0D4
+              D3CCD0CFD3D8D6D1D6D4CBCFCECACDCCC8CDCA79BB9977BA98C7CDCAC8CBCAC8
+              CCCBCED2D0D0D5D3CED3D1D8DBDACACDCCEFF0F0FEFEFEFFFFFFFFFFFFFFFFFF
+              F7F7F7D2D4D4C8CDCCBBC0BFB8BCBBC2C6C5C1C4C3AFBBB578B79790E0B76EDA
+              A371B491ADB9B3BDC1BFC4C9C7CCD0CFD3D7D6D6DAD9D2D4D3F6F7F7FFFFFFFF
+              FFFFFFFFFFFFFFFFFCFCFCE0E1E1C3C7C5C8CDCCB7BCBBB9BDBCB9C5BF87BDA2
+              80D6AA93EFC04FE59962D19983BB9EB7C2BDC9CDCCCED3D1D4D8D7CACECDDFE0
+              E0FBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBECEBC1C5C4C6CBC9C4C8C7BD
+              C3C190C1A875D2A383EAB589EFBA3AE38E4DE29766CF998FC1A8C8CECCC3C6C5
+              C5C9C8C5C8C6EBEBEBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5F5F5CACC
+              CCC2C6C5C5CAC99EC2B06BCC9A6FE6A975ECB087EFBA38E38D37E38C51E19867
+              CD99A2C6B4C3C7C5C2C5C4CBCECDF5F5F5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFFFFFEFEFEEAEAEACED3D19BC3AF6DC5996DE4A765E8A573EBAE87EEBA38E3
+              8D35E28B46E49467E3A46FC6999CC3AFCED4D1E9EAEAFEFEFEFFFFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFEE6F4EC94D5B47BD3A67AD9A972DFA7
+              79EAB085ECB836E18B3EE28F5DDC9C78DAA87DD3A794D5B3E5F4ECFEFFFEFFFF
+              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF4FBF7D9F0E4D5
+              EFE1BBE5D078D7A77AE9B083EBB632DF8840E08F69D59EBBE5D0D5EFE2D9F0E4
+              F4FBF7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFFFFFFFEFEFEFEFEFEDCF1E67BD7A977E7AF80EAB42EDD853CDE8C6BD59FDB
+              F1E5FEFEFEFEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDCF1E67AD6A874E5AC7DE8B329DB
+              8038DC8969D49EDCF1E6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDCF1E678D6A7
+              71E4AA7AE7B023D87D32D98567D39DDCF1E6FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFFDCF1E67DD8AA80E7B38BEBBA3ADC8B46DD916DD4A0DCF1E6FFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+              FFFFFFFFFFFFFFFFFFFFD9F0E566C69664CB986DCE9C4EC7894EC6885EC591D9
+              F0E4FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+            Spacing = 8
           end
           object btnSystemRun: TLMDButton
             Left = 208
-            Top = 212
+            Top = 188
             Width = 217
             Height = 69
             Hint = #36865#20986'Bruker Command'
@@ -8409,7 +8412,7 @@ object MainForm: TMainForm
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 17
+            TabOrder = 25
             OnClick = btnSystemRunClick
             Glyph.Data = {
               360D0000424D360D000000000000360400002800000030000000300000000100
@@ -8521,17 +8524,17 @@ object MainForm: TMainForm
           end
           object pnlToMeasurePosition: TPanel
             Left = 621
-            Top = 176
+            Top = 128
             Width = 23
             Height = 23
             BevelOuter = bvLowered
             BevelWidth = 2
             Color = clSilver
-            TabOrder = 18
+            TabOrder = 26
           end
           object cbShareImage: TCheckBox
-            Left = 322
-            Top = 112
+            Left = 506
+            Top = 88
             Width = 138
             Height = 20
             Hint = #25152#26377#40670#20301#20849#29992'#1'#30340'Pattern'#24433#20687#27284
@@ -8548,108 +8551,13 @@ object MainForm: TMainForm
             ParentShowHint = False
             ShowHint = True
             State = cbChecked
-            TabOrder = 19
-          end
-          object btnOLSToLocal: TLMDButton
-            Left = 536
-            Top = 116
-            Width = 107
-            Height = 28
-            Cursor = crHandPoint
-            Caption = 'OLS to Local'
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clBlack
-            Font.Height = -16
-            Font.Name = 'Arial'
-            Font.Style = [fsBold]
-            ParentFont = False
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 20
-            OnClick = btnOLSToLocalClick
-          end
-          object rgOperationMode1: TLMDRadioGroup
-            Left = 322
-            Top = 134
-            Width = 157
-            Height = 38
-            Bevel.Mode = bmWindows
-            BtnAlignment.Alignment = agCenterLeft
-            Caption = 'Operation Mode'
-            CaptionFont.Charset = ANSI_CHARSET
-            CaptionFont.Color = clWindowText
-            CaptionFont.Height = -13
-            CaptionFont.Name = 'Arial'
-            CaptionFont.Style = []
-            CaptionParentFont = False
-            Columns = 3
-            Enabled = False
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -13
-            Font.Name = 'Arial'
-            Font.Style = []
-            Items.Strings = (
-              '0'
-              '45'
-              '0+45')
-            ItemHeight = 20
-            ParentFont = False
-            TabOrder = 21
-            OnClick = rgSpeedClick
-            ItemIndex = 0
-          end
-          object rgLightMode1: TLMDRadioGroup
-            Left = 484
-            Top = 113
-            Width = 47
-            Height = 59
-            Bevel.Mode = bmWindows
-            BtnAlignment.Alignment = agCenterLeft
-            Caption = 'Light'
-            CaptionFont.Charset = ANSI_CHARSET
-            CaptionFont.Color = clWindowText
-            CaptionFont.Height = -13
-            CaptionFont.Name = 'Arial'
-            CaptionFont.Style = []
-            CaptionParentFont = False
-            Enabled = False
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -12
-            Font.Name = 'Arial'
-            Font.Style = []
-            Items.Strings = (
-              'BF'
-              'OP')
-            ItemHeight = 20
-            ParentFont = False
-            TabOrder = 22
-            OnClick = rgSpeedClick
-            ItemIndex = 0
-          end
-          object cbPO: TCheckBox
-            Left = 536
-            Top = 148
-            Width = 49
-            Height = 20
-            Caption = 'PO'
-            Color = clBlack
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clWhite
-            Font.Height = -16
-            Font.Name = 'Arial'
-            Font.Style = [fsBold]
-            ParentColor = False
-            ParentFont = False
-            TabOrder = 23
-            OnClick = cbPOClick
+            TabOrder = 27
           end
         end
         object tsArrayDieMove: TLMDTabSheet
           Left = 4
           Top = 33
-          Width = 659
+          Width = 649
           Height = 417
           Bevel.Mode = bmCustom
           Caption = 'Step'
@@ -9819,7 +9727,7 @@ object MainForm: TMainForm
         object tsMark: TLMDTabSheet
           Left = 4
           Top = 33
-          Width = 659
+          Width = 649
           Height = 417
           Bevel.Mode = bmCustom
           Caption = 'Mark'
@@ -9894,11 +9802,10 @@ object MainForm: TMainForm
         object tsHome: TLMDTabSheet
           Left = 4
           Top = 33
-          Width = 659
+          Width = 649
           Height = 417
           Bevel.Mode = bmCustom
           Caption = 'Assist'
-          TabVisible = False
           object Label182: TLabel
             Left = 136
             Top = 401
@@ -10041,7 +9948,7 @@ object MainForm: TMainForm
         object tsPosittionMove: TLMDTabSheet
           Left = 4
           Top = 33
-          Width = 659
+          Width = 649
           Height = 417
           Bevel.Mode = bmCustom
           Caption = 'User Position'
@@ -11986,7 +11893,7 @@ object MainForm: TMainForm
         object tsMatch: TLMDTabSheet
           Left = 4
           Top = 33
-          Width = 659
+          Width = 649
           Height = 417
           Bevel.Mode = bmCustom
           Caption = 'Match-Align'
@@ -12745,11 +12652,10 @@ object MainForm: TMainForm
         object tsSystemConfig: TLMDTabSheet
           Left = 4
           Top = 33
-          Width = 659
+          Width = 649
           Height = 417
           Bevel.Mode = bmCustom
           Caption = 'System Config'
-          TabVisible = False
           object gbLP1Edge: TLMDGroupBox
             Left = 3
             Top = 6
@@ -12766,7 +12672,6 @@ object MainForm: TMainForm
             CaptionFont.Name = 'Arial'
             CaptionFont.Style = []
             CaptionParentFont = False
-            Enabled = False
             ParentShowHint = False
             ShowHint = True
             TabOrder = 0
@@ -13347,7 +13252,7 @@ object MainForm: TMainForm
           object gbLP2Edge: TLMDGroupBox
             Left = 299
             Top = 6
-            Width = 286
+            Width = 294
             Height = 263
             Hint = 'Machine coordinates for user defined sample (0, 0)'
             Bevel.LightColor = clSilver
@@ -13360,7 +13265,6 @@ object MainForm: TMainForm
             CaptionFont.Name = 'Arial'
             CaptionFont.Style = []
             CaptionParentFont = False
-            Enabled = False
             ParentShowHint = False
             ShowHint = True
             TabOrder = 1
@@ -13941,40 +13845,39 @@ object MainForm: TMainForm
           object GroupBox13: TGroupBox
             Left = 3
             Top = 277
-            Width = 118
-            Height = 51
+            Width = 166
+            Height = 57
             Caption = 'Lamp Power(hr)'
             Color = 13027014
-            Enabled = False
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
-            Font.Height = -13
+            Font.Height = -15
             Font.Name = 'Arial'
             Font.Style = []
             ParentColor = False
             ParentFont = False
             TabOrder = 2
             object Label190: TLabel
-              Left = 16
-              Top = 22
-              Width = 28
-              Height = 16
+              Left = 32
+              Top = 26
+              Width = 32
+              Height = 17
               Caption = 'Time'
             end
             object edLampLife: TEdit
-              Left = 48
-              Top = 19
-              Width = 57
-              Height = 24
+              Left = 72
+              Top = 23
+              Width = 65
+              Height = 25
               Color = 11711154
               TabOrder = 0
               Text = '2000'
             end
           end
           object btnSystemConfigSave: TLMDButton
-            Left = 589
-            Top = 10
-            Width = 67
+            Left = 512
+            Top = 277
+            Width = 82
             Height = 31
             Cursor = crHandPoint
             Hint = #20786#23384#20013#24515#40670#23563#25214#30340#37002#30028#24231#27161#21443#25976'.|'#20786#23384#24231#27161#27284#21443#25976': '#36335#24465', '#27284#21517', '#21407#40670#24231#27161', '#21934#20301', '#26041#21521'.'
@@ -13991,139 +13894,43 @@ object MainForm: TMainForm
             OnClick = btnSystemConfigSaveClick
           end
           object GroupBox18: TGroupBox
-            Left = 131
+            Left = 179
             Top = 277
-            Width = 118
-            Height = 51
+            Width = 166
+            Height = 57
             Caption = 'SECS Port'
             Color = 13027014
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
-            Font.Height = -13
+            Font.Height = -15
             Font.Name = 'Arial'
             Font.Style = []
             ParentColor = False
             ParentFont = False
             TabOrder = 4
             object Label649: TLabel
-              Left = 16
-              Top = 22
-              Width = 24
-              Height = 16
+              Left = 32
+              Top = 26
+              Width = 27
+              Height = 17
               Caption = 'Port'
             end
-            object edSECSPortSet: TEdit
-              Left = 48
-              Top = 19
-              Width = 57
-              Height = 24
+            object Edit1: TEdit
+              Left = 72
+              Top = 23
+              Width = 65
+              Height = 25
               Color = 11711154
               TabOrder = 0
-              Text = '5900'
-            end
-          end
-          object GroupBox6: TGroupBox
-            Left = 338
-            Top = 277
-            Width = 318
-            Height = 108
-            Caption = 'Path'
-            Color = 13027014
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -13
-            Font.Name = 'Arial'
-            Font.Style = []
-            ParentColor = False
-            ParentFont = False
-            TabOrder = 5
-            object Label663: TLabel
-              Left = 24
-              Top = 21
-              Width = 40
-              Height = 16
-              Caption = 'Recipe'
-            end
-            object Label664: TLabel
-              Left = 24
-              Top = 49
-              Width = 36
-              Height = 16
-              Caption = 'Macro'
-            end
-            object Label667: TLabel
-              Left = 24
-              Top = 77
-              Width = 35
-              Height = 16
-              Caption = 'Image'
-            end
-            object edRecipePath: TEdit
-              Left = 72
-              Top = 18
-              Width = 233
-              Height = 24
-              Color = 11711154
-              TabOrder = 0
-              Text = '\\192.168.0.1\Recipe'
-            end
-            object edMacroPath: TEdit
-              Left = 72
-              Top = 46
-              Width = 233
-              Height = 24
-              Color = 11711154
-              TabOrder = 1
-              Text = '\\192.168.0.3\Remote'
-            end
-            object edImagePath: TEdit
-              Left = 72
-              Top = 74
-              Width = 233
-              Height = 24
-              Color = 11711154
-              TabOrder = 2
-              Text = 'D:\Capture'
-            end
-          end
-          object GroupBox7: TGroupBox
-            Left = 3
-            Top = 333
-            Width = 118
-            Height = 51
-            Caption = 'Macro Timeout(s)'
-            Color = 13027014
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -13
-            Font.Name = 'Arial'
-            Font.Style = []
-            ParentColor = False
-            ParentFont = False
-            TabOrder = 6
-            object Label668: TLabel
-              Left = 16
-              Top = 22
-              Width = 28
-              Height = 16
-              Caption = 'Time'
-            end
-            object edMacroTimeout: TEdit
-              Left = 48
-              Top = 19
-              Width = 57
-              Height = 24
-              Color = 11711154
-              TabOrder = 0
-              Text = '120'
+              Text = '5200'
             end
           end
         end
       end
       object pnlCurrentSpeed: TPanel
-        Left = 502
+        Left = 538
         Top = 153
-        Width = 99
+        Width = 123
         Height = 16
         Hint = #30446#21069'X/Y'#36895#24230#25351#23450#20540
         BevelOuter = bvNone
@@ -14132,7 +13939,7 @@ object MainForm: TMainForm
         Color = 7566195
         Font.Charset = ANSI_CHARSET
         Font.Color = clWhite
-        Font.Height = -11
+        Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
@@ -14327,7 +14134,7 @@ object MainForm: TMainForm
       end
       object btnEFEMMaintenanceMode: TLMDButton
         Left = 7
-        Top = 171
+        Top = 169
         Width = 234
         Height = 34
         Cursor = crHandPoint
@@ -14348,7 +14155,7 @@ object MainForm: TMainForm
       end
       object pnlEFEMMaintenanceMode: TPanel
         Left = 243
-        Top = 171
+        Top = 169
         Width = 25
         Height = 34
         Hint = 'EFEM in Maintenance Mode'
@@ -14362,7 +14169,7 @@ object MainForm: TMainForm
       end
       object btnMaintenanceLight: TLMDButton
         Left = 277
-        Top = 171
+        Top = 169
         Width = 97
         Height = 34
         Cursor = crHandPoint
@@ -14379,7 +14186,7 @@ object MainForm: TMainForm
       end
       object pnlMaintenanceLight: TPanel
         Left = 376
-        Top = 171
+        Top = 169
         Width = 25
         Height = 34
         Hint = #29031#26126#29128#29376#24907
@@ -14953,7 +14760,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = #35222#21516'Cassette'#37325#26032'Load, '#30001'Select('#25351#23450#30340#31532#19968#29255#38283#22987#21462#29255'.'
         Caption = 'From Scratch'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
@@ -16831,7 +16637,6 @@ object MainForm: TMainForm
         Cursor = crHandPoint
         Hint = #21040'Wafer'#30340#20013#24515#40670
         Caption = 'ToCenter'
-        DragCursor = crHandPoint
         Font.Charset = ANSI_CHARSET
         Font.Color = clBlack
         Font.Height = -16
@@ -18274,7 +18079,7 @@ object MainForm: TMainForm
           TabOrder = 51
           OnClick = Panel129Click
         end
-        object btnAllSelect2: TLMDButton
+        object LMDButton1: TLMDButton
           Left = 74
           Top = 252
           Width = 22
@@ -18291,11 +18096,11 @@ object MainForm: TMainForm
           ParentShowHint = False
           ShowHint = True
           TabOrder = 52
-          OnClick = btnAllSelect2Click
+          OnClick = btnAllSelectClick
           FontFX.Angle = 270
           FontFX.PosX = 18
         end
-        object btnAllCancel2: TLMDButton
+        object LMDButton3: TLMDButton
           Left = 74
           Top = 444
           Width = 22
@@ -18312,7 +18117,7 @@ object MainForm: TMainForm
           ParentShowHint = False
           ShowHint = True
           TabOrder = 53
-          OnClick = btnAllCancel2Click
+          OnClick = btnAllCancelClick
           FontFX.Angle = 270
           FontFX.PosX = 18
         end
@@ -20564,7 +20369,7 @@ object MainForm: TMainForm
         end
         object Label188: TLabel
           Left = 31
-          Top = 256
+          Top = 253
           Width = 30
           Height = 19
           Caption = 'LP1'
@@ -20590,7 +20395,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           Transparent = True
-          OnClick = Label189Click
         end
         object pnlWaferAlignerInformation: TPanel
           Left = 3
@@ -21156,21 +20960,20 @@ object MainForm: TMainForm
       object Panel69: TPanel
         Left = 403
         Top = 4
-        Width = 158
+        Width = 149
         Height = 40
         Color = clRed
         TabOrder = 2
         object btnUpdateRecipe: TButton
           Left = 5
           Top = 5
-          Width = 148
+          Width = 140
           Height = 31
           Cursor = crHandPoint
-          Caption = '>Update Recipe'
-          DragCursor = crHandPoint
+          Caption = '>'#26356#26032' Recipe'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
@@ -21194,14 +20997,13 @@ object MainForm: TMainForm
         TabOrder = 3
       end
       object btnDeleteRecipe: TLMDButton
-        Left = 568
+        Left = 560
         Top = 6
-        Width = 113
+        Width = 121
         Height = 35
         Cursor = crHandPoint
         Hint = 'Delete Recipe'
-        Caption = 'Del Recipe'
-        DragCursor = crHandPoint
+        Caption = #21034#38500' Recipe'
         Font.Charset = ANSI_CHARSET
         Font.Color = clBlack
         Font.Height = -19
@@ -21891,7 +21693,7 @@ object MainForm: TMainForm
               Top = 416
               Width = 609
               Height = 275
-              ColCount = 9
+              ColCount = 8
               FixedColor = 16311512
               RowCount = 2
               Font.Charset = ANSI_CHARSET
@@ -21912,7 +21714,7 @@ object MainForm: TMainForm
               Width = 219
               Height = 202
               Caption = 'Pattern Matching'
-              Color = 13487565
+              Color = 15461355
               Font.Charset = ANSI_CHARSET
               Font.Color = clWindowText
               Font.Height = -13
@@ -21988,7 +21790,6 @@ object MainForm: TMainForm
                 Cursor = crHandPoint
                 Hint = 'Auto Pattern Match and Move to Center'
                 Caption = 'Match'
-                DragCursor = crHandPoint
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clNavy
                 Font.Height = -19
@@ -22049,7 +21850,6 @@ object MainForm: TMainForm
                 Height = 22
                 Cursor = crHandPoint
                 Caption = 'CancelMatch'
-                DragCursor = crHandPoint
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
                 Font.Height = -11
@@ -22099,7 +21899,6 @@ object MainForm: TMainForm
                 Cursor = crHandPoint
                 Hint = #27161#28310'Pattern'#23384#27284'(-std)'
                 Caption = 'SavePtn'
-                DragCursor = crHandPoint
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clNavy
                 Font.Height = -19
@@ -22131,7 +21930,7 @@ object MainForm: TMainForm
               end
               object comboPattern: TComboBox
                 Left = 4
-                Top = 170
+                Top = 166
                 Width = 208
                 Height = 24
                 Font.Charset = ANSI_CHARSET
@@ -22152,7 +21951,6 @@ object MainForm: TMainForm
                 Cursor = crHandPoint
                 Hint = #27161#28310'Pattern'#23384#27284'(-std)'
                 Caption = 'AssignPtn'
-                DragCursor = crHandPoint
                 Enabled = False
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clNavy
@@ -22173,7 +21971,6 @@ object MainForm: TMainForm
                 Cursor = crHandPoint
                 Hint = #23559#21462#20687#26694#31227#21040#21313#23383#20013#24515
                 Caption = 'ToCenter'
-                DragCursor = crHandPoint
                 Font.Charset = ANSI_CHARSET
                 Font.Color = clWindowText
                 Font.Height = -11
@@ -22373,7 +22170,6 @@ object MainForm: TMainForm
               Height = 26
               Hint = #36984#25799#35201#35079#35069#30340#40670#20301'('#24433#20687#27284'/Z/Intensity/Lens/MMD)'
               Caption = 'Assign'
-              DragCursor = crHandPoint
               Font.Charset = ANSI_CHARSET
               Font.Color = clWindowText
               Font.Height = -21
@@ -22392,7 +22188,6 @@ object MainForm: TMainForm
               Height = 26
               Hint = #35079#35069#36984#25799#30340#40670#20301#36039#35338'('#24433#20687#27284'/Z/Intensity/Lens/MMD)'
               Caption = 'Apply'
-              DragCursor = crHandPoint
               Font.Charset = ANSI_CHARSET
               Font.Color = clWindowText
               Font.Height = -21
@@ -22423,19 +22218,19 @@ object MainForm: TMainForm
               ShowHint = True
               TabOrder = 14
             end
-            object pcRecipeParameter: TPageControl
+            object PageControl2: TPageControl
               Left = 236
               Top = 21
               Width = 389
               Height = 202
-              ActivePage = tsRecipeTilt
+              ActivePage = tsRecipeParameter
               Font.Charset = ANSI_CHARSET
               Font.Color = 8158332
               Font.Height = -13
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              TabIndex = 2
+              TabIndex = 1
               TabOrder = 15
               object tsRecipeSet: TTabSheet
                 Caption = 'Set Recipe'
@@ -22447,7 +22242,7 @@ object MainForm: TMainForm
                 ParentFont = False
                 object Label303: TLabel
                   Left = 88
-                  Top = 60
+                  Top = 63
                   Width = 30
                   Height = 17
                   Caption = 'Area'
@@ -22461,7 +22256,7 @@ object MainForm: TMainForm
                 end
                 object Label307: TLabel
                   Left = 134
-                  Top = 36
+                  Top = 39
                   Width = 18
                   Height = 17
                   Caption = 'No'
@@ -22475,7 +22270,7 @@ object MainForm: TMainForm
                 end
                 object Label305: TLabel
                   Left = 173
-                  Top = 51
+                  Top = 54
                   Width = 8
                   Height = 33
                   Caption = '/'
@@ -22489,7 +22284,7 @@ object MainForm: TMainForm
                 end
                 object Label308: TLabel
                   Left = 182
-                  Top = 36
+                  Top = 39
                   Width = 92
                   Height = 17
                   Caption = 'Total(20/1000)'
@@ -22503,7 +22298,7 @@ object MainForm: TMainForm
                 end
                 object Label306: TLabel
                   Left = 208
-                  Top = 86
+                  Top = 90
                   Width = 8
                   Height = 33
                   Caption = '/'
@@ -22517,7 +22312,7 @@ object MainForm: TMainForm
                 end
                 object Label304: TLabel
                   Left = 119
-                  Top = 94
+                  Top = 98
                   Width = 33
                   Height = 17
                   Caption = 'Point'
@@ -22531,7 +22326,7 @@ object MainForm: TMainForm
                 end
                 object Label563: TLabel
                   Left = 184
-                  Top = 117
+                  Top = 120
                   Width = 19
                   Height = 19
                   Caption = '(3)'
@@ -22544,7 +22339,7 @@ object MainForm: TMainForm
                 end
                 object Label562: TLabel
                   Left = 255
-                  Top = 117
+                  Top = 120
                   Width = 9
                   Height = 19
                   Caption = '2'
@@ -22557,7 +22352,7 @@ object MainForm: TMainForm
                 end
                 object Label564: TLabel
                   Left = 303
-                  Top = 117
+                  Top = 120
                   Width = 19
                   Height = 19
                   Caption = '(4)'
@@ -22569,45 +22364,32 @@ object MainForm: TMainForm
                   ParentFont = False
                 end
                 object Label536: TLabel
-                  Left = 4
-                  Top = 132
-                  Width = 19
-                  Height = 16
+                  Left = 93
+                  Top = 148
+                  Width = 24
+                  Height = 18
                   Caption = 'Col'
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clWindowText
-                  Font.Height = -13
+                  Font.Height = -16
                   Font.Name = 'Arial'
                   Font.Style = []
                   ParentFont = False
                   Transparent = True
                 end
                 object Label561: TLabel
-                  Left = 4
-                  Top = 150
-                  Width = 25
-                  Height = 16
+                  Left = 206
+                  Top = 147
+                  Width = 31
+                  Height = 18
                   Caption = 'Row'
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWindowText
-                  Font.Height = -13
-                  Font.Name = 'Arial'
-                  Font.Style = []
-                  ParentFont = False
-                  Transparent = True
-                end
-                object Label662: TLabel
-                  Left = 111
-                  Top = 37
-                  Width = 9
-                  Height = 19
-                  Caption = '1'
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clWindowText
                   Font.Height = -16
                   Font.Name = 'Arial'
-                  Font.Style = [fsBold]
+                  Font.Style = []
                   ParentFont = False
+                  Transparent = True
                 end
                 object btnReBuild: TLMDButton
                   Left = 4
@@ -22684,34 +22466,32 @@ object MainForm: TMainForm
                   TabOrder = 3
                   OnClick = btnZAdjustClick
                 end
-                object pnlGetRecipe: TPanel
+                object Panel74: TPanel
                   Left = 88
                   Top = 5
-                  Width = 57
-                  Height = 26
+                  Width = 69
+                  Height = 30
                   BevelInner = bvRaised
                   BevelOuter = bvNone
                   BevelWidth = 2
                   Caption = 'Recipe'
-                  Color = 6908265
+                  Color = 14211288
                   Font.Charset = ANSI_CHARSET
-                  Font.Color = clWhite
-                  Font.Height = -16
+                  Font.Color = clBlack
+                  Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = []
                   ParentFont = False
                   TabOrder = 4
-                  OnClick = pnlGetRecipeClick
                 end
                 object comboOlympusVisionName1: TComboBox
-                  Left = 144
+                  Left = 157
                   Top = 5
-                  Width = 237
-                  Height = 26
-                  DropDownCount = 20
+                  Width = 221
+                  Height = 30
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clWindowText
-                  Font.Height = -16
+                  Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = []
                   ItemHeight = 0
@@ -22722,7 +22502,7 @@ object MainForm: TMainForm
                 end
                 object edAreaNo: TLMDEdit
                   Left = 120
-                  Top = 53
+                  Top = 56
                   Width = 50
                   Height = 28
                   Bevel.Mode = bmWindows
@@ -22746,7 +22526,7 @@ object MainForm: TMainForm
                 end
                 object edAreaTNo: TLMDEdit
                   Left = 184
-                  Top = 53
+                  Top = 56
                   Width = 50
                   Height = 28
                   Bevel.Mode = bmWindows
@@ -22771,7 +22551,7 @@ object MainForm: TMainForm
                 end
                 object btnAreaSet: TLMDButton
                   Left = 241
-                  Top = 53
+                  Top = 56
                   Width = 50
                   Height = 28
                   Cursor = crHandPoint
@@ -22789,7 +22569,7 @@ object MainForm: TMainForm
                 end
                 object btnAreaTo: TLMDButton
                   Left = 297
-                  Top = 53
+                  Top = 56
                   Width = 34
                   Height = 28
                   Cursor = crHandPoint
@@ -22807,7 +22587,7 @@ object MainForm: TMainForm
                 end
                 object pnlToAreaPosition: TPanel
                   Left = 333
-                  Top = 53
+                  Top = 56
                   Width = 12
                   Height = 28
                   BevelOuter = bvLowered
@@ -22817,7 +22597,7 @@ object MainForm: TMainForm
                 end
                 object pnlToDotPosition: TPanel
                   Left = 368
-                  Top = 87
+                  Top = 91
                   Width = 12
                   Height = 28
                   BevelOuter = bvLowered
@@ -22827,7 +22607,7 @@ object MainForm: TMainForm
                 end
                 object btnDotTo: TLMDButton
                   Left = 332
-                  Top = 87
+                  Top = 91
                   Width = 34
                   Height = 28
                   Cursor = crHandPoint
@@ -22845,7 +22625,7 @@ object MainForm: TMainForm
                 end
                 object btnDotSet: TLMDButton
                   Left = 276
-                  Top = 87
+                  Top = 91
                   Width = 50
                   Height = 28
                   Cursor = crHandPoint
@@ -22863,7 +22643,7 @@ object MainForm: TMainForm
                 end
                 object edDotTNo: TLMDEdit
                   Left = 219
-                  Top = 87
+                  Top = 91
                   Width = 50
                   Height = 28
                   Bevel.Mode = bmWindows
@@ -22887,7 +22667,7 @@ object MainForm: TMainForm
                 end
                 object edDotNo: TLMDEdit
                   Left = 155
-                  Top = 87
+                  Top = 91
                   Width = 50
                   Height = 28
                   Bevel.Mode = bmWindows
@@ -22910,17 +22690,17 @@ object MainForm: TMainForm
                   Text = '1'
                 end
                 object pnlColumSet: TPanel
-                  Left = 32
-                  Top = 132
-                  Width = 49
-                  Height = 16
+                  Left = 120
+                  Top = 145
+                  Width = 79
+                  Height = 24
                   BevelOuter = bvNone
                   BevelWidth = 2
                   Caption = '0'
                   Color = clGray
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clWhite
-                  Font.Height = -15
+                  Font.Height = -21
                   Font.Name = 'Arial'
                   Font.Style = [fsBold]
                   ParentFont = False
@@ -22929,17 +22709,17 @@ object MainForm: TMainForm
                   TabOrder = 16
                 end
                 object pnlRowSet: TPanel
-                  Left = 32
-                  Top = 150
-                  Width = 49
-                  Height = 16
+                  Left = 240
+                  Top = 144
+                  Width = 79
+                  Height = 24
                   BevelOuter = bvNone
                   BevelWidth = 2
                   Caption = '0'
                   Color = clGray
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clWhite
-                  Font.Height = -15
+                  Font.Height = -21
                   Font.Name = 'Arial'
                   Font.Style = [fsBold]
                   ParentFont = False
@@ -22947,84 +22727,13 @@ object MainForm: TMainForm
                   ShowHint = True
                   TabOrder = 17
                 end
-                object pnlGetMacro: TPanel
-                  Left = 88
-                  Top = 141
-                  Width = 57
-                  Height = 26
-                  BevelInner = bvRaised
-                  BevelOuter = bvNone
-                  BevelWidth = 2
-                  Caption = 'Macro'
-                  Color = 6908265
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWhite
-                  Font.Height = -16
-                  Font.Name = 'Arial'
-                  Font.Style = []
-                  ParentFont = False
-                  TabOrder = 18
-                  OnClick = pnlGetMacroClick
-                end
-                object comboOlympusMacroName: TComboBox
-                  Left = 144
-                  Top = 141
-                  Width = 237
-                  Height = 26
-                  DropDownCount = 20
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWindowText
-                  Font.Height = -16
-                  Font.Name = 'Arial'
-                  Font.Style = []
-                  ItemHeight = 0
-                  ParentFont = False
-                  TabOrder = 19
-                  OnClick = comboOlympusMacroNameClick
-                end
-                object btnMacroTest: TLMDButton
-                  Left = 88
-                  Top = 119
-                  Width = 57
-                  Height = 21
-                  Cursor = crHandPoint
-                  Hint = #28204#35430#35712#21462'Macro'
-                  Caption = 'TestRD'
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clBlack
-                  Font.Height = -16
-                  Font.Name = 'Arial'
-                  Font.Style = []
-                  ParentFont = False
-                  ParentShowHint = False
-                  ShowHint = True
-                  TabOrder = 20
-                  OnClick = btnMacroTestClick
-                end
-                object pnlMacroTest: TPanel
-                  Left = 146
-                  Top = 119
-                  Width = 10
-                  Height = 21
-                  Hint = #20316#26989#32080#26524
-                  Color = 11184810
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clBlack
-                  Font.Height = -19
-                  Font.Name = 'Arial'
-                  Font.Style = [fsBold]
-                  ParentFont = False
-                  ParentShowHint = False
-                  ShowHint = True
-                  TabOrder = 21
-                end
               end
               object tsRecipeParameter: TTabSheet
                 Caption = 'Parameters'
                 ImageIndex = 1
                 object Label612: TLabel
                   Left = 8
-                  Top = 74
+                  Top = 79
                   Width = 113
                   Height = 16
                   Caption = 'Tilt YCompensation'
@@ -23038,7 +22747,7 @@ object MainForm: TMainForm
                 end
                 object Label613: TLabel
                   Left = 185
-                  Top = 74
+                  Top = 79
                   Width = 21
                   Height = 17
                   Caption = 'um'
@@ -23053,48 +22762,34 @@ object MainForm: TMainForm
                 object Label574: TLabel
                   Left = 8
                   Top = 7
-                  Width = 94
-                  Height = 18
+                  Width = 113
+                  Height = 22
                   Alignment = taCenter
                   Caption = 'DieSizex(um)'
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clBlack
-                  Font.Height = -16
+                  Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = []
                   ParentFont = False
                 end
                 object Label575: TLabel
                   Left = 8
-                  Top = 35
-                  Width = 94
-                  Height = 18
+                  Top = 39
+                  Width = 113
+                  Height = 22
                   Alignment = taCenter
                   Caption = 'DieSizey(um)'
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clBlack
-                  Font.Height = -16
+                  Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = []
                   ParentFont = False
-                end
-                object Label670: TLabel
-                  Left = 7
-                  Top = 105
-                  Width = 32
-                  Height = 16
-                  Caption = 'LED1'
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWindowText
-                  Font.Height = -13
-                  Font.Name = 'Arial'
-                  Font.Style = []
-                  ParentFont = False
-                  Transparent = True
                 end
                 object edY45Offset: TLMDEdit
                   Left = 124
-                  Top = 68
+                  Top = 73
                   Width = 59
                   Height = 25
                   Bevel.Mode = bmWindows
@@ -23107,7 +22802,7 @@ object MainForm: TMainForm
                   ShowHint = True
                   TabOrder = 0
                   Font.Charset = ANSI_CHARSET
-                  Font.Color = clBlack
+                  Font.Color = clWindowText
                   Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = [fsBold]
@@ -23117,17 +22812,17 @@ object MainForm: TMainForm
                   Text = '0'
                 end
                 object edDieSizeY1: TEdit
-                  Left = 107
-                  Top = 33
-                  Width = 62
-                  Height = 25
+                  Left = 123
+                  Top = 37
+                  Width = 79
+                  Height = 28
                   Hint = 'Die Size - '#39640
                   AutoSize = False
                   Color = 14211288
                   Enabled = False
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clGray
-                  Font.Height = -16
+                  Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = [fsBold]
                   ImeMode = imAlpha
@@ -23138,17 +22833,17 @@ object MainForm: TMainForm
                   Text = '5000'
                 end
                 object edDieSizeX1: TEdit
-                  Left = 107
+                  Left = 123
                   Top = 5
-                  Width = 62
-                  Height = 25
+                  Width = 79
+                  Height = 28
                   Hint = 'Die Size - '#23532
                   AutoSize = False
                   Color = 14211288
                   Enabled = False
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clGray
-                  Font.Height = -16
+                  Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = [fsBold]
                   ImeMode = imAlpha
@@ -23159,17 +22854,17 @@ object MainForm: TMainForm
                   Text = '5000'
                 end
                 object edDieSizeGapX1: TEdit
-                  Left = 172
+                  Left = 204
                   Top = 5
-                  Width = 45
-                  Height = 25
+                  Width = 57
+                  Height = 28
                   Hint = 'Die Size - '#20999#21106#36947#23532
                   AutoSize = False
                   Color = 14211288
                   Enabled = False
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clGray
-                  Font.Height = -16
+                  Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = [fsBold]
                   ImeMode = imAlpha
@@ -23180,17 +22875,17 @@ object MainForm: TMainForm
                   Text = '0'
                 end
                 object edDieSizeGapY1: TEdit
-                  Left = 172
-                  Top = 33
-                  Width = 45
-                  Height = 25
+                  Left = 204
+                  Top = 37
+                  Width = 57
+                  Height = 28
                   Hint = 'Die Size - '#20999#21106#36947#39640
                   AutoSize = False
                   Color = 14211288
                   Enabled = False
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clGray
-                  Font.Height = -16
+                  Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = [fsBold]
                   ImeMode = imAlpha
@@ -23201,12 +22896,12 @@ object MainForm: TMainForm
                   Text = '0'
                 end
                 object rgOperationMode: TRadioGroup
-                  Left = 263
-                  Top = 6
-                  Width = 116
-                  Height = 75
+                  Left = 8
+                  Top = 112
+                  Width = 257
+                  Height = 49
                   Caption = 'Operation Mode'
-                  Color = 12763842
+                  Columns = 3
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clBlack
                   Font.Height = -13
@@ -23214,20 +22909,18 @@ object MainForm: TMainForm
                   Font.Style = []
                   ItemIndex = 2
                   Items.Strings = (
-                    '0 Deg.'
-                    '45 Deg.'
-                    '0+45 Deg.')
-                  ParentColor = False
+                    '0Degree'
+                    '45Degree'
+                    '0+45Degree')
                   ParentFont = False
                   TabOrder = 5
                 end
                 object rgLightMode: TRadioGroup
-                  Left = 263
-                  Top = 89
-                  Width = 116
-                  Height = 40
-                  Caption = 'Observation Mode'
-                  Color = 12763842
+                  Left = 272
+                  Top = 112
+                  Width = 97
+                  Height = 49
+                  Caption = 'Light Mode'
                   Columns = 2
                   Font.Charset = ANSI_CHARSET
                   Font.Color = clBlack
@@ -23238,314 +22931,8 @@ object MainForm: TMainForm
                   Items.Strings = (
                     'BF'
                     'PO')
-                  ParentColor = False
                   ParentFont = False
                   TabOrder = 6
-                end
-                object edRecipeLED1: TLMDEdit
-                  Left = 41
-                  Top = 102
-                  Width = 41
-                  Height = 22
-                  Bevel.Mode = bmWindows
-                  Caret.BlinkRate = 530
-                  Caret.Style = csUnder
-                  Color = 16311512
-                  TabOrder = 7
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWindowText
-                  Font.Height = -16
-                  Font.Name = 'Arial'
-                  Font.Style = [fsBold]
-                  ParentFont = False
-                  CustomButtons = <>
-                  PasswordChar = #0
-                  Text = '20'
-                end
-                object btnRecipeLED1: TLMDButton
-                  Left = 84
-                  Top = 102
-                  Width = 39
-                  Height = 22
-                  Cursor = crHandPoint
-                  Caption = 'Set'
-                  DragCursor = crHandPoint
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWindowText
-                  Font.Height = -19
-                  Font.Name = 'Arial'
-                  Font.Style = []
-                  ParentFont = False
-                  ParentShowHint = False
-                  ShowHint = True
-                  TabOrder = 8
-                  OnClick = btnRecipeLED1Click
-                end
-              end
-              object tsRecipeTilt: TTabSheet
-                Caption = 'Tilt Parameters'
-                ImageIndex = 2
-                object Label669: TLabel
-                  Left = 5
-                  Top = 144
-                  Width = 32
-                  Height = 16
-                  Caption = 'LED2'
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWindowText
-                  Font.Height = -13
-                  Font.Name = 'Arial'
-                  Font.Style = []
-                  ParentFont = False
-                  Transparent = True
-                end
-                object GroupBox8: TGroupBox
-                  Left = 4
-                  Top = 4
-                  Width = 129
-                  Height = 131
-                  Caption = 'Tilt CCD Setting'
-                  TabOrder = 0
-                  object Label665: TLabel
-                    Left = 11
-                    Top = 22
-                    Width = 27
-                    Height = 16
-                    Caption = 'Gain'
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -13
-                    Font.Name = 'Arial'
-                    Font.Style = []
-                    ParentFont = False
-                    Transparent = True
-                  end
-                  object Label666: TLabel
-                    Left = 11
-                    Top = 43
-                    Width = 62
-                    Height = 16
-                    Caption = 'Brightness'
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -13
-                    Font.Name = 'Arial'
-                    Font.Style = []
-                    ParentFont = False
-                    Transparent = True
-                  end
-                  object Label655: TLabel
-                    Left = 11
-                    Top = 85
-                    Width = 42
-                    Height = 16
-                    Caption = 'Shutter'
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -13
-                    Font.Name = 'Arial'
-                    Font.Style = []
-                    ParentFont = False
-                    Transparent = True
-                  end
-                  object edRecipeGain: TLMDEdit
-                    Left = 39
-                    Top = 18
-                    Width = 41
-                    Height = 22
-                    Bevel.Mode = bmWindows
-                    Caret.BlinkRate = 530
-                    Caret.Style = csUnder
-                    Color = 16311512
-                    TabOrder = 0
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -16
-                    Font.Name = 'Arial'
-                    Font.Style = [fsBold]
-                    ParentFont = False
-                    CustomButtons = <>
-                    PasswordChar = #0
-                    Text = '15'
-                  end
-                  object btnRecipeGain: TLMDButton
-                    Left = 82
-                    Top = 18
-                    Width = 39
-                    Height = 22
-                    Cursor = crHandPoint
-                    Caption = 'Set'
-                    DragCursor = crHandPoint
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -19
-                    Font.Name = 'Arial'
-                    Font.Style = []
-                    ParentFont = False
-                    ParentShowHint = False
-                    ShowHint = True
-                    TabOrder = 1
-                    OnClick = btnRecipeGainClick
-                  end
-                  object edRecipeBrightness: TLMDEdit
-                    Left = 39
-                    Top = 60
-                    Width = 41
-                    Height = 22
-                    Bevel.Mode = bmWindows
-                    Caret.BlinkRate = 530
-                    Caret.Style = csUnder
-                    Color = 16311512
-                    TabOrder = 2
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -16
-                    Font.Name = 'Arial'
-                    Font.Style = [fsBold]
-                    ParentFont = False
-                    CustomButtons = <>
-                    PasswordChar = #0
-                    Text = '48'
-                  end
-                  object btnRecipeBrightness: TLMDButton
-                    Left = 82
-                    Top = 60
-                    Width = 39
-                    Height = 22
-                    Cursor = crHandPoint
-                    Caption = 'Set'
-                    DragCursor = crHandPoint
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -19
-                    Font.Name = 'Arial'
-                    Font.Style = []
-                    ParentFont = False
-                    ParentShowHint = False
-                    ShowHint = True
-                    TabOrder = 3
-                    OnClick = btnRecipeBrightnessClick
-                  end
-                  object edRecipeShutter: TLMDEdit
-                    Left = 39
-                    Top = 102
-                    Width = 41
-                    Height = 22
-                    Bevel.Mode = bmWindows
-                    Caret.BlinkRate = 530
-                    Caret.Style = csUnder
-                    Color = 16311512
-                    TabOrder = 4
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -16
-                    Font.Name = 'Arial'
-                    Font.Style = [fsBold]
-                    ParentFont = False
-                    CustomButtons = <>
-                    PasswordChar = #0
-                    Text = '100'
-                  end
-                  object btnRecipeShutter: TLMDButton
-                    Left = 82
-                    Top = 102
-                    Width = 39
-                    Height = 22
-                    Cursor = crHandPoint
-                    Caption = 'Set'
-                    DragCursor = crHandPoint
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -19
-                    Font.Name = 'Arial'
-                    Font.Style = []
-                    ParentFont = False
-                    ParentShowHint = False
-                    ShowHint = True
-                    TabOrder = 5
-                    OnClick = btnRecipeShutterClick
-                  end
-                end
-                object edRecipeLED2: TLMDEdit
-                  Left = 39
-                  Top = 141
-                  Width = 41
-                  Height = 22
-                  Bevel.Mode = bmWindows
-                  Caret.BlinkRate = 530
-                  Caret.Style = csUnder
-                  Color = 16311512
-                  TabOrder = 1
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWindowText
-                  Font.Height = -16
-                  Font.Name = 'Arial'
-                  Font.Style = [fsBold]
-                  ParentFont = False
-                  CustomButtons = <>
-                  PasswordChar = #0
-                  Text = '20'
-                end
-                object pnlRecipeLED2: TLMDButton
-                  Left = 82
-                  Top = 141
-                  Width = 39
-                  Height = 22
-                  Cursor = crHandPoint
-                  Caption = 'Set'
-                  DragCursor = crHandPoint
-                  Font.Charset = ANSI_CHARSET
-                  Font.Color = clWindowText
-                  Font.Height = -19
-                  Font.Name = 'Arial'
-                  Font.Style = []
-                  ParentFont = False
-                  ParentShowHint = False
-                  ShowHint = True
-                  TabOrder = 2
-                  OnClick = pnlRecipeLED2Click
-                end
-                object GroupBox9: TGroupBox
-                  Left = 140
-                  Top = 4
-                  Width = 129
-                  Height = 53
-                  Caption = 'Trigger'
-                  TabOrder = 3
-                  object Label679: TLabel
-                    Left = 11
-                    Top = 22
-                    Width = 28
-                    Height = 16
-                    Caption = 'Start'
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -13
-                    Font.Name = 'Arial'
-                    Font.Style = []
-                    ParentFont = False
-                    Transparent = True
-                  end
-                  object edRecipeStart: TLMDEdit
-                    Left = 42
-                    Top = 18
-                    Width = 71
-                    Height = 22
-                    Bevel.Mode = bmWindows
-                    Caret.BlinkRate = 530
-                    Caret.Style = csUnder
-                    Color = 16311512
-                    TabOrder = 0
-                    Font.Charset = ANSI_CHARSET
-                    Font.Color = clWindowText
-                    Font.Height = -16
-                    Font.Name = 'Arial'
-                    Font.Style = [fsBold]
-                    ParentFont = False
-                    CustomButtons = <>
-                    PasswordChar = #0
-                    Text = '200'
-                  end
                 end
               end
             end
@@ -28800,7 +28187,7 @@ object MainForm: TMainForm
         Options = [toNoTabIfEmpty, toShowBorder, toShowFocusRect, toShowAccelChar]
         TabPosition = tpBottom
         DockOrientation = doNoOrient
-        ActivePage = tsDI
+        ActivePage = tsPosition
         object tsMotionParameter: TLMDTabSheet
           Left = 4
           Top = 4
@@ -32586,11 +31973,11 @@ object MainForm: TMainForm
           object Label9: TLabel
             Left = 35
             Top = 196
-            Width = 53
+            Width = 86
             Height = 15
-            Caption = 'Reserved'
+            Caption = 'XY-Stage Home'
             Font.Charset = ANSI_CHARSET
-            Font.Color = clGray
+            Font.Color = clBlack
             Font.Height = -12
             Font.Name = 'Arial'
             Font.Style = []
@@ -32660,7 +32047,7 @@ object MainForm: TMainForm
             Height = 15
             Caption = 'Reserved'
             Font.Charset = ANSI_CHARSET
-            Font.Color = clGray
+            Font.Color = clNavy
             Font.Height = -12
             Font.Name = 'Arial'
             Font.Style = []
@@ -40938,11 +40325,11 @@ object MainForm: TMainForm
           Visible = False
         end
         object laXAxis: TLabel
-          Left = 92
+          Left = 108
           Top = 11
-          Width = 35
+          Width = 9
           Height = 16
-          Caption = 'X(0.1)'
+          Caption = 'X'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -40952,11 +40339,11 @@ object MainForm: TMainForm
           Transparent = True
         end
         object laTAxis: TLabel
-          Left = 220
+          Left = 236
           Top = 11
-          Width = 33
+          Width = 7
           Height = 16
-          Caption = 'Z(0.1)'
+          Caption = 'Z'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -40966,11 +40353,11 @@ object MainForm: TMainForm
           Transparent = True
         end
         object laZAxis: TLabel
-          Left = 281
+          Left = 297
           Top = 11
-          Width = 47
+          Width = 14
           Height = 16
-          Caption = 'Z1(0.05)'
+          Caption = 'Z1'
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -13
@@ -40980,11 +40367,11 @@ object MainForm: TMainForm
           Transparent = True
         end
         object laYAxis: TLabel
-          Left = 161
+          Left = 169
           Top = 11
-          Width = 34
+          Width = 8
           Height = 16
-          Caption = 'Y(0.1)'
+          Caption = 'Y'
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -13
@@ -41034,11 +40421,11 @@ object MainForm: TMainForm
           Visible = False
         end
         object Label423: TLabel
-          Left = 345
+          Left = 361
           Top = 11
-          Width = 41
+          Width = 8
           Height = 16
-          Caption = 'L(0.82)'
+          Caption = 'L'
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -13
@@ -41048,11 +40435,11 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label500: TLabel
-          Left = 409
+          Left = 425
           Top = 11
-          Width = 39
+          Width = 13
           Height = 16
-          Caption = 'W(0.1)'
+          Caption = 'W'
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -13
@@ -44005,14 +43392,14 @@ object MainForm: TMainForm
         Top = 8
         Width = 359
         Height = 809
-        ActivePage = tsLoadPort1
+        ActivePage = tsRobot
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
-        TabIndex = 2
+        TabIndex = 1
         TabOrder = 0
         object tsAligner: TTabSheet
           Caption = 'Aligner'
@@ -44117,19 +43504,6 @@ object MainForm: TMainForm
               Font.Charset = ANSI_CHARSET
               Font.Color = clWindowText
               Font.Height = -12
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-            end
-            object Label660: TLabel
-              Left = 286
-              Top = 248
-              Width = 59
-              Height = 14
-              Caption = 'Aligner Deg.'
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
@@ -44667,15 +44041,6 @@ object MainForm: TMainForm
               ParentFont = False
               TabOrder = 31
               OnClick = btnAlignerGPIOClick
-            end
-            object edRorzeAlignerDegree: TEdit
-              Left = 286
-              Top = 263
-              Width = 60
-              Height = 26
-              Hint = 'Aligner: Chuck'#30340#35036#20767#35282#24230'.'
-              TabOrder = 32
-              Text = '0.00'
             end
           end
           object btnRorzeAlignerEnable: TLMDButton
@@ -46305,7 +45670,7 @@ object MainForm: TMainForm
             end
             object pnlLP1300DSC: TPanel
               Left = 286
-              Top = 397
+              Top = 429
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46322,7 +45687,7 @@ object MainForm: TMainForm
             end
             object pnlLP1200DSC: TPanel
               Left = 286
-              Top = 413
+              Top = 445
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46339,7 +45704,7 @@ object MainForm: TMainForm
             end
             object pnlLP1150DSC: TPanel
               Left = 286
-              Top = 429
+              Top = 461
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46356,7 +45721,7 @@ object MainForm: TMainForm
             end
             object pnlLP1200mm: TPanel
               Left = 286
-              Top = 461
+              Top = 493
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46373,7 +45738,7 @@ object MainForm: TMainForm
             end
             object pnlLP1150mm: TPanel
               Left = 286
-              Top = 477
+              Top = 509
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46390,7 +45755,7 @@ object MainForm: TMainForm
             end
             object pnlLP1Adapter: TPanel
               Left = 286
-              Top = 493
+              Top = 525
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46407,7 +45772,7 @@ object MainForm: TMainForm
             end
             object pnlLP1Left: TPanel
               Left = 286
-              Top = 525
+              Top = 557
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46424,7 +45789,7 @@ object MainForm: TMainForm
             end
             object pnlLP1Right: TPanel
               Left = 286
-              Top = 541
+              Top = 573
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46441,7 +45806,7 @@ object MainForm: TMainForm
             end
             object pnlLP1Middle: TPanel
               Left = 286
-              Top = 557
+              Top = 589
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46458,7 +45823,7 @@ object MainForm: TMainForm
             end
             object pnlLP1Presence: TPanel
               Left = 286
-              Top = 573
+              Top = 605
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46475,7 +45840,7 @@ object MainForm: TMainForm
             end
             object pnlLP1CST: TPanel
               Left = 286
-              Top = 445
+              Top = 477
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46492,7 +45857,7 @@ object MainForm: TMainForm
             end
             object pnlLP1Cover: TPanel
               Left = 286
-              Top = 509
+              Top = 541
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46509,7 +45874,7 @@ object MainForm: TMainForm
             end
             object pnlLP1FOUPLeftDoor: TPanel
               Left = 286
-              Top = 594
+              Top = 629
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46526,7 +45891,7 @@ object MainForm: TMainForm
             end
             object pnlLP1FOUPRightDoor: TPanel
               Left = 286
-              Top = 610
+              Top = 645
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46543,7 +45908,7 @@ object MainForm: TMainForm
             end
             object pnlLP1CarrierClamp: TPanel
               Left = 286
-              Top = 626
+              Top = 661
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46560,7 +45925,7 @@ object MainForm: TMainForm
             end
             object pnlLP1Protrusion: TPanel
               Left = 286
-              Top = 642
+              Top = 677
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -46574,91 +45939,6 @@ object MainForm: TMainForm
               Font.Style = []
               ParentFont = False
               TabOrder = 57
-            end
-            object pnlLP1ES: TPanel
-              Left = 286
-              Top = 727
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'ES.63'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 58
-            end
-            object pnlLP1HOAVBL: TPanel
-              Left = 286
-              Top = 711
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'HO-AVBL.62'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 59
-            end
-            object pnlLP1Ready: TPanel
-              Left = 286
-              Top = 695
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'Ready.59'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 60
-            end
-            object pnlLP1UReq: TPanel
-              Left = 286
-              Top = 679
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'U_Req.57'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 61
-            end
-            object pnlLP1LReq: TPanel
-              Left = 286
-              Top = 663
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'L_Req.56'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 62
             end
           end
           object btnRorzeLoadPort1Enable: TLMDButton
@@ -47663,7 +46943,7 @@ object MainForm: TMainForm
             end
             object pnlLP2150DSC: TPanel
               Left = 286
-              Top = 429
+              Top = 461
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47680,7 +46960,7 @@ object MainForm: TMainForm
             end
             object pnlLP2200DSC: TPanel
               Left = 286
-              Top = 413
+              Top = 445
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47697,7 +46977,7 @@ object MainForm: TMainForm
             end
             object pnlLP2300DSC: TPanel
               Left = 286
-              Top = 397
+              Top = 429
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47714,7 +46994,7 @@ object MainForm: TMainForm
             end
             object pnlLP2200mm: TPanel
               Left = 286
-              Top = 461
+              Top = 493
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47731,7 +47011,7 @@ object MainForm: TMainForm
             end
             object pnlLP2150mm: TPanel
               Left = 286
-              Top = 477
+              Top = 509
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47748,7 +47028,7 @@ object MainForm: TMainForm
             end
             object pnlLP2Adapter: TPanel
               Left = 286
-              Top = 493
+              Top = 525
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47765,7 +47045,7 @@ object MainForm: TMainForm
             end
             object pnlLP2Left: TPanel
               Left = 286
-              Top = 525
+              Top = 557
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47782,7 +47062,7 @@ object MainForm: TMainForm
             end
             object pnlLP2Right: TPanel
               Left = 286
-              Top = 541
+              Top = 573
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47799,7 +47079,7 @@ object MainForm: TMainForm
             end
             object pnlLP2Middle: TPanel
               Left = 286
-              Top = 557
+              Top = 589
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47816,7 +47096,7 @@ object MainForm: TMainForm
             end
             object pnlLP2Presence: TPanel
               Left = 286
-              Top = 573
+              Top = 605
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47833,7 +47113,7 @@ object MainForm: TMainForm
             end
             object pnlLP2CST: TPanel
               Left = 286
-              Top = 445
+              Top = 477
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47850,7 +47130,7 @@ object MainForm: TMainForm
             end
             object pnlLP2Cover: TPanel
               Left = 286
-              Top = 509
+              Top = 541
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47867,7 +47147,7 @@ object MainForm: TMainForm
             end
             object pnlLP2FOUPLeftDoor: TPanel
               Left = 286
-              Top = 594
+              Top = 629
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47884,7 +47164,7 @@ object MainForm: TMainForm
             end
             object pnlLP2FOUPRightDoor: TPanel
               Left = 286
-              Top = 610
+              Top = 645
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47901,7 +47181,7 @@ object MainForm: TMainForm
             end
             object pnlLP2CarrierClamp: TPanel
               Left = 286
-              Top = 626
+              Top = 661
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47918,7 +47198,7 @@ object MainForm: TMainForm
             end
             object pnlLP2Protrusion: TPanel
               Left = 286
-              Top = 642
+              Top = 677
               Width = 61
               Height = 15
               BevelOuter = bvLowered
@@ -47932,91 +47212,6 @@ object MainForm: TMainForm
               Font.Style = []
               ParentFont = False
               TabOrder = 62
-            end
-            object pnlLP2LReq: TPanel
-              Left = 286
-              Top = 663
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'L_Req.56'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 63
-            end
-            object pnlLP2UReq: TPanel
-              Left = 286
-              Top = 679
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'U_Req.57'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 64
-            end
-            object pnlLP2Ready: TPanel
-              Left = 286
-              Top = 695
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'Ready.59'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 65
-            end
-            object pnlLP2HOAVBL: TPanel
-              Left = 286
-              Top = 711
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'HO-AVBL.62'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 66
-            end
-            object pnlLP2ES: TPanel
-              Left = 286
-              Top = 727
-              Width = 61
-              Height = 15
-              BevelOuter = bvLowered
-              BevelWidth = 2
-              Caption = 'ES.63'
-              Color = clSilver
-              Font.Charset = ANSI_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Arial'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 67
             end
           end
           object btnRorzeLoadPort2Enable: TLMDButton
@@ -51899,7 +51094,6 @@ object MainForm: TMainForm
           Height = 41
           Caption = 'Chuck'
           Color = clSilver
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -24
@@ -51918,7 +51112,6 @@ object MainForm: TMainForm
           BevelWidth = 2
           Caption = 'Aligner'
           Color = clSilver
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -19
@@ -51939,7 +51132,6 @@ object MainForm: TMainForm
           BevelWidth = 2
           Caption = 'R.U.8"'
           Color = clSilver
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -19
@@ -51960,7 +51152,6 @@ object MainForm: TMainForm
           BevelWidth = 2
           Caption = 'R.L12"'
           Color = clSilver
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -19
@@ -51985,7 +51176,7 @@ object MainForm: TMainForm
         Left = 3
         Top = 4
         Width = 678
-        Height = 860
+        Height = 851
         Bevel.LightColor = clSilver
         Bevel.Mode = bmWindows
         Bevel.ShadowColor = clActiveBorder
@@ -52039,8 +51230,8 @@ object MainForm: TMainForm
           ParentFont = False
         end
         object Label315: TLabel
-          Left = 20
-          Top = 717
+          Left = 456
+          Top = 656
           Width = 60
           Height = 19
           Caption = 'Recipe'
@@ -52050,11 +51241,10 @@ object MainForm: TMainForm
           Font.Name = #27161#26999#39636
           Font.Style = []
           ParentFont = False
-          Transparent = True
         end
         object Label521: TLabel
           Left = 642
-          Top = 798
+          Top = 787
           Width = 20
           Height = 19
           Caption = 'ms'
@@ -52079,8 +51269,8 @@ object MainForm: TMainForm
           ParentFont = False
         end
         object Label366: TLabel
-          Left = 10
-          Top = 752
+          Left = 456
+          Top = 720
           Width = 70
           Height = 19
           Caption = 'WaferID'
@@ -52090,11 +51280,10 @@ object MainForm: TMainForm
           Font.Name = #27161#26999#39636
           Font.Style = []
           ParentFont = False
-          Transparent = True
         end
         object Label534: TLabel
-          Left = 530
-          Top = 766
+          Left = 10
+          Top = 795
           Width = 80
           Height = 18
           Caption = 'Total Points'
@@ -52134,7 +51323,7 @@ object MainForm: TMainForm
           Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
-          ItemHeight = 0
+          ItemHeight = 18
           ParentFont = False
           TabOrder = 1
           OnClick = comboOlympusVisionNameClick
@@ -52159,12 +51348,11 @@ object MainForm: TMainForm
         end
         object pnlYuanliMessage: TPanel
           Left = 10
-          Top = 829
+          Top = 817
           Width = 655
           Height = 26
           Alignment = taLeftJustify
           Caption = 'Message'
-          Color = 11513775
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -52280,10 +51468,10 @@ object MainForm: TMainForm
           Width = 655
           Height = 49
           Caption = 'Command Set(To YuanLi)'
-          Columns = 12
+          Columns = 10
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -12
+          Font.Height = -15
           Font.Name = 'Arial'
           Font.Style = []
           ItemIndex = 0
@@ -52297,9 +51485,7 @@ object MainForm: TMainForm
             'Busy'
             'Invalid'
             'InPos'
-            'RFID'
-            'Done'
-            'Data')
+            'RFID')
           ParentFont = False
           TabOrder = 10
           OnClick = rgYuanliCommandSetClick
@@ -52337,15 +51523,15 @@ object MainForm: TMainForm
           TabOrder = 12
         end
         object rgYuanliPoint: TRadioGroup
-          Left = 498
-          Top = 656
-          Width = 167
-          Height = 105
+          Left = 10
+          Top = 712
+          Width = 439
+          Height = 73
           Caption = 'Point'
-          Columns = 4
+          Columns = 10
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -15
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ItemIndex = 8
@@ -52394,15 +51580,15 @@ object MainForm: TMainForm
           OnClick = btnYunliReConnectClick
         end
         object rgMode: TRadioGroup
-          Left = 374
+          Left = 336
           Top = 656
-          Width = 119
+          Width = 113
           Height = 49
           Caption = 'Mode'
           Columns = 2
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -15
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ItemIndex = 0
@@ -52413,9 +51599,9 @@ object MainForm: TMainForm
           TabOrder = 15
         end
         object edRecipeName: TEdit
-          Left = 82
-          Top = 712
-          Width = 407
+          Left = 456
+          Top = 680
+          Width = 209
           Height = 32
           AutoSize = False
           Color = 13948116
@@ -52430,14 +51616,14 @@ object MainForm: TMainForm
         end
         object edDelayTime: TEdit
           Left = 584
-          Top = 796
+          Top = 782
           Width = 57
-          Height = 26
+          Height = 32
           AutoSize = False
           Color = clSilver
           Font.Charset = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -52449,13 +51635,13 @@ object MainForm: TMainForm
         object rgCommand: TRadioGroup
           Left = 10
           Top = 656
-          Width = 359
+          Width = 319
           Height = 49
           Caption = 'Command(From YuanLi)'
           Columns = 3
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -15
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ItemIndex = 0
@@ -52487,9 +51673,9 @@ object MainForm: TMainForm
           TabOrder = 19
         end
         object edWaferID: TEdit
-          Left = 82
-          Top = 749
-          Width = 175
+          Left = 456
+          Top = 741
+          Width = 209
           Height = 30
           Color = 16763594
           Font.Charset = ANSI_CHARSET
@@ -52502,8 +51688,8 @@ object MainForm: TMainForm
           Text = 'WaferID'
         end
         object edTotalPoint: TEdit
-          Left = 614
-          Top = 762
+          Left = 94
+          Top = 791
           Width = 50
           Height = 26
           Hint = 'EQ Wafer ID'
@@ -52809,14 +51995,14 @@ object MainForm: TMainForm
         Top = 584
         Width = 663
         Height = 246
-        ActivePage = tsSECSSystem
+        ActivePage = tsSECSLP2
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
-        TabIndex = 0
+        TabIndex = 2
         TabOrder = 13
         object tsSECSSystem: TTabSheet
           Caption = 'System'
@@ -53622,7 +52808,7 @@ object MainForm: TMainForm
         Left = 3
         Top = 296
         Width = 678
-        Height = 180
+        Height = 191
         Bevel.LightColor = clSilver
         Bevel.Mode = bmWindows
         Bevel.ShadowColor = clActiveBorder
@@ -53635,8 +52821,8 @@ object MainForm: TMainForm
         CaptionParentFont = False
         TabOrder = 1
         object Label282: TLabel
-          Left = 552
-          Top = 68
+          Left = 536
+          Top = 76
           Width = 109
           Height = 16
           Caption = 'LED(115200/8/N/1)'
@@ -53646,7 +52832,6 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          Transparent = True
           Visible = False
         end
         object Label283: TLabel
@@ -53680,16 +52865,16 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label285: TLabel
-          Left = 552
+          Left = 536
           Top = 15
-          Width = 113
+          Width = 121
           Height = 33
           AutoSize = False
           Caption = ' Status'
           Color = clBlack
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentColor = False
@@ -53699,13 +52884,13 @@ object MainForm: TMainForm
           Left = 12
           Top = 35
           Width = 69
-          Height = 27
+          Height = 30
           Hint = #20809#21407#31185#25216': 4Chs LED'#25511#21046#22120'(Binary Protocol)'
           Caption = 'Ch1'
           Color = clGray
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -53714,17 +52899,16 @@ object MainForm: TMainForm
           TabOrder = 0
         end
         object btnSaveLED2: TLMDButton
-          Left = 552
-          Top = 132
-          Width = 113
-          Height = 36
+          Left = 536
+          Top = 140
+          Width = 129
+          Height = 38
           Cursor = crHandPoint
           Hint = #26356#26032'LED'#20142#24230#20540#33267'ini'#27284
           Caption = 'Save'
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -21
+          Font.Height = -27
           Font.Name = #27161#26999#39636
           Font.Style = [fsBold]
           ParentFont = False
@@ -53795,7 +52979,7 @@ object MainForm: TMainForm
           Left = 427
           Top = 35
           Width = 65
-          Height = 27
+          Height = 30
           BevelInner = bvRaised
           BevelOuter = bvNone
           BevelWidth = 2
@@ -53803,14 +52987,14 @@ object MainForm: TMainForm
           Color = clSilver
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 2
         end
         object pnlLampControl2: TPanel
-          Left = 617
+          Left = 608
           Top = 17
           Width = 46
           Height = 28
@@ -53819,35 +53003,32 @@ object MainForm: TMainForm
           TabOrder = 3
         end
         object cbLampControl2: TCheckBox
-          Left = 103
-          Top = 0
-          Width = 72
-          Height = 19
+          Left = 127
+          Top = -2
+          Width = 82
+          Height = 20
           Caption = 'Active'
           Checked = True
-          Color = clBlack
           Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -15
+          Font.Color = clWindowText
+          Font.Height = -19
           Font.Name = 'Arial'
           Font.Style = [fsBold]
-          ParentColor = False
           ParentFont = False
           State = cbChecked
           TabOrder = 4
           OnClick = cbLampControl2Click
         end
         object btnLampControl2: TButton
-          Left = 552
-          Top = 84
-          Width = 113
-          Height = 36
+          Left = 536
+          Top = 92
+          Width = 129
+          Height = 38
           Cursor = crHandPoint
           Caption = 'COM Setup'
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -53858,7 +53039,7 @@ object MainForm: TMainForm
           Left = 96
           Top = 35
           Width = 321
-          Height = 27
+          Height = 30
           Hint = 'Value of PWM(0% ~ 100%)'
           MaxValue = 100
           PageSize = 10
@@ -53875,9 +53056,9 @@ object MainForm: TMainForm
         end
         object tbLED2CH2: TLMDTrackBar
           Left = 96
-          Top = 69
+          Top = 72
           Width = 321
-          Height = 27
+          Height = 30
           Hint = 'Value of PWM(0% ~ 100%)'
           MaxValue = 100
           PageSize = 10
@@ -53894,9 +53075,9 @@ object MainForm: TMainForm
         end
         object pnlLED2CH2: TPanel
           Left = 427
-          Top = 69
+          Top = 72
           Width = 65
-          Height = 27
+          Height = 30
           BevelInner = bvRaised
           BevelOuter = bvNone
           BevelWidth = 2
@@ -53905,7 +53086,7 @@ object MainForm: TMainForm
           Enabled = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -53913,9 +53094,9 @@ object MainForm: TMainForm
         end
         object tbLED2CH3: TLMDTrackBar
           Left = 96
-          Top = 104
+          Top = 110
           Width = 321
-          Height = 27
+          Height = 30
           Hint = 'Value of PWM(0% ~ 100%)'
           MaxValue = 100
           PageSize = 10
@@ -53934,9 +53115,9 @@ object MainForm: TMainForm
         end
         object pnlLED2CH3: TPanel
           Left = 427
-          Top = 104
+          Top = 110
           Width = 65
-          Height = 27
+          Height = 30
           BevelInner = bvRaised
           BevelOuter = bvNone
           BevelWidth = 2
@@ -53945,7 +53126,7 @@ object MainForm: TMainForm
           Enabled = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -53954,9 +53135,9 @@ object MainForm: TMainForm
         end
         object tbLED2CH4: TLMDTrackBar
           Left = 96
-          Top = 139
+          Top = 148
           Width = 321
-          Height = 27
+          Height = 30
           Hint = 'Value of PWM(0% ~ 100%)'
           MaxValue = 100
           PageSize = 10
@@ -53975,9 +53156,9 @@ object MainForm: TMainForm
         end
         object pnlLED2CH4: TPanel
           Left = 427
-          Top = 139
+          Top = 148
           Width = 65
-          Height = 27
+          Height = 30
           BevelInner = bvRaised
           BevelOuter = bvNone
           BevelWidth = 2
@@ -53986,7 +53167,7 @@ object MainForm: TMainForm
           Enabled = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -53995,16 +53176,16 @@ object MainForm: TMainForm
         end
         object Panel20: TPanel
           Left = 12
-          Top = 69
+          Top = 72
           Width = 69
-          Height = 27
+          Height = 30
           Hint = #20809#21407#31185#25216': 4Chs LED'#25511#21046#22120'(Binary Protocol)'
           Caption = 'Ch2'
           Color = clGray
           Enabled = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -54014,16 +53195,16 @@ object MainForm: TMainForm
         end
         object Panel51: TPanel
           Left = 12
-          Top = 104
+          Top = 110
           Width = 69
-          Height = 27
+          Height = 30
           Hint = #20809#21407#31185#25216': 4Chs LED'#25511#21046#22120'(Binary Protocol)'
           Caption = 'Ch3'
           Color = clGray
           Enabled = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -54034,16 +53215,16 @@ object MainForm: TMainForm
         end
         object Panel54: TPanel
           Left = 12
-          Top = 139
+          Top = 148
           Width = 69
-          Height = 27
+          Height = 30
           Hint = #20809#21407#31185#25216': 4Chs LED'#25511#21046#22120'(Binary Protocol)'
           Caption = 'Ch4'
           Color = clGray
           Enabled = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -19
+          Font.Height = -21
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -54111,9 +53292,9 @@ object MainForm: TMainForm
         object Label206: TLabel
           Left = 299
           Top = 89
-          Width = 76
+          Width = 84
           Height = 14
-          Caption = 'FrameRate(fps)'
+          Caption = 'CaptureRate(fps)'
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -54122,7 +53303,7 @@ object MainForm: TMainForm
           ParentFont = False
         end
         object Label336: TLabel
-          Left = 435
+          Left = 433
           Top = 89
           Width = 85
           Height = 15
@@ -54163,8 +53344,8 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label132: TLabel
-          Left = 584
-          Top = 13
+          Left = 576
+          Top = 21
           Width = 49
           Height = 16
           Caption = 'um/pixel'
@@ -54175,20 +53356,6 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentColor = False
-          ParentFont = False
-          Transparent = True
-        end
-        object Label671: TLabel
-          Left = 575
-          Top = 86
-          Width = 46
-          Height = 16
-          Caption = 'Timeout'
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
           ParentFont = False
           Transparent = True
         end
@@ -54262,7 +53429,6 @@ object MainForm: TMainForm
           Cursor = crHandPoint
           Hint = 'Live/Grab Mode'
           Caption = 'Live'
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -19
@@ -54331,7 +53497,7 @@ object MainForm: TMainForm
           Cursor = crHandPoint
           Hint = 'Grab'
           Caption = 'Grab'
-          DragCursor = crHandPoint
+          Enabled = False
           Font.Charset = ANSI_CHARSET
           Font.Color = clTeal
           Font.Height = -19
@@ -54341,7 +53507,6 @@ object MainForm: TMainForm
           ParentShowHint = False
           ShowHint = True
           TabOrder = 3
-          OnClick = btnReviewGrabClick
           Glyph.Data = {
             F6060000424DF606000000000000360000002800000018000000180000000100
             180000000000C0060000130B0000130B00000000000000000000FFFFFFFFFFFF
@@ -54409,7 +53574,6 @@ object MainForm: TMainForm
           Cursor = crHandPoint
           Hint = 'Load Image File(*.bmp)'
           Caption = 'Load'
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -19
@@ -54487,7 +53651,6 @@ object MainForm: TMainForm
           Cursor = crHandPoint
           Hint = 'Save CCD Image(*.bmp)'
           Caption = 'Save'
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -19
@@ -54499,80 +53662,62 @@ object MainForm: TMainForm
           TabOrder = 5
           OnClick = btnReviewSaveClick
           Glyph.Data = {
-            32090000424D320900000000000036000000280000001E000000190000000100
-            180000000000FC080000C40E0000C40E00000000000000000000B9B9B9AFAFAF
-            AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAF
-            AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAF
-            AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFA5A5A50000C8C8C8C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000C8C8C8C0C0C0A7A7A77272725555
-            5555555555555555555555555555555555555555555555555555555555555555
-            5555555555555555555555555555555555555555555555555555555555555555
-            5555555555555555555D5D5D0000C8C8C8C0C0C0BBBBBB6F6F6F1D1D1D171717
-            2828280D0D0D3333330000003838380808082D2D2D1313133333335959595959
-            593D3D3D0C0C0C3333330101013737370808082D2D2D1313132121211E1E1E17
-            17172929291B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B45757573C3C3C45454536
-            36364B4B4B2F2F2F4E4E4E3333337E7E7E616161636363787878787878686868
-            5858588989893030304D4D4D3434344848483A3A3A4141413F3F3F3C3C3C3737
-            371B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B46E6E6E4444443535354F4F4F2A2A
-            2A5C5C5C2626268181818B8B8B8A8A8A3939390000000000002A2A2A8A8A8A8A
-            8A8A8D8D8D2929295353533030304848483B3B3B3E3E3E4545451818181B1B1B
-            0000C8C8C8C0C0C0EAEAEAB4B4B44C4C4C3737374E4E4E2929295D5D5D181818
-            636363B2B2B22D2D2D000000000000000000000000000000000000181818BCBC
-            BC6C6C6C2323235454543232324545454040403737374848481B1B1B0000C8C8
-            C8C0C0C0EAEAEAB4B4B47979794949492C2C2C5C5C5C19191973737316161696
-            9696282828000000000000000000000000000000000000151515A7A7A71A1A1A
-            6464642424245050503737373E3E3E4A4A4A0808081B1B1B0000C8C8C8C0C0C0
-            EAEAEAB4B4B44040403333335656561C1C1C6E6E6E000000B6B6B61B1B1B0000
-            00000000000000000000000000000000000000000000060606B5B5B51C1C1C60
-            60602A2A2A4848484040403232325858581B1B1B0000C8C8C8C0C0C0EAEAEAB4
-            B4B47A7A7A4949492C2C2C5C5C5C181818747474BBBBBB1B1B1B000000000000
-            000000000000000000000000323232CACACA060606B5B5B57F7F7F2323235151
-            513737373E3E3E4A4A4A0707071B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B44B4B
-            4B3737374E4E4E2828285D5D5D171717E7E7E722222200000000000000000000
-            0000000000000000090909282828060606B5B5B52F2F2F545454313131454545
-            4040403636364848481B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B46E6E6E454545
-            3434344F4F4F2929295D5D5D464646A8A8A82A2A2A0000000000000000000000
-            003838389090901111118888883838385656563030304949493B3B3B3E3E3E45
-            45451818181B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B45757573C3C3C45454535
-            35354C4C4C2E2E2E4E4E4EE5E5E53B3B3B0000000000000000000000001C1C1C
-            484848181818BBBBBB5656563333334848483939394242423F3F3F3B3B3B3838
-            381B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B46262624040403D3D3D4242423B3B
-            3B4545453A3A3AA7A7A79595958A8A8A3939390000000000002020206868686E
-            6E6E9999993F3F3F4343433C3C3C4141413E3E3E3F3F3F4040402828281B1B1B
-            0000C8C8C8C0C0C0EAEAEAB4B4B46363634040403D3D3D4343433A3A3A464646
-            393939444444A7A7A79E9E9E7C7C7C7272726767675B5B5B7575759696964545
-            453939394343433C3C3C4141413E3E3E3F3F3F4040402828281B1B1B0000C8C8
-            C8C0C0C0EAEAEACECECE8484847C7C7C9393936D6D6DA2A2A25B5B5BA8A8A866
-            6666999999757575BABABAFFFFFFEEEEEEB0B0B06C6C6CA2A2A25D5D5DA8A8A8
-            6767679999997676768A8A8A8585857B7B7B8686863F3F3F0000C8C8C8C0C0C0
-            DEDEDEEEEEEEF6F6F6FFFFFFF4F4F4E0E0E0EEEEEEEEEEEEFDFDFDC4C4C4D4D4
-            D4C6C6C6CECECECCCCCCC8C8C8D2D2D2C2C2C2D8D8D8BCBCBCDBDBDBEBEBEBEE
-            EEEEEEEEEEF7F7F7EEEEEEE3E3E3D1D1D18D8D8D0000C8C8C8C0C0C0C0C0C0C0
-            C0C0D9D9D9F4F4F4D3D3D3969696C0C0C0C0C0C0E6E6E64646467C7C7C4E4E4E
-            696969626262565656757575424242858585191919797979B6B6B6C0C0C0C0C0
-            C0DDDDDDC0C0C09F9F9FC0C0C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0878787E8E8E8F9F9F9FDFDFDF8F8F8F4
-            F4F4F4F4F4F4F4F4F2F2F2DDDDDD858585858585B6B6B6C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0BFBFBFC0C0C0C0C0C0EAEAEAB5B5B58181818181
-            818181816565651A1A1ABFBFBFBFBFBFBFBFBFC0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C4C4C4BEBEBEB9B9B9B9B9B9B9B9B9
-            B6B6B6AEAEAEC0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B2
-            0000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000C8C8
-            C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000C8C8C8C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000}
+            F6060000424DF606000000000000360000002800000018000000180000000100
+            180000000000C0060000130B0000130B00000000000000000000FFFFFFFEFEFE
+            F7F7F7EAEAEAE0E0E0DFDFDFE0DFDFE0DFDFE0DFDFDFDFDFE0DFDFE0DFDFE0E0
+            DFE0E0DFE0DFDFE0DFDFE0E0DFE0E0DFE0E0E0E0E0E0E8E8E8F4F4F4FCFCFCFF
+            FFFFFEFEFEEDEDEDC5C5C49B9B997E7D7B7E7D7B7E7E7C7F7E7D7F7E7D7E7E7C
+            7F7E7C7F7E7D807F7E81817E80807E807F7E80807E81807E81817F80807E9999
+            97C1C1C1E9E9E9FCFCFCF9F9F9BBBBB96866624A49433C3B363E3D38403F3A44
+            433F46454143423E42413E42423E48484450514D51514E4E4E4B4F504C51524F
+            4F514D4D4E4B53524F6E6F6CBABAB9F5F5F5F3F3F39393903D3C363A39333B3A
+            353C3B363E3D3842413D47474344454141423E40413D535450696B686D6E6B68
+            69676869666B6D6B67696765676550524E4C4E4A959593F0F0F0F4F4F49D9D9B
+            6465617779757A7B78797B787A7B797C7E7A7F817E7F817E7D7F7C7B7E7B8688
+            859395939497959296939294929396949295939094928285826C6E6B9B9B99F2
+            F2F2F8F9F8C4C6C5B8BBB9CBCECDCACDCCC7CBC9C9CDCCCACECDCBCECECDD0CF
+            CED1D0CED1D0CDD0CFCCCFCECACDCCC8CCCBC7CAC9C5C9C8C3C8C6BEC2C0BEC2
+            C1B4B7B5C2C3C2F7F7F7FCFCFCDEDFDED5D8D6D2D5D3CBCFCECFD4D2D3D7D6D3
+            D7D6D7DADADDE0DFE0E3E2E2E5E4E3E5E4E1E4E3DDE0E0D7DADAD3D7D5D0D5D3
+            CACECDB8BDBBB9BDBCCACDCCDCDDDDFCFCFCFEFEFEE7E8E8D3D5D4D1D4D3CFD2
+            D1D6DAD9DCDFDEE0E2E2E2E5E4E5E8E7E6E8E8E5E9E8E6E8E8E6E9E8E4E7E6DB
+            DEDDD0D3D2CCD0CFCFD3D2C7CCCAC6CBC9CDD0CFE7E8E8FEFEFEFFFFFFF3F4F4
+            D1D4D3D2D6D4D3D7D6E2E5E4E7E9E9E4E7E6E3E5E5E2E4E4E1E4E3E0E3E2E0E3
+            E2E0E3E2E0E3E2DFE1E1D7DADAC8CCCBC1C5C4CACFCCD5D8D7D1D4D3F4F5F4FF
+            FFFFFFFFFFFAFAFAD6D8D8D2D5D4D9DCDBE3E5E5DFE2E2DDE1E0DDE0E0DDE0E0
+            DDE0DFDDE0DFDDDFDFDCDFDEDCDFDEDBDFDEDBDEDDD5D8D7C2C6C5C0C5C3D1D5
+            D4D6D8D7FAFAFAFFFFFFFFFFFFFCFCFCE3E4E3CCCFCEDADEDDDBDFDED9DDDCD9
+            DDDCD8DCDBD8DBDADADBDBC7D0CCC9D1CDDBDDDDD7DBDAD5D9D8D7DBD9D6DAD9
+            CCD1CFCACECCCBCFCEE3E4E3FCFCFCFFFFFFFFFFFFFEFEFEEFF0EFC6C9C8D0D4
+            D3CCD0CFD3D8D6D1D6D4CBCFCECACDCCC8CDCA79BB9977BA98C7CDCAC8CBCAC8
+            CCCBCED2D0D0D5D3CED3D1D8DBDACACDCCEFF0F0FEFEFEFFFFFFFFFFFFFFFFFF
+            F7F7F7D2D4D4C8CDCCBBC0BFB8BCBBC2C6C5C1C4C3AFBBB578B79790E0B76EDA
+            A371B491ADB9B3BDC1BFC4C9C7CCD0CFD3D7D6D6DAD9D2D4D3F6F7F7FFFFFFFF
+            FFFFFFFFFFFFFFFFFCFCFCE0E1E1C3C7C5C8CDCCB7BCBBB9BDBCB9C5BF87BDA2
+            80D6AA93EFC04FE59962D19983BB9EB7C2BDC9CDCCCED3D1D4D8D7CACECDDFE0
+            E0FBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBECEBC1C5C4C6CBC9C4C8C7BD
+            C3C190C1A875D2A383EAB589EFBA3AE38E4DE29766CF998FC1A8C8CECCC3C6C5
+            C5C9C8C5C8C6EBEBEBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5F5F5CACC
+            CCC2C6C5C5CAC99EC2B06BCC9A6FE6A975ECB087EFBA38E38D37E38C51E19867
+            CD99A2C6B4C3C7C5C2C5C4CBCECDF5F5F5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFEFEFEEAEAEACED3D19BC3AF6DC5996DE4A765E8A573EBAE87EEBA38E3
+            8D35E28B46E49467E3A46FC6999CC3AFCED4D1E9EAEAFEFEFEFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFEE6F4EC94D5B47BD3A67AD9A972DFA7
+            79EAB085ECB836E18B3EE28F5DDC9C78DAA87DD3A794D5B3E5F4ECFEFFFEFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF4FBF7D9F0E4D5
+            EFE1BBE5D078D7A77AE9B083EBB632DF8840E08F69D59EBBE5D0D5EFE2D9F0E4
+            F4FBF7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFEFEFEFEFEFEDCF1E67BD7A977E7AF80EAB42EDD853CDE8C6BD59FDB
+            F1E5FEFEFEFEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDCF1E67AD6A874E5AC7DE8B329DB
+            8038DC8969D49EDCF1E6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDCF1E678D6A7
+            71E4AA7AE7B023D87D32D98567D39DDCF1E6FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFDCF1E67DD8AA80E7B38BEBBA3ADC8B46DD916DD4A0DCF1E6FFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFFFFFFFFFFD9F0E566C69664CB986DCE9C4EC7894EC6885EC591D9
+            F0E4FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
           Spacing = 8
         end
         object pnlCCDX: TPanel
@@ -54663,7 +53808,7 @@ object MainForm: TMainForm
         object pnlCCDStatus: TPanel
           Left = 372
           Top = 114
-          Width = 13
+          Width = 29
           Height = 15
           BevelOuter = bvLowered
           BevelWidth = 2
@@ -54671,9 +53816,9 @@ object MainForm: TMainForm
           TabOrder = 11
         end
         object pnlCapturedNo: TPanel
-          Left = 377
+          Left = 386
           Top = 86
-          Width = 27
+          Width = 43
           Height = 22
           Hint = 'Frame Rate(fps)'
           BevelOuter = bvNone
@@ -54682,7 +53827,7 @@ object MainForm: TMainForm
           Color = clGray
           Font.Charset = ANSI_CHARSET
           Font.Color = clYellow
-          Font.Height = -12
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -54693,7 +53838,7 @@ object MainForm: TMainForm
         object pnlCaptureTime: TPanel
           Left = 520
           Top = 86
-          Width = 25
+          Width = 41
           Height = 22
           BevelOuter = bvNone
           BevelWidth = 2
@@ -54701,7 +53846,7 @@ object MainForm: TMainForm
           Color = clGray
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -54712,7 +53857,7 @@ object MainForm: TMainForm
           Top = 109
           Width = 119
           Height = 21
-          Caption = '2448*2048'
+          Caption = '1600x1200'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -15
@@ -54765,7 +53910,7 @@ object MainForm: TMainForm
           PasswordChar = #0
           Text = '40'
         end
-        object rgCCDShutter: TRadioGroup
+        object rgBaslerShutter: TRadioGroup
           Left = 19
           Top = 103
           Width = 267
@@ -54795,7 +53940,7 @@ object MainForm: TMainForm
             '1/15000s')
           ParentFont = False
           TabOrder = 17
-          OnClick = rgCCDShutterClick
+          OnClick = rgBaslerShutterClick
         end
         object GroupBox35: TGroupBox
           Left = 299
@@ -54813,9 +53958,9 @@ object MainForm: TMainForm
           object Label329: TLabel
             Left = 17
             Top = 30
-            Width = 7
+            Width = 21
             Height = 15
-            Caption = '0'
+            Caption = '175'
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
             Font.Height = -12
@@ -54826,9 +53971,9 @@ object MainForm: TMainForm
           object Label330: TLabel
             Left = 144
             Top = 30
-            Width = 21
+            Width = 28
             Height = 15
-            Caption = '480'
+            Caption = '1020'
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
             Font.Height = -12
@@ -54849,32 +53994,33 @@ object MainForm: TMainForm
             Font.Style = [fsBold]
             ParentFont = False
           end
-          object tbCCDGain: TTrackBar
-            Left = 24
+          object tbBaslerGain: TTrackBar
+            Left = 40
             Top = 15
-            Width = 121
+            Width = 105
             Height = 27
             LineSize = 16
-            Max = 480
+            Max = 1020
+            Min = 175
             Orientation = trHorizontal
             PageSize = 5
             Frequency = 16
-            Position = 1
+            Position = 175
             SelEnd = 0
             SelStart = 0
             TabOrder = 0
             TickMarks = tmBottomRight
             TickStyle = tsAuto
-            OnChange = tbCCDGainChange
+            OnChange = tbBaslerGainChange
           end
-          object pnlCCDGain: TPanel
+          object pnlBaslerGain: TPanel
             Left = 219
             Top = 15
             Width = 53
             Height = 25
             BevelOuter = bvLowered
             BevelWidth = 2
-            Caption = '0'
+            Caption = '175'
             Color = clBlack
             Font.Charset = ANSI_CHARSET
             Font.Color = clWhite
@@ -54899,7 +54045,7 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 19
           object Label241: TLabel
-            Left = 17
+            Left = 33
             Top = 30
             Width = 7
             Height = 15
@@ -54912,7 +54058,7 @@ object MainForm: TMainForm
             ParentFont = False
           end
           object Label249: TLabel
-            Left = 147
+            Left = 139
             Top = 30
             Width = 14
             Height = 15
@@ -54938,15 +54084,15 @@ object MainForm: TMainForm
             ParentFont = False
           end
           object tbContrast: TTrackBar
-            Left = 24
+            Left = 40
             Top = 15
-            Width = 121
+            Width = 97
             Height = 27
             LineSize = 16
             Max = 14
             Orientation = trHorizontal
             PageSize = 4
-            Frequency = 1
+            Frequency = 16
             Position = 10
             SelEnd = 0
             SelStart = 0
@@ -54974,8 +54120,8 @@ object MainForm: TMainForm
           end
         end
         object pnlLensPrecision: TPanel
-          Left = 583
-          Top = 29
+          Left = 575
+          Top = 37
           Width = 82
           Height = 24
           BevelOuter = bvNone
@@ -54990,132 +54136,16 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 20
         end
-        object cbCCDTrigger: TCheckBox
-          Left = 583
-          Top = 55
-          Width = 82
-          Height = 25
-          Caption = 'Trigger'
-          Color = clBlack
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-          TabOrder = 21
-          OnClick = cbCCDTriggerClick
-        end
-        object btnCCDSetting: TButton
-          Left = 591
-          Top = 135
-          Width = 66
-          Height = 23
-          Caption = 'Setting.1'
-          DragCursor = crHandPoint
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 22
-          OnClick = btnCCDSettingClick
-        end
-        object edCCDTimeout: TLMDEdit
-          Left = 624
-          Top = 83
-          Width = 41
-          Height = 22
-          Bevel.Mode = bmWindows
-          Caret.BlinkRate = 530
-          Caret.Style = csUnder
-          Color = 16311512
-          TabOrder = 23
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          CustomButtons = <>
-          PasswordChar = #0
-          Text = '5000'
-        end
-        object pnlCCD2Status: TPanel
-          Left = 386
-          Top = 114
-          Width = 13
-          Height = 15
-          BevelOuter = bvLowered
-          BevelWidth = 2
-          Color = clSilver
-          TabOrder = 24
-        end
-        object pnlCapturedNo2: TPanel
-          Left = 406
-          Top = 86
-          Width = 27
-          Height = 22
-          Hint = 'Frame Rate(fps)'
-          BevelOuter = bvNone
-          BevelWidth = 2
-          Caption = '0'
-          Color = clGray
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clYellow
-          Font.Height = -12
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 25
-        end
-        object pnlCaptureTime2: TPanel
-          Left = 546
-          Top = 86
-          Width = 25
-          Height = 22
-          BevelOuter = bvNone
-          BevelWidth = 2
-          Caption = '0'
-          Color = clGray
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 26
-        end
-        object Button1: TButton
-          Left = 591
-          Top = 160
-          Width = 66
-          Height = 23
-          Caption = 'Setting.2'
-          DragCursor = crHandPoint
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 27
-          OnClick = Button1Click
-        end
       end
       object gbVieworksCCD: TLMDGroupBox
         Left = 4
-        Top = 480
+        Top = 491
         Width = 677
-        Height = 241
+        Height = 216
         Bevel.LightColor = clSilver
         Bevel.Mode = bmWindows
         Bevel.ShadowColor = clActiveBorder
-        Caption = 'Vieworks CCD(Tilt)'
+        Caption = 'Vieworks CCD'
         CaptionFont.Charset = ANSI_CHARSET
         CaptionFont.Color = clBlack
         CaptionFont.Height = -13
@@ -55140,8 +54170,8 @@ object MainForm: TMainForm
           ParentFont = False
         end
         object laframe: TLabel
-          Left = 210
-          Top = 182
+          Left = 247
+          Top = 158
           Width = 44
           Height = 16
           Caption = 'Frames'
@@ -55154,8 +54184,8 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label672: TLabel
-          Left = 302
-          Top = 182
+          Left = 350
+          Top = 158
           Width = 40
           Height = 16
           Caption = 'Interval'
@@ -55168,8 +54198,8 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label673: TLabel
-          Left = 390
-          Top = 182
+          Left = 438
+          Top = 158
           Width = 17
           Height = 16
           Caption = 'pls'
@@ -55183,10 +54213,10 @@ object MainForm: TMainForm
         end
         object Label674: TLabel
           Left = 116
-          Top = 182
-          Width = 28
+          Top = 158
+          Width = 49
           Height = 16
-          Caption = 'Start'
+          Caption = 'Start pls'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -55196,8 +54226,8 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label675: TLabel
-          Left = 413
-          Top = 182
+          Left = 461
+          Top = 158
           Width = 37
           Height = 16
           Caption = 'Speed'
@@ -55210,8 +54240,8 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label676: TLabel
-          Left = 506
-          Top = 182
+          Left = 554
+          Top = 158
           Width = 17
           Height = 16
           Caption = 'pls'
@@ -55224,26 +54254,25 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label677: TLabel
-          Left = 532
-          Top = 182
-          Width = 31
+          Left = 165
+          Top = 134
+          Width = 44
           Height = 17
           AutoSize = False
-          Caption = 'Time'
+          Caption = 'Time(ns)'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -11
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          Transparent = True
         end
-        object Label659: TLabel
-          Left = 622
-          Top = 182
-          Width = 14
+        object Label655: TLabel
+          Left = 227
+          Top = 51
+          Width = 27
           Height = 16
-          Caption = 'ns'
+          Caption = 'Gain'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -55271,7 +54300,7 @@ object MainForm: TMainForm
         object pnlVendor: TPanel
           Left = 174
           Top = 19
-          Width = 75
+          Width = 125
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
@@ -55283,9 +54312,9 @@ object MainForm: TMainForm
           TabOrder = 1
         end
         object pnlModel: TPanel
-          Left = 252
+          Left = 302
           Top = 19
-          Width = 101
+          Width = 209
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
@@ -55297,9 +54326,9 @@ object MainForm: TMainForm
           TabOrder = 2
         end
         object pnlVersion: TPanel
-          Left = 357
+          Left = 515
           Top = 19
-          Width = 92
+          Width = 150
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
@@ -55311,9 +54340,9 @@ object MainForm: TMainForm
           TabOrder = 3
         end
         object pnlID: TPanel
-          Left = 452
-          Top = 19
-          Width = 144
+          Left = 400
+          Top = 47
+          Width = 111
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
@@ -55327,48 +54356,48 @@ object MainForm: TMainForm
         object pnlWidth: TPanel
           Left = 174
           Top = 75
-          Width = 62
+          Width = 65
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
           TabOrder = 5
         end
         object pnlHeight: TPanel
-          Left = 238
+          Left = 242
           Top = 75
-          Width = 62
+          Width = 65
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
           TabOrder = 6
         end
         object pnlPixelSize: TPanel
-          Left = 302
+          Left = 310
           Top = 75
-          Width = 62
+          Width = 65
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
           TabOrder = 7
         end
         object pnlCCDCount: TPanel
-          Left = 174
-          Top = 103
+          Left = 194
+          Top = 104
           Width = 73
           Height = 25
           Color = clBlack
@@ -55381,8 +54410,8 @@ object MainForm: TMainForm
           TabOrder = 8
         end
         object pnlInCnt: TPanel
-          Left = 249
-          Top = 103
+          Left = 515
+          Top = 75
           Width = 73
           Height = 25
           Color = clBlack
@@ -55395,8 +54424,8 @@ object MainForm: TMainForm
           TabOrder = 9
         end
         object pnlSum: TPanel
-          Left = 324
-          Top = 103
+          Left = 592
+          Top = 75
           Width = 73
           Height = 25
           Color = clBlack
@@ -55409,28 +54438,28 @@ object MainForm: TMainForm
           TabOrder = 10
         end
         object pnlW: TPanel
-          Left = 366
+          Left = 378
           Top = 75
-          Width = 62
+          Width = 65
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
           TabOrder = 11
         end
         object pnlH: TPanel
-          Left = 430
+          Left = 446
           Top = 75
-          Width = 62
+          Width = 65
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
@@ -55438,7 +54467,7 @@ object MainForm: TMainForm
         end
         object pnlVieworksMessage: TPanel
           Left = 5
-          Top = 209
+          Top = 185
           Width = 660
           Height = 25
           Hint = #31995#32113#22519#34892#35338#24687
@@ -55487,11 +54516,12 @@ object MainForm: TMainForm
           OnClick = btnGrabClick
         end
         object rgImageType: TRadioGroup
-          Left = 557
-          Top = 75
-          Width = 108
-          Height = 100
-          Caption = 'Type(1600*1600)'
+          Left = 272
+          Top = 105
+          Width = 393
+          Height = 41
+          Caption = 'Type(1024*1200)'
+          Columns = 4
           DragCursor = crHandPoint
           ItemIndex = 2
           Items.Strings = (
@@ -55517,14 +54547,14 @@ object MainForm: TMainForm
           TabOrder = 17
         end
         object pnlCCDRun: TPanel
-          Left = 599
-          Top = 19
-          Width = 66
+          Left = 515
+          Top = 47
+          Width = 150
           Height = 25
           Color = clSilver
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -12
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
@@ -55532,14 +54562,13 @@ object MainForm: TMainForm
         end
         object rgLiveMode: TRadioGroup
           Left = 12
-          Top = 110
+          Top = 105
           Width = 149
           Height = 41
           Hint = 'Continuous or triggered acquisition'
           Caption = 'Live Mode'
           Columns = 2
           DragCursor = crHandPoint
-          Enabled = False
           ItemIndex = 0
           Items.Strings = (
             'Continue'
@@ -55550,10 +54579,9 @@ object MainForm: TMainForm
         end
         object btnTriggerTest: TButton
           Left = 12
-          Top = 177
+          Top = 148
           Width = 88
-          Height = 28
-          Cursor = crHandPoint
+          Height = 33
           Hint = 'Trigger image test: StartPoint/Repeat times/Inteval/Direction.'
           Caption = 'TriggerTest'
           DragCursor = crHandPoint
@@ -55569,9 +54597,9 @@ object MainForm: TMainForm
           OnClick = btnTriggerTestClick
         end
         object edTriggerFrameNo: TLMDEdit
-          Left = 256
-          Top = 179
-          Width = 41
+          Left = 293
+          Top = 155
+          Width = 52
           Height = 22
           Bevel.Mode = bmWindows
           Caret.BlinkRate = 530
@@ -55589,8 +54617,8 @@ object MainForm: TMainForm
           Text = '50'
         end
         object edTriggerInterval: TLMDEdit
-          Left = 344
-          Top = 179
+          Left = 391
+          Top = 155
           Width = 44
           Height = 22
           Bevel.Mode = bmWindows
@@ -55609,9 +54637,9 @@ object MainForm: TMainForm
           Text = '20'
         end
         object edTriggerStart: TLMDEdit
-          Left = 147
-          Top = 179
-          Width = 57
+          Left = 167
+          Top = 155
+          Width = 74
           Height = 22
           Bevel.Mode = bmWindows
           Caret.BlinkRate = 530
@@ -55630,16 +54658,16 @@ object MainForm: TMainForm
         end
         object pnlTriggerTest: TPanel
           Left = 101
-          Top = 177
+          Top = 148
           Width = 11
-          Height = 28
+          Height = 33
           BevelOuter = bvLowered
           BevelWidth = 2
           TabOrder = 24
         end
         object edTriggerSpeed: TLMDEdit
-          Left = 453
-          Top = 179
+          Left = 501
+          Top = 155
           Width = 50
           Height = 22
           Bevel.Mode = bmWindows
@@ -55658,8 +54686,8 @@ object MainForm: TMainForm
           Text = '320'
         end
         object edTriggerTime: TEdit
-          Left = 562
-          Top = 179
+          Left = 210
+          Top = 131
           Width = 57
           Height = 22
           Hint = 'Trigger Time Width(N ns) - CMP Pulse'#30340#23532#24230
@@ -55674,7 +54702,7 @@ object MainForm: TMainForm
           ParentShowHint = False
           ShowHint = True
           TabOrder = 26
-          Text = '1150'
+          Text = '200'
         end
         object pnlTriggerCaptureNo: TPanel
           Left = 174
@@ -55695,11 +54723,10 @@ object MainForm: TMainForm
           TabOrder = 27
         end
         object cbTriggerDirection: TLMDCheckBox
-          Left = 402
-          Top = 132
-          Width = 105
-          Height = 20
-          Cursor = crHandPoint
+          Left = 576
+          Top = 157
+          Width = 89
+          Height = 19
           Hint = 'Ruler'
           Caption = 'Down to Up'
           ParentColor = False
@@ -55710,7 +54737,7 @@ object MainForm: TMainForm
           Ctl3D = True
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -13
+          Font.Height = -12
           Font.Name = 'Arial'
           Font.Style = []
           GlyphTransparent = True
@@ -55761,9 +54788,9 @@ object MainForm: TMainForm
           TabOrder = 30
         end
         object ed45Gain: TLMDEdit
-          Left = 231
+          Left = 256
           Top = 47
-          Width = 41
+          Width = 43
           Height = 25
           Bevel.Mode = bmWindows
           Caret.BlinkRate = 530
@@ -55781,436 +54808,75 @@ object MainForm: TMainForm
           Text = '15'
         end
         object btn45Gain: TButton
-          Left = 273
+          Left = 302
           Top = 47
-          Width = 56
+          Width = 53
           Height = 25
-          Cursor = crHandPoint
           Caption = 'SetGain'
           DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
           Font.Name = 'Arial'
-          Font.Style = [fsBold]
+          Font.Style = []
           ParentFont = False
           TabOrder = 32
           OnClick = btn45GainClick
         end
         object btn45Reset: TButton
-          Left = 594
+          Left = 356
           Top = 47
-          Width = 71
+          Width = 43
           Height = 25
-          Cursor = crHandPoint
-          Caption = 'Reset CCD'
+          Caption = 'Reset'
           DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
           Font.Name = 'Arial'
-          Font.Style = [fsBold]
+          Font.Style = []
           ParentFont = False
           TabOrder = 33
           OnClick = btn45ResetClick
         end
-        object cb45ExposureAuto: TCheckBox
-          Left = 402
-          Top = 103
-          Width = 105
-          Height = 25
-          Cursor = crHandPoint
-          Caption = 'ExposureAuto'
-          Checked = True
-          Color = clBlack
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-          State = cbChecked
-          TabOrder = 34
-          OnClick = cb45ExposureAutoClick
-        end
-        object ed45TargetBrightness: TLMDEdit
-          Left = 334
-          Top = 47
-          Width = 45
-          Height = 25
-          Bevel.Mode = bmWindows
-          Caret.BlinkRate = 530
-          Caret.Style = csUnder
-          Color = 16311512
-          TabOrder = 35
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          CustomButtons = <>
-          PasswordChar = #0
-          Text = '48'
-        end
-        object btn45TargetBrightness: TButton
-          Left = 380
-          Top = 47
-          Width = 93
-          Height = 25
-          Cursor = crHandPoint
-          Caption = 'SetBrightness'
-          DragCursor = crHandPoint
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 36
-          OnClick = btn45TargetBrightnessClick
-        end
-        object btn45Save: TLMDButton
-          Left = 496
-          Top = 75
-          Width = 57
-          Height = 25
-          Cursor = crHandPoint
-          Hint = #26356#26032'Trigger'#21443#25976#33267'ini'#27284
-          Caption = 'Save'
-          DragCursor = crHandPoint
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clNavy
-          Font.Height = -19
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 37
-          OnClick = btn45SaveClick
-          ButtonLayout.Spacing = 6
-        end
-        object btnClearActive: TButton
-          Left = 511
-          Top = 103
-          Width = 42
-          Height = 25
-          Cursor = crHandPoint
-          Caption = 'Clear'
-          DragCursor = crHandPoint
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 38
-          OnClick = btnClearActiveClick
-        end
-        object pnlDisplayCount: TPanel
-          Left = 174
-          Top = 131
-          Width = 35
-          Height = 22
-          Color = clBlack
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -15
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 39
-        end
-        object rgPictureBitmap: TRadioGroup
-          Left = 216
-          Top = 128
-          Width = 129
-          Height = 37
-          Columns = 2
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = 'Arial'
-          Font.Style = []
-          ItemIndex = 0
-          Items.Strings = (
-            'picture'
-            'bitmap')
-          ParentFont = False
-          TabOrder = 40
-        end
-        object cbLoadFirst: TCheckBox
-          Left = 63
-          Top = 156
-          Width = 44
-          Height = 17
-          Cursor = crHandPoint
-          Hint = #20351#29992'Load'#24460#20877'Draw'#20358#39023#31034#24433#20687
-          Caption = 'Load'
-          Color = clBlack
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 41
-        end
-        object cbResetFirst: TCheckBox
-          Left = 164
-          Top = 156
-          Width = 48
-          Height = 17
-          Cursor = crHandPoint
-          Hint = #27599#27425'45'#24230#21462#20687#21069#37117#20570'CCD Reset'
-          Caption = 'Reset'
-          Color = clBlack
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 42
-        end
-        object cbTimerDisplay: TCheckBox
-          Left = 112
-          Top = 156
-          Width = 48
-          Height = 17
-          Cursor = crHandPoint
-          Hint = #20351#29992'Timer'#20358#20570#39023#31034
-          Caption = 'Timer'
-          Color = clBlack
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 43
-        end
-        object cbGrabFirst: TCheckBox
-          Left = 12
-          Top = 156
-          Width = 46
-          Height = 17
-          Cursor = crHandPoint
-          Hint = #21246#36984': '#20351#29992'Grab'#20358#20570'CCD Live, '#19981#21246#36984': '#20351#29992'CCD Live'
-          Caption = 'Grab'
-          Color = clBlack
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 44
-        end
-        object btn45SaveImage: TBitBtn
-          Left = 511
-          Top = 131
-          Width = 42
-          Height = 34
-          Cursor = crHandPoint
-          Hint = 'Save CCD Image(*.bmp)'
-          DragCursor = crHandPoint
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clBlack
-          Font.Height = -19
-          Font.Name = #27161#26999#39636
-          Font.Style = [fsBold]
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 45
-          OnClick = btn45SaveImageClick
-          Glyph.Data = {
-            32090000424D320900000000000036000000280000001E000000190000000100
-            180000000000FC080000C40E0000C40E00000000000000000000B9B9B9AFAFAF
-            AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAF
-            AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAF
-            AFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFAFA5A5A50000C8C8C8C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000C8C8C8C0C0C0A7A7A77272725555
-            5555555555555555555555555555555555555555555555555555555555555555
-            5555555555555555555555555555555555555555555555555555555555555555
-            5555555555555555555D5D5D0000C8C8C8C0C0C0BBBBBB6F6F6F1D1D1D171717
-            2828280D0D0D3333330000003838380808082D2D2D1313133333335959595959
-            593D3D3D0C0C0C3333330101013737370808082D2D2D1313132121211E1E1E17
-            17172929291B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B45757573C3C3C45454536
-            36364B4B4B2F2F2F4E4E4E3333337E7E7E616161636363787878787878686868
-            5858588989893030304D4D4D3434344848483A3A3A4141413F3F3F3C3C3C3737
-            371B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B46E6E6E4444443535354F4F4F2A2A
-            2A5C5C5C2626268181818B8B8B8A8A8A3939390000000000002A2A2A8A8A8A8A
-            8A8A8D8D8D2929295353533030304848483B3B3B3E3E3E4545451818181B1B1B
-            0000C8C8C8C0C0C0EAEAEAB4B4B44C4C4C3737374E4E4E2929295D5D5D181818
-            636363B2B2B22D2D2D000000000000000000000000000000000000181818BCBC
-            BC6C6C6C2323235454543232324545454040403737374848481B1B1B0000C8C8
-            C8C0C0C0EAEAEAB4B4B47979794949492C2C2C5C5C5C19191973737316161696
-            9696282828000000000000000000000000000000000000151515A7A7A71A1A1A
-            6464642424245050503737373E3E3E4A4A4A0808081B1B1B0000C8C8C8C0C0C0
-            EAEAEAB4B4B44040403333335656561C1C1C6E6E6E000000B6B6B61B1B1B0000
-            00000000000000000000000000000000000000000000060606B5B5B51C1C1C60
-            60602A2A2A4848484040403232325858581B1B1B0000C8C8C8C0C0C0EAEAEAB4
-            B4B47A7A7A4949492C2C2C5C5C5C181818747474BBBBBB1B1B1B000000000000
-            000000000000000000000000323232CACACA060606B5B5B57F7F7F2323235151
-            513737373E3E3E4A4A4A0707071B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B44B4B
-            4B3737374E4E4E2828285D5D5D171717E7E7E722222200000000000000000000
-            0000000000000000090909282828060606B5B5B52F2F2F545454313131454545
-            4040403636364848481B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B46E6E6E454545
-            3434344F4F4F2929295D5D5D464646A8A8A82A2A2A0000000000000000000000
-            003838389090901111118888883838385656563030304949493B3B3B3E3E3E45
-            45451818181B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B45757573C3C3C45454535
-            35354C4C4C2E2E2E4E4E4EE5E5E53B3B3B0000000000000000000000001C1C1C
-            484848181818BBBBBB5656563333334848483939394242423F3F3F3B3B3B3838
-            381B1B1B0000C8C8C8C0C0C0EAEAEAB4B4B46262624040403D3D3D4242423B3B
-            3B4545453A3A3AA7A7A79595958A8A8A3939390000000000002020206868686E
-            6E6E9999993F3F3F4343433C3C3C4141413E3E3E3F3F3F4040402828281B1B1B
-            0000C8C8C8C0C0C0EAEAEAB4B4B46363634040403D3D3D4343433A3A3A464646
-            393939444444A7A7A79E9E9E7C7C7C7272726767675B5B5B7575759696964545
-            453939394343433C3C3C4141413E3E3E3F3F3F4040402828281B1B1B0000C8C8
-            C8C0C0C0EAEAEACECECE8484847C7C7C9393936D6D6DA2A2A25B5B5BA8A8A866
-            6666999999757575BABABAFFFFFFEEEEEEB0B0B06C6C6CA2A2A25D5D5DA8A8A8
-            6767679999997676768A8A8A8585857B7B7B8686863F3F3F0000C8C8C8C0C0C0
-            DEDEDEEEEEEEF6F6F6FFFFFFF4F4F4E0E0E0EEEEEEEEEEEEFDFDFDC4C4C4D4D4
-            D4C6C6C6CECECECCCCCCC8C8C8D2D2D2C2C2C2D8D8D8BCBCBCDBDBDBEBEBEBEE
-            EEEEEEEEEEF7F7F7EEEEEEE3E3E3D1D1D18D8D8D0000C8C8C8C0C0C0C0C0C0C0
-            C0C0D9D9D9F4F4F4D3D3D3969696C0C0C0C0C0C0E6E6E64646467C7C7C4E4E4E
-            696969626262565656757575424242858585191919797979B6B6B6C0C0C0C0C0
-            C0DDDDDDC0C0C09F9F9FC0C0C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0878787E8E8E8F9F9F9FDFDFDF8F8F8F4
-            F4F4F4F4F4F4F4F4F2F2F2DDDDDD858585858585B6B6B6C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0BFBFBFC0C0C0C0C0C0EAEAEAB5B5B58181818181
-            818181816565651A1A1ABFBFBFBFBFBFBFBFBFC0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C4C4C4BEBEBEB9B9B9B9B9B9B9B9B9
-            B6B6B6AEAEAEC0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0B2B2B20000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B2
-            0000C8C8C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000C8C8
-            C8C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000C8C8C8C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-            C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0B2B2B20000}
-          Spacing = 8
-        end
-        object ed45Shutter: TLMDEdit
-          Left = 478
-          Top = 47
-          Width = 41
-          Height = 25
-          Bevel.Mode = bmWindows
-          Caret.BlinkRate = 530
-          Caret.Style = csUnder
-          Color = 16311512
-          TabOrder = 46
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          CustomButtons = <>
-          PasswordChar = #0
-          Text = '100'
-        end
-        object btn45Shutter: TButton
-          Left = 520
-          Top = 47
-          Width = 72
-          Height = 25
-          Cursor = crHandPoint
-          Caption = 'SetShutter'
-          DragCursor = crHandPoint
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          TabOrder = 47
-          OnClick = btn45ShutterClick
-        end
-        object cbUseTrigger: TCheckBox
-          Left = 402
-          Top = 156
-          Width = 105
-          Height = 17
-          Cursor = crHandPoint
-          Hint = #27599#27425'45'#24230#21462#20687#21069#37117#20570'CCD Reset'
-          Caption = 'Use Trigger'
-          Color = clBlack
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 48
-        end
       end
       object pnlFocusWin: TPanel
         Left = 4
-        Top = 728
+        Top = 712
         Width = 677
-        Height = 136
+        Height = 152
         TabOrder = 3
         object Label267: TLabel
-          Left = 20
+          Left = 28
           Top = 30
-          Width = 29
-          Height = 15
+          Width = 30
+          Height = 16
           Caption = 'Ref.Z'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -12
+          Font.Height = -13
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
           Transparent = True
         end
         object Label279: TLabel
-          Left = 16
-          Top = 52
-          Width = 32
-          Height = 15
+          Left = 24
+          Top = 54
+          Width = 34
+          Height = 16
           Caption = 'Offset'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -12
+          Font.Height = -13
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
           Transparent = True
         end
         object Label280: TLabel
-          Left = 119
-          Top = 51
+          Left = 127
+          Top = 56
           Width = 18
           Height = 16
           Caption = 'um'
@@ -56223,42 +54889,42 @@ object MainForm: TMainForm
           Transparent = True
         end
         object Label281: TLabel
-          Left = 13
-          Top = 74
-          Width = 36
-          Height = 15
+          Left = 21
+          Top = 78
+          Width = 37
+          Height = 16
           Caption = 'Speed'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -12
+          Font.Height = -13
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
           Transparent = True
         end
         object Label342: TLabel
-          Left = 419
-          Top = 50
-          Width = 16
-          Height = 16
+          Left = 415
+          Top = 61
+          Width = 20
+          Height = 18
           Caption = 'Up'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
           Transparent = True
         end
         object Label343: TLabel
-          Left = 403
-          Top = 69
-          Width = 32
-          Height = 16
+          Left = 395
+          Top = 77
+          Width = 40
+          Height = 18
           Caption = 'Down'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
@@ -56266,13 +54932,13 @@ object MainForm: TMainForm
         end
         object Label344: TLabel
           Left = 464
-          Top = 30
-          Width = 32
-          Height = 16
+          Top = 34
+          Width = 39
+          Height = 18
           Caption = 'Value'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
@@ -56280,13 +54946,13 @@ object MainForm: TMainForm
         end
         object Label345: TLabel
           Left = 565
-          Top = 30
-          Width = 7
-          Height = 16
+          Top = 34
+          Width = 9
+          Height = 18
           Caption = 'Z'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
@@ -56294,10 +54960,24 @@ object MainForm: TMainForm
         end
         object Label346: TLabel
           Left = 615
-          Top = 30
-          Width = 34
-          Height = 16
+          Top = 34
+          Width = 41
+          Height = 18
           Caption = 'Count'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          Transparent = True
+        end
+        object Label311: TLabel
+          Left = 157
+          Top = 81
+          Width = 103
+          Height = 16
+          Caption = 'Contrast(200-250)'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -13
@@ -56306,30 +54986,16 @@ object MainForm: TMainForm
           ParentFont = False
           Transparent = True
         end
-        object Label311: TLabel
-          Left = 157
-          Top = 73
-          Width = 101
-          Height = 15
-          Caption = 'Contrast(200-250)'
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = 'Arial'
-          Font.Style = []
-          ParentFont = False
-          Transparent = True
-        end
         object Label520: TLabel
-          Left = 322
-          Top = 54
-          Width = 32
-          Height = 15
+          Left = 325
+          Top = 61
+          Width = 28
+          Height = 13
           Caption = '10-60'
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = 'Arial'
+          Font.Height = -13
+          Font.Name = #26032#32048#26126#39636
           Font.Style = []
           ParentFont = False
           Transparent = True
@@ -56346,7 +55012,7 @@ object MainForm: TMainForm
           Color = clBlack
           Font.Charset = ANSI_CHARSET
           Font.Color = clWhite
-          Font.Height = -15
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
@@ -56355,10 +55021,10 @@ object MainForm: TMainForm
           TabOrder = 0
         end
         object edAutoFocus: TLMDEdit
-          Left = 55
+          Left = 63
           Top = 27
           Width = 74
-          Height = 20
+          Height = 22
           Bevel.Mode = bmWindows
           Caret.BlinkRate = 530
           Caret.Style = csUnder
@@ -56366,7 +55032,7 @@ object MainForm: TMainForm
           TabOrder = 1
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -56378,13 +55044,12 @@ object MainForm: TMainForm
           Left = 246
           Top = 11
           Width = 137
-          Height = 30
+          Height = 38
           Cursor = crHandPoint
           Hint = 'Stop Operation'
           Caption = 'AutoFocus'
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clBlack
           Font.Height = -21
           Font.Name = #27161#26999#39636
           Font.Style = [fsBold]
@@ -56456,7 +55121,7 @@ object MainForm: TMainForm
           Left = 386
           Top = 11
           Width = 19
-          Height = 30
+          Height = 38
           Hint = #33258#21205#23565#28966#32080#26524
           BevelOuter = bvLowered
           BevelWidth = 2
@@ -56469,14 +55134,13 @@ object MainForm: TMainForm
           Left = 165
           Top = 11
           Width = 68
-          Height = 30
+          Height = 38
           Cursor = crHandPoint
           Hint = #23559#23565#28966#36039#26009#23384#27284'.'
           Caption = 'Save'
-          DragCursor = crHandPoint
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -21
+          Font.Height = -24
           Font.Name = #27161#26999#39636
           Font.Style = [fsBold]
           ParentFont = False
@@ -56486,10 +55150,10 @@ object MainForm: TMainForm
           OnClick = btnUpdateFocusClick
         end
         object edAutoFocusOffset: TLMDEdit
-          Left = 55
-          Top = 49
+          Left = 63
+          Top = 51
           Width = 61
-          Height = 20
+          Height = 22
           Bevel.Mode = bmWindows
           Caret.BlinkRate = 530
           Caret.Style = csUnder
@@ -56497,7 +55161,7 @@ object MainForm: TMainForm
           TabOrder = 5
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -56506,10 +55170,10 @@ object MainForm: TMainForm
           Text = '5000'
         end
         object edAutoFocusSpeed: TLMDEdit
-          Left = 55
-          Top = 71
+          Left = 63
+          Top = 75
           Width = 61
-          Height = 20
+          Height = 22
           Bevel.Mode = bmWindows
           Caret.BlinkRate = 530
           Caret.Style = csUnder
@@ -56517,7 +55181,7 @@ object MainForm: TMainForm
           TabOrder = 6
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -56527,9 +55191,9 @@ object MainForm: TMainForm
         end
         object pnlUpZPos: TPanel
           Left = 534
-          Top = 47
+          Top = 53
           Width = 75
-          Height = 20
+          Height = 22
           Hint = 'Total no of position in file'
           BevelOuter = bvNone
           BevelWidth = 2
@@ -56547,9 +55211,9 @@ object MainForm: TMainForm
         end
         object pnlDownZPos: TPanel
           Left = 534
-          Top = 69
+          Top = 77
           Width = 75
-          Height = 20
+          Height = 22
           Hint = 'Total no of position in file'
           BevelOuter = bvNone
           BevelWidth = 2
@@ -56567,9 +55231,9 @@ object MainForm: TMainForm
         end
         object pnlUpValue: TPanel
           Left = 440
-          Top = 47
+          Top = 53
           Width = 89
-          Height = 20
+          Height = 22
           Hint = 'Total no of position in file'
           BevelOuter = bvNone
           BevelWidth = 2
@@ -56587,9 +55251,9 @@ object MainForm: TMainForm
         end
         object pnlDownValue: TPanel
           Left = 440
-          Top = 69
+          Top = 77
           Width = 89
-          Height = 20
+          Height = 22
           Hint = 'Total no of position in file'
           BevelOuter = bvNone
           BevelWidth = 2
@@ -56606,23 +55270,23 @@ object MainForm: TMainForm
           TabOrder = 10
         end
         object rgFocusAlgorithm: TLMDRadioGroup
-          Left = 13
-          Top = 96
-          Width = 465
-          Height = 35
+          Left = 8
+          Top = 102
+          Width = 638
+          Height = 45
           Bevel.Mode = bmWindows
           BtnAlignment.Alignment = agCenterLeft
           Caption = 'Focus Algorithm'
           CaptionFont.Charset = ANSI_CHARSET
           CaptionFont.Color = clWindowText
-          CaptionFont.Height = -11
+          CaptionFont.Height = -15
           CaptionFont.Name = 'Arial'
           CaptionFont.Style = []
           CaptionParentFont = False
           Columns = 5
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = []
           Items.Strings = (
@@ -56637,9 +55301,9 @@ object MainForm: TMainForm
         end
         object pnlUpZCount: TPanel
           Left = 614
-          Top = 47
+          Top = 53
           Width = 48
-          Height = 20
+          Height = 22
           Hint = 'Total no of position in file'
           BevelOuter = bvNone
           BevelWidth = 2
@@ -56657,9 +55321,9 @@ object MainForm: TMainForm
         end
         object pnlDownZCount: TPanel
           Left = 614
-          Top = 69
+          Top = 77
           Width = 48
-          Height = 20
+          Height = 22
           Hint = 'Total no of position in file'
           BevelOuter = bvNone
           BevelWidth = 2
@@ -56689,7 +55353,7 @@ object MainForm: TMainForm
           Ctl3D = True
           Font.Charset = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -16
+          Font.Height = -19
           Font.Name = #26032#32048#26126#39636
           Font.Style = []
           GlyphTransparent = True
@@ -56704,9 +55368,9 @@ object MainForm: TMainForm
         end
         object edDifferenceValue: TLMDEdit
           Left = 262
-          Top = 69
+          Top = 77
           Width = 55
-          Height = 20
+          Height = 22
           Bevel.Mode = bmWindows
           Caret.BlinkRate = 530
           Caret.Style = csUnder
@@ -56714,7 +55378,7 @@ object MainForm: TMainForm
           TabOrder = 15
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -56724,9 +55388,9 @@ object MainForm: TMainForm
         end
         object edDifferenceRatio: TLMDEdit
           Left = 320
-          Top = 69
+          Top = 77
           Width = 41
-          Height = 20
+          Height = 22
           Bevel.Mode = bmWindows
           Caret.BlinkRate = 530
           Caret.Style = csUnder
@@ -56734,7 +55398,7 @@ object MainForm: TMainForm
           TabOrder = 16
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
-          Font.Height = -13
+          Font.Height = -16
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
@@ -57079,16 +55743,6 @@ object MainForm: TMainForm
               Font.Style = []
               ParentFont = False
               Transparent = True
-            end
-            object Label661: TLabel
-              Left = 368
-              Top = 552
-              Width = 260
-              Height = 128
-              Caption = 
-                'Auto'#13#10'-------'#13#10'1. OLS5000('#25152#26377#40670#20301')'#13#10'    a. '#29289#37857#20999#25563#33267'50x, '#23565#28966#23436#30050' - [Macro]' +
-                #13#10'    b. '#37327#28204' - [Macro2]'#13#10'2. 45'#24230'(LM 50x; '#25152#26377#40670#20301')'#13#10'    a. '#31227#21205#21040#39640#24230#13#10'    ' +
-                'b. '#36899#32396#21462#20687
             end
             object edOLS5000Port: TEdit
               Left = 52
@@ -65574,8 +64228,8 @@ object MainForm: TMainForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000}
   end
   object ICImagingControl1: TICImagingControl
-    Left = 56
-    Top = 848
+    Left = 1032
+    Top = 88
     Width = 57
     Height = 41
     TabOrder = 12
@@ -67144,8 +65798,8 @@ object MainForm: TMainForm
     ImageIndex = 8
   end
   object pnlTest: TPanel
-    Left = 79
-    Top = 424
+    Left = 63
+    Top = 552
     Width = 489
     Height = 321
     Cursor = crSizeAll
@@ -67753,8 +66407,8 @@ object MainForm: TMainForm
     OnClick = pnlMovingClick
   end
   object pnlZAdjust: TPanel
-    Left = 647
-    Top = 552
+    Left = 623
+    Top = 544
     Width = 489
     Height = 185
     BevelWidth = 2
@@ -68080,27 +66734,13 @@ object MainForm: TMainForm
   end
   object Panel44: TPanel
     Left = 1904
-    Top = 88
-    Width = 625
-    Height = 553
+    Top = 80
+    Width = 641
+    Height = 585
     Caption = ']'
     Color = clTeal
     TabOrder = 13
     Visible = False
-    object Label318: TLabel
-      Left = 227
-      Top = 339
-      Width = 41
-      Height = 18
-      Caption = 'Count'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Arial'
-      Font.Style = []
-      ParentFont = False
-      Transparent = True
-    end
     object lbGiga: TListBox
       Left = 13
       Top = 224
@@ -68407,7 +67047,7 @@ object MainForm: TMainForm
         '5')
     end
     object gbSetting: TLMDGroupBox
-      Left = 379
+      Left = 395
       Top = 107
       Width = 238
       Height = 73
@@ -68548,8 +67188,8 @@ object MainForm: TMainForm
       ItemIndex = 0
     end
     object pnlLoadPortInterLockCode1: TPanel
-      Left = 5
-      Top = 100
+      Left = 13
+      Top = 300
       Width = 36
       Height = 24
       Hint = 'Inter Lock Code'
@@ -68565,8 +67205,8 @@ object MainForm: TMainForm
       TabOrder = 13
     end
     object pnlLoadPortInterLockMsg: TPanel
-      Left = 44
-      Top = 100
+      Left = 52
+      Top = 300
       Width = 197
       Height = 24
       Alignment = taLeftJustify
@@ -68584,8 +67224,8 @@ object MainForm: TMainForm
     end
     object pnlLineLength: TPanel
       Left = 3
-      Top = 336
-      Width = 214
+      Top = 376
+      Width = 548
       Height = 33
       Hint = 
         'Click: Disable Measure window, Double Click: Change Measure mode' +
@@ -68606,8 +67246,8 @@ object MainForm: TMainForm
     end
     object pnlMeasureResult: TPanel
       Left = 6
-      Top = 296
-      Width = 211
+      Top = 336
+      Width = 547
       Height = 33
       Hint = 
         'Click: Disable Measure window, Double Click: Change Measure mode' +
@@ -69035,7 +67675,7 @@ object MainForm: TMainForm
     end
     object Panel159: TPanel
       Left = 8
-      Top = 384
+      Top = 416
       Width = 385
       Height = 161
       Color = 16742263
@@ -69555,73 +68195,11 @@ object MainForm: TMainForm
       ShowHint = True
       TabOrder = 23
     end
-    object edRunLoop: TLMDEdit
-      Left = 271
-      Top = 332
-      Width = 50
-      Height = 28
-      Bevel.Mode = bmWindows
-      Caret.BlinkRate = 530
-      Caret.Style = csUnder
-      Color = 16311512
-      Enabled = False
-      ImeMode = imDisable
-      ImeName = #20013#25991' ('#32321#39636') - '#27880#38899
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 24
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -21
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      CustomButtons = <>
-      PasswordChar = #0
-      Text = '1'
-    end
-    object pnlRunDoneNo: TPanel
-      Left = 326
-      Top = 332
-      Width = 67
-      Height = 28
-      BevelOuter = bvNone
-      BevelWidth = 2
-      Caption = '0'
-      Color = clGray
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWhite
-      Font.Height = -21
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 25
-    end
-    object btnRunStop: TLMDButton
-      Left = 400
-      Top = 332
-      Width = 66
-      Height = 28
-      Caption = 'Stop'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clMaroon
-      Font.Height = -21
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 26
-      Visible = False
-      OnClick = btnRunStopClick
-    end
   end
   object pnlVieworks: TPanel
-    Left = 1895
-    Top = 51
-    Width = 1102
+    Left = 1904
+    Top = 139
+    Width = 1065
     Height = 910
     Color = 8224125
     Font.Charset = DEFAULT_CHARSET
@@ -69712,7 +68290,7 @@ object MainForm: TMainForm
       ShowHint = True
     end
     object Label656: TLabel
-      Left = 1028
+      Left = 996
       Top = 822
       Width = 61
       Height = 16
@@ -69725,7 +68303,7 @@ object MainForm: TMainForm
       ParentFont = False
     end
     object cb45CrossLine: TCheckBox
-      Left = 960
+      Left = 928
       Top = 16
       Width = 129
       Height = 27
@@ -69744,8 +68322,8 @@ object MainForm: TMainForm
       OnClick = cb45CrossLineClick
     end
     object Panel45: TPanel
-      Left = 960
-      Top = 96
+      Left = 928
+      Top = 152
       Width = 111
       Height = 32
       Alignment = taLeftJustify
@@ -69774,8 +68352,8 @@ object MainForm: TMainForm
       end
     end
     object Panel66: TPanel
-      Left = 960
-      Top = 131
+      Left = 928
+      Top = 187
       Width = 111
       Height = 32
       Alignment = taLeftJustify
@@ -69804,15 +68382,15 @@ object MainForm: TMainForm
       end
     end
     object Panel73: TPanel
-      Left = 960
-      Top = 216
+      Left = 928
+      Top = 272
       Width = 111
       Height = 32
       Alignment = taLeftJustify
       Caption = ' Cu Up'
       Color = clBlack
       Font.Charset = ANSI_CHARSET
-      Font.Color = 16744576
+      Font.Color = clBlue
       Font.Height = -13
       Font.Name = 'Arial'
       Font.Style = []
@@ -69834,8 +68412,8 @@ object MainForm: TMainForm
       end
     end
     object Panel83: TPanel
-      Left = 960
-      Top = 251
+      Left = 928
+      Top = 307
       Width = 111
       Height = 32
       Alignment = taLeftJustify
@@ -69864,7 +68442,7 @@ object MainForm: TMainForm
       end
     end
     object cb45FullImage: TCheckBox
-      Left = 960
+      Left = 928
       Top = 46
       Width = 129
       Height = 27
@@ -69883,24 +68461,24 @@ object MainForm: TMainForm
       OnClick = cb45FullImageClick
     end
     object Panel60: TPanel
-      Left = 952
+      Left = 928
       Top = 840
-      Width = 137
+      Width = 129
       Height = 61
       Alignment = taLeftJustify
       Caption = ' Resolution'
       Color = clBlack
       Font.Charset = ANSI_CHARSET
-      Font.Color = clWhite
+      Font.Color = clAqua
       Font.Height = -13
       Font.Name = 'Arial'
       Font.Style = []
       ParentFont = False
       TabOrder = 6
       object pnl45Resolution: TPanel
-        Left = 74
+        Left = 68
         Top = 3
-        Width = 58
+        Width = 56
         Height = 25
         Caption = '0.123'
         Color = clSilver
@@ -69913,9 +68491,9 @@ object MainForm: TMainForm
         TabOrder = 0
       end
       object Panel68: TPanel
-        Left = 74
+        Left = 68
         Top = 31
-        Width = 58
+        Width = 56
         Height = 25
         Caption = '3.45um'
         Color = clSilver
@@ -69929,8 +68507,8 @@ object MainForm: TMainForm
       end
     end
     object pnl45Ni: TPanel
-      Left = 981
-      Top = 167
+      Left = 949
+      Top = 223
       Width = 90
       Height = 25
       Color = clSilver
@@ -69943,8 +68521,8 @@ object MainForm: TMainForm
       TabOrder = 7
     end
     object pnl45Cu: TPanel
-      Left = 981
-      Top = 287
+      Left = 949
+      Top = 343
       Width = 90
       Height = 25
       Color = clSilver
@@ -69957,8 +68535,8 @@ object MainForm: TMainForm
       TabOrder = 8
     end
     object btn45Z1Up: TLMDButton
-      Left = 960
-      Top = 351
+      Left = 928
+      Top = 407
       Width = 56
       Height = 25
       Cursor = crHandPoint
@@ -70026,8 +68604,8 @@ object MainForm: TMainForm
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000}
     end
     object btn45Z1Down: TLMDButton
-      Left = 960
-      Top = 383
+      Left = 928
+      Top = 439
       Width = 56
       Height = 25
       Cursor = crHandPoint
@@ -70095,8 +68673,8 @@ object MainForm: TMainForm
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000}
     end
     object pnl45Z1: TPanel
-      Left = 1024
-      Top = 367
+      Left = 992
+      Top = 423
       Width = 63
       Height = 25
       Color = clSilver
@@ -70108,346 +68686,18 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 11
     end
-    object Panel74: TPanel
-      Left = 978
-      Top = 715
-      Width = 111
-      Height = 32
-      Alignment = taLeftJustify
-      Caption = ' Trigger'
-      Color = clBlack
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWhite
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 12
-      object pnlTriggerNo: TPanel
-        Left = 48
-        Top = 3
-        Width = 58
-        Height = 25
-        Color = clSilver
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clBlack
-        Font.Height = -19
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
-        TabOrder = 0
-      end
-    end
-    object Panel85: TPanel
-      Left = 978
-      Top = 779
-      Width = 111
-      Height = 32
-      Alignment = taLeftJustify
-      Caption = ' Factor'
-      Color = clBlack
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWhite
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 13
-      object edFactor: TEdit
-        Left = 48
-        Top = 3
-        Width = 58
-        Height = 25
-        AutoSize = False
-        Color = 14211288
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clBlack
-        Font.Height = -15
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-        Text = '1.4142'
-      end
-    end
-    object Panel87: TPanel
-      Left = 912
-      Top = 424
-      Width = 185
-      Height = 273
-      Color = 12829635
-      TabOrder = 14
-      object sgMeasureData: TStringGrid
-        Left = 5
-        Top = 8
-        Width = 175
-        Height = 257
-        Color = 11513775
-        ColCount = 3
-        FixedColor = 10855845
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-      end
-    end
-    object btn45Measured: TLMDButton
-      Left = 686
-      Top = 824
-      Width = 214
-      Height = 73
-      Cursor = crHandPoint
-      Hint = #35531#38283#22987#23565#28966'('#29289#37857#20999#25563#33267'50x)'#65292#23565#28966#23436#30050#24460#35531#25353'['#23565#28966#23436#25104']'
-      Caption = #37327#28204#23436#25104'  Measured'
-      DragCursor = crHandPoint
-      Font.Charset = ANSI_CHARSET
-      Font.Color = 9769222
-      Font.Height = -29
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentFont = False
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 15
-      Visible = False
-      OnClick = btn45MeasuredClick
-      ButtonLayout.Spacing = 8
-      Glyph.Data = {
-        361B0000424D361B000000000000360000002800000030000000300000000100
-        180000000000001B0000C40E0000C40E00000000000000000000ECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECEEEFEFEFF3F1ECF2EFE9F1EEE7
-        F1ECE5F0ECE5F1EBE4F1EBE3F1EBE3F1EBE3F1EBE2F2EBE2F2EBE2F2EBE1F2EB
-        E1F2EBE1F3EBE1F3EBE0F3EBE0F3EBE0F3EBE0F3EBE0F3EBE0F3EBE1F3EBE1F3
-        EBE1F2EBE1F2EBE2F2EBE2F2EBE2F2EBE3F1EBE3F1EBE3F1EBE4F1EBE4F1EBE5
-        F0ECE7F1ECE9F1EEECF2EFEFF3F1EEEFEFECECECECECECECECECECECECECECEC
-        EEEFEFEDF5F1E4F5EDD9F1E6D0EEE1C9ECDCC4EAD9C2E9D8C2E9D8C2E9D8C2E9
-        D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2
-        E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8
-        C2E9D8C2E9D8C2E9D8C2E9D8C2E9D8C4EAD9C9ECDCD0EEE1D9F1E6E4F5EDEDF5
-        F1EEEFEFECECECECECECECECECECECECEEF5F1E2F4ECD1EEE1BFE8D6AFE3CCA4
-        DFC59DDCC09ADBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE
-        99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DB
-        BE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE99DBBE9ADBBE9D
-        DCC0A4DFC5AFE3CCBFE8D6D1EEE1E2F4ECEEF5F1ECECECECECECECECECEEEFEE
-        E7F6EFD3EFE3B9E6D29EDDC187D5B27FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2
-        AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7F
-        D2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD
-        7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD7FD2AD87D5B29EDDC1B9E6D2D3EF
-        E3E7F6EFEEEFEEECECECECECECEFF4F2E0F4EBC8EBDCA7E0C782D3AF7FD2AD7F
-        D2AD6AC99D55C08D48BB833FB77D3FB77D3FB77D3FB77D3FB77D3FB77D3FB77D
-        3FB77D3FB77D3FB77D3FB77D3FB77D3FB77D3FB77D3FB77D3FB77D3FB77D3FB7
-        7D3FB77D3FB77D3FB77D3FB77D3FB77D3FB77D3FB77D3FB77D45BA8155C08D65
-        C7997FD2AD7FD2AD82D3AFA7E0C7C8EBDCE0F4EBEFF4F2ECECECECECECEFF7F3
-        DEF3EAC3EAD8A0DDC27ED1AD55C08D23AA6619A4581CA5571FA65823A85926AB
-        5C28AD5E2BB1612EB36431B56733B86936BB6C38BD6F3BC0713DC27342C37646
-        C67A49C67C46C67A42C3763DC2733BC07138BD6F36BB6C33B86931B5672EB364
-        2BB16128AD5E26AB5C21A7591EA6581AA5591FA86251BF8A7CD1ABA0DDC2C3EA
-        D8DEF3EAEFF7F3ECECECECECECF0F8F4DFF3EAC5EADA97DABC31B17117A2571B
-        A05221A3552BA85D34AC643DB06B44B4704AB77651BA7B59BD7F5EBF8464C288
-        6AC48C6FC69075C89378CA977DCB997FCD9A82CD9D7FCD9A7DCB9978CA9775C8
-        936FC6906AC48C64C2885EBF8459BD7F51BA7B4AB67544B36F3BAF6930AB6124
-        A5591DA25319A2562BAF6E96D9BBC5EADADFF3EAF0F8F4ECECECECECECF1F5F3
-        E4F5EDC3E9D831B07017A0541B9F5022A4572AA75D31AB6337AE673FB36E46B6
-        734DB97954BD7E5AC08360C38966C58D6DC79172CA9477CC987ACE9B7ECE9E81
-        CF9F82CFA081CF9F7ECE9E7ACE9B77CC9872CA946DC79166C58D60C2895AC083
-        53BC7E4DB97946B6723FB26D37AE6731AA6228A65A1DA15219A0542BAE6BC3E9
-        D8E4F5EDF1F5F3ECECECECECECF0F2F0ECF8F25CC18E17A155189E4F1EA15425
-        A5592BA95F31AD6638B16C40B57348BA7A4FBE8056C1855DC58B63C8906ACA94
-        70CD9976CF9D7BD1A07FD2A382D4A584D4A686D4A784D4A682D4A57FD2A37BD1
-        A076CF9D70CC986ACA9463C8905CC48B55C1844EBE8047B97840B57238B06B31
-        AC652BA85E23A5571A9E5117A05459C08CECF8F2F1F3F2ECECECECECECEDEEED
-        C1E7D516A55B179C4E199F511EA25525A65D2BAC6332B06A39B67241BB7949BF
-        8051C28758C68C5FCA9166CD976DCF9B73D29F79D4A37ED7A882D8AA85D9AD86
-        DAAE87DAAF86DAAE85D9AD82D8AA7ED7A879D4A373D29F6DCF9B66CD975FC991
-        58C68C50C28648BE8041B97838B47031AF682AAA6124A55A1DA053179D4E16A3
-        59C1E7D5F2F3F2ECECECECECECECECEC66C49416A054179D4E1AA0521EA45924
-        AA602CAE6932B47039B97742BE7E48C28451C68C58CA915FCD9666CF9B6CD29F
-        73D4A477D6A87CD8AB81DBAF83DBB086DCB286DCB286DCB283DBB081DBAF7CD8
-        AB77D6A873D4A46CD29F66CF9B5FCD9658C99151C58B48C28441BD7D38B87631
-        B36E2BAC6624A75D1EA357189E5017A05369C596F3F3F3ECECECECECECEEEEEE
-        2EAF6E169D50179E5118A1541EA65C23AC652AB16B31B67439BB7A40BF8047C3
-        864FC78D56CA925DCC9764D19C6AD3A06FD5A574D7A978D9AA7DDBAE7FDCAF81
-        DCB182DDB281DCB17FDCAF7DDBAE78D9AA74D7A96FD5A56AD3A064D19C5DCC97
-        56CA924FC78C47C38640BE7F38BA7931B6722AAF6923AA611DA459189F52169C
-        4F36B273F3F3F3ECECECECECECF2F2F216A65D159C4F179F5318A3581DA85E22
-        AE6728B26D2FB87536BB7A3DBF8044C2854BC78C52CA9159CE965FD19A65D39F
-        73D7A877D9AB74D8AA78DAAC7BDBAE7CDBAF7CDBAF7CDBAF7BDBAE78DAAC74D8
-        AA6FD7A66AD5A365D39F5FD19A59CE9652CA914AC68C44C2853DBF8036BB7A2F
-        B77428B16C21AD651CA55C18A155179E501BA75EF2F2F2ECECECECECECEEF2F0
-        16A65D159D5016A15518A65B1CAA6220B06926B46F2DB77532BA793ABF7F40C3
-        8447C68A4ECA9054CC945ACE986FD5A5EEFAF5FCFEFD97E2BF72D9A973D9AB74
-        D9AB75DAAC74D9AB73D9AB72D9A96ED7A66AD6A465D3A060D19C5ACE9854CC94
-        4ECA9047C68940C3843ABF7F32BA792DB77526B36E20AE671BA85F17A358169F
-        5216A55CF2F2F2ECECECECECECEEF3F116A75E159E5216A35717A85E1AAB641F
-        B16A24B46E29B7732FBB7934BD7D3CC28343C48848C78D4FCA9164D2A0EDFAF4
-        FFFFFFFFFFFFFDFFFE93E1BE6BD6A66DD7A86ED7A86DD7A86BD6A669D5A566D4
-        A263D3A05ED29D5ACF9954CD964FCA9148C78D43C4883CC28334BD7D2FBB7929
-        B77324B46D1FAF6819A96117A55A15A05416A65DF1F1F1ECECECECECECEFF3F1
-        16A86015A05416A45A17AA6018AC641DB06A21B46F26B7742CB97732BE7C37BF
-        803EC48744C68B5ACE9AEAF9F2FFFFFFFFFFFFFFFFFFFFFFFFFDFFFE90E1BD66
-        D5A466D5A466D5A464D5A362D4A25FD3A05CD29D58D09A53CE974ECB9349C98F
-        44C68B3EC48737BF8032BE7C2CB97726B77421B36E1DAF6817AA6217A75C16A2
-        5616A75EF1F1F1ECECECECECECEFF4F116A86115A25615A65C17AA6218AD671A
-        AF6A1FB36E23B77229B9772CBB7A33C08038C1844FCA93E9F8F1FFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFDFFFE8ADFBA5CD39F5CD39F5BD39F5AD29E57D0
-        9C54CF9950CE974DCC9547CA9043C78C3DC58838C18433C0802CBB7A29B97723
-        B7721FB26D1AAF6918AC6516A85F15A35816A860F0F0F0ECECECECECECEFF5F2
-        16A96215A35815A75E17AC6417AF6719AF691CB36D20B67224B9752ABC7A2DBD
-        7D45C78EE5F7EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD
-        FEFE85DFB955D29D53D19B52D09A4ECE984DCE9749CD9444CA9041C88D3CC589
-        38C48632C1822DBD7D2ABC7A24B97520B6721CB36D19AF6917AD6616A96015A4
-        5A16A961F0F0F0ECECECECECECEFF6F216AA6315A45A15A96017AC6518AF6818
-        B16B19B36D1DB57120B87424BA783EC489DCF4EAFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFEFD7FDCB54BCE9749CE9647CD
-        9445CC9341C98F3EC98E3AC78B36C48731C1832DBF802ABE7D24BA7820B8741D
-        B57119B36D18B16B18AE6716AA6215A55B16AA62EFEFEFECECECECECECEFF6F2
-        16AB6515A55C16AA6217AD6617AF6918B26D18B36E1AB5711DB87433C183DBF4
-        E9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFBFEFC77DBB242CC9340CC923ECA903AC98E36C78A33C58830C385
-        2CC28229BF7F24BC7B21BB781DB8741AB57118B36E18B16C17AF6816AB6316A6
-        5D16AB64EFEFEFECECECECECECF0F7F416AD6616A75D16AC6317AF6817B06B17
-        B26D18B47018B5712DBD7FDAF4E9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFEFC71D9AF37CA
-        8E36C88D34C88B31C68A2EC5872BC28427C18023BF7D20BD7A1DBA771AB77418
-        B57118B47017B16C17B06A16AD6516A85E17AD65EEEEEEECECECECECECF0F7F4
-        17AE6716A85E16AD6517B06917B26D17B46F17B5702BBD7FD9F3E8FFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFAFEFC6BD8AD2FC78B2DC78A2BC58728C48425C282
-        22C07F1FBE7C1CBC791ABA7718B87418B77317B57017B36E17B26C16AE6616A9
-        6017AE67EDEDEDECECECECECECF0F8F417AF6916A95F16AE6717B16B17B36E17
-        B5712ABC7ED9F3E8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        E6F8F1C2EFDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFE
-        FC65D7AB27C68825C58622C28320C2821DBF7E1BBE7B18BB7818BA7718B97617
-        B77417B67217B47017B36D16AF6816AA6217AF68EDEDEDECECECECECECF0F9F5
-        17B06A16AA611BB06C17B26D17B57017B7737FD8B2FFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFE7F9F23ECD9628C78BB7EDD8FFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFEFC60D5A81FC4851EC2831CC281
-        19BF7E18BE7C18BD7B18BC7917BA7717B97617B87417B67217B56E1BB26E16AB
-        6317B06AECECECECECECECECECF0F9F517B16C17AB6222B3711BB5701BB7741B
-        B9771BBA7894DFC0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE7F9F23CCD95
-        21C68822C78828C88DB7EDD8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFAFEFC5ED5A71DC3831CC2821CC1811CC1801BBF7E1BBE7C1BBD7B1B
-        BB7A1BBA781BB8761BB67222B67316AC6519B16CECECECECECECECECECF0F9F5
-        17B26D17AC6429B8771FB8751FBA791FBB7B1FBD7D1FBE7E96E1C3FFFFFFFFFF
-        FFFFFFFFFFFFFFE7F9F23DCD9721C78822C78922C88A23C88C29CB8FB7EED9FF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFEFC5FD6A920C586
-        1FC3841FC2841FC1831FC0811FBF801FBE7E1FBD7D1FBB7A1FB9772ABA7A16AE
-        6621B472ECECECECECECECECECF0F9F517B36E18AF6531BB7D25BA7A25BD7D25
-        BF8025C08225C18325C38598E3C6FFFFFFFFFFFFE8F9F342CE9A26C88C26C88D
-        27CA8F27CB8F27CB9027CC912CCD94B8EEDBFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFAFEFC63D7AC25C78A25C68825C58725C48625C38525
-        C18325C08225BE7F25BC7B32BD8116AF6726B877ECECECECECECECECECF0F8F4
-        17B47018AF673BC0852ABD7F2AC0822AC2852AC3872AC4882AC58A2AC68A9BE5
-        C9E9F9F346D19D2BCB902BCC912BCC922BCD932BCD942BCD952BCE952BCE9530
-        CF97B9EFDCFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFEFC
-        67D9AF2BC98D2AC88C2AC68A2AC58A2AC4882AC3872AC1842ABF803CC18816B0
-        692DBA7DECECECECECECECECECF0F7F417B57119B06945C48C30C08430C28730
-        C58A30C68B30C78D30C88E30C98F30CA913FCF9B30CC9430CD9530CE9530CF97
-        30D09730D19830D19930D19A30D19A30D19A35D29CBBF0DEFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFEFC6ADAB130CA9130C98F30C88E30
-        C78D30C68B30C48930C18546C58F16B16A33BD81ECECECECECECECECECF0F7F4
-        17B67319B16B4FC79436C38836C58C36C88E36C89036CA9236CB9437CC9437CE
-        9637CE9837CF9937D09A37D19B37D29C37D39D37D39E37D49E37D49F37D59F37
-        D5A037D5A03CD6A2BDF1DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFAFEFD6FDCB437CC9436CB9436CA9236C89036C78D36C48A51C99716B2
-        6C3ABF86ECECECECECECECECECEFF6F317B7741AB26D5ACC9C3DC68E3DC9923D
-        CA943DCC963DCD973ECF993ECF9A3ED09C3ED19D3ED39E3ED4A03ED4A13ED5A1
-        3ED6A23ED6A33ED7A43ED7A43ED8A53ED8A53ED8A53ED8A540D8A6BFF2E1FFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFEFD74DDB73ECF993D
-        CD973DCC953DCA933DC8905CCD9E16B46C3FC18AECECECECECECECECECEFF6F3
-        17B8751BB46E66D0A344C99344CC9644CD9844CF9B45D09C45D19E45D29F45D4
-        A145D4A345D5A345D6A545D7A645D8A745D8A745D9A845DAA945DAAA45DAAA45
-        DBAA45DBAB45DBAA45DAAA47DAABC2F3E3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFBFEFD7ADEB945D09C44CF9A44CC9844CB9568D2A616B5
-        6D46C48EECECECECECECECECECEFF5F217B9761BB57071D3AB4CCC994CCE9C4C
-        D19E4DD1A04DD3A24DD4A34DD5A54DD6A64DD7A84DD8A84DD9AA4DDAAB4DDBAC
-        4DDBAD4DDCAE4DDCAE4DDDAF4DDDAF4DDDAF4DDEAF4DDDAF4DDDAF4DDDAF4FDC
-        AFC4F3E4FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFEFD5E
-        D7AB4DD19F4CD09E4CCE9B73D6AD16B56F4CC693ECECECECECECECECECEFF5F2
-        17BA771CB6727BD7B154CF9E54D1A155D4A355D4A655D6A755D6A955D8AA55D9
-        AC55DAAC55DBAE55DCAF55DDB055DEB155DFB255DFB355DFB455E0B455E0B555
-        E0B555E0B555E0B555E0B555E0B455DFB457DFB4C7F4E6FFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFF95E5C955D6A755D4A555D3A354D1A07ED9B416B6
-        7052C897ECECECECECECECECECEFF4F217BB791DB67387DBB85CD2A35CD4A75D
-        D6A95DD7AB5DD8AC5DDAAE5DDAAF5DDCB05DDDB25DDEB35DDFB45DDFB55DE0B6
-        5DE1B75DE2B85DE2B95DE2B95DE3BA5DE3BA5DE3BA5DE3BA5DE3BA5DE2B95DE2
-        B95DE2B85FE1B8CAF5E7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF9AE8CD5DDAAE5D
-        D8AC5DD7AA5DD6A95CD3A68ADDBC16B67158CA9BECECECECECECECECECEEF4F2
-        17BC7A1DB77492DFBF64D5A865D7AC65D9AE65DAB065DBB165DCB365DDB465DE
-        B665DFB765E0B865E1B965E2BA65E3BB65E4BC65E4BD65E4BE65E5BE65E5BE66
-        E6BE66E6BF66E6BE65E5BE65E5BE65E4BE65E4BD65E4BC67E3BCCCF5E8FFFFFF
-        FFFFFFFFFFFF9FEAD165DDB465DCB365DBB165DAAF65D8AE65D6AB95E1C216B7
-        725ECC9FECECECECECECECECECEEF3F117BC7A18B6719DE2C66ED7AF6DDAB16D
-        DCB36DDCB46DDEB66DDFB86DDFB96DE1BA6DE2BB6DE3BD6DE3BE6DE4BF6DE5C0
-        6DE6C06DE6C26EE7C26EE7C36EE8C36EE8C36EE8C46EE8C36EE8C36EE7C36EE7
-        C26DE6C26DE6C06DE5C06FE4C0CFF6EAFFFFFFA4EDD56DE1BA6DDFB96DDFB86D
-        DEB66DDCB46DDBB36ED9B19DE3C716B87365CEA4ECECECECECECECECECF2F3F3
-        1CBF7E16B67199E2C47BDCB675DCB675DEB775DFBA75E0BB75E1BC75E2BD75E3
-        BF75E4C075E5C175E6C275E7C375E7C575E8C576E8C676E9C676EAC776EAC876
-        EAC876EAC876EAC876EAC876EAC776E9C676E8C675E8C575E7C575E7C377E6C3
-        99ECD175E4C075E3BF75E2BD75E1BC75E0BB75DFB975DDB77DDDB895E1C316B8
-        736ED0AAECECECECECECECECECF0F0F041C99316B77279D8B293E2C37EDFBC7E
-        E0BD7EE1BE7EE3C07EE4C17EE4C27EE5C47EE6C57EE7C67EE8C77EE9C87EE9C9
-        7FEACA7FEBCB7FECCB7FECCC7FECCC7FECCC7FECCC7FECCC7FECCC7FECCC7FEC
-        CB7FEBCB7FEACA7EE9C97EE9C87EE8C77EE7C67EE6C57EE5C47EE4C27EE4C17E
-        E3C07EE1BE7EE0BD95E4C673D8B016B87484D7B7ECECECECECECECECECEDEDED
-        8DDCBD16BB7841C891AFE9D387E1C087E3C287E4C387E5C587E6C687E7C787E8
-        C987E8CA87E9CB87EACC87EBCD88EBCD88ECCE88EDCF88EDD088EED088EED188
-        EED188EED188EED188EED188EED088EDD088EDCF88ECCE88EBCD87EBCD87EACC
-        87E9CB87E8CA87E8C987E7C787E6C687E5C587E4C387E3C1AFEAD442CA9316BC
-        78ABE2CDECECECECECECECECECECECECD3EDE317C07F17BB7892E1C3AAE9D290
-        E4C790E6C890E7C990E8CA90E9CB90E9CC90EACE90EBCF90ECD090EDD190EDD1
-        90EED290EFD390EFD490F0D490F0D590F0D590F0D590F0D590F0D590F0D490EF
-        D490EFD390EED290EDD190EDD190ECD090EBCF90EACE90E9CC90E9CB90E8CA90
-        E7C890E5C8A9EAD394E3C517BD7B18C07FD6EDE4ECECECECECECECECECECECEC
-        F0F0F05BD3A618BF7D2AC589B6EDD9B2EDD899E8CC99E9CD99EACF99EBD099EC
-        D199ECD299EDD399EED499EED599EFD599EFD699F0D799F1D899F1D899F1D899
-        F2D999F2D999F2D999F1D899F1D899F1D899F0D799EFD699EFD599EED599EED4
-        99EDD399ECD299ECD199EBD099EACE99E8CDB1EDD8BAEFDB2CC88D17C07E59D4
-        A6F0F0F0ECECECECECECECECECECECECECECECE7F4EF30CA9117C17F29C88C92
-        E5C7C8F3E3B8F0DDABEED7A9EDD7A2EDD5A2EED6A2EFD7A2EFD8A2F0D9A2F0D9
-        A2F1DAA2F2DBA2F2DBA2F2DCA2F3DDA2F3DDA2F3DDA2F3DDA2F3DDA2F2DCA2F2
-        DBA2F2DBA2F1DAA2F0D9A2F0D9A2EFD8A2EFD7A2EED6A8EED7ABEED8B6F0DCC6
-        F3E49DE8CE2DCB9117C2812BCA8FE5F4EEECECECECECECECECECECECECECECEC
-        ECECECF0F0F0DBF1E933CC9518C58517C6863DD29E7CE3C0ACEDD8B7F1DED1F6
-        EAD1F7EBD1F7EBD1F7EBD1F8ECD1F8ECD1F8EDD1F9EDD1F9EDD1F9EED1F9EED1
-        F9EED1F9EED1F9EED1F9EED1F9EED1F9EDD1F9EDD1F8EDD1F8ECD1F8ECD1F7EB
-        D1F7EBD1F6EBBBF2E0ACEFD983E5C444D6A318C88817C6872DCD94D7F1E8F0F0
-        F0ECECECECECECECECECECECECECECECECECECECECECF0F0F0E9F5F166DAB118
-        C98B18CA8B18CC8E18CF9118D19418D39618D49918D69B19D89E19D99F19DBA1
-        19DCA219DEA419DFA619E0A719E1A919E2AA19E3AB19E2AA19E1A919E0A719DF
-        A619DEA419DCA219DBA119D99F19D89E18D69B18D49818D39618D19418CE9018
-        CC8E18CB8D59D8ACE5F4EFF0F0F0ECECECECECECECECECECECECECECECECECEC
-        ECECECECECECECECECECECECF0F0F0DDF0E9B1E7D48CDFC47FDEBF66DBB55FDB
-        B459DCB353DCB24DDDB148DEB041DFB03BDFAF35E0AF2FE1AF28E1AD22E2AD1B
-        E3AC1BE3AC22E3AE27E2AE2EE2AF34E1B03AE1B140DFB147DFB24DDEB252DEB3
-        58DDB45EDCB565DCB67BDFBE8CE1C4ACE6D3D9EFE7F0F0F0ECECECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECECEC
-        ECECECECECECECECECECECECECECECECECECECECECECECECECEC}
-      MultiLine = True
-    end
   end
   object pnlHomeStep: TPanel
     Left = 380
-    Top = 216
+    Top = 232
     Width = 455
-    Height = 284
+    Height = 265
     Color = 11053224
     TabOrder = 29
     Visible = False
     object Label46: TLabel
       Left = 80
-      Top = 248
+      Top = 228
       Width = 62
       Height = 16
       Caption = 'Yuanli Unit'
@@ -70460,7 +68710,7 @@ object MainForm: TMainForm
     end
     object Label47: TLabel
       Left = 80
-      Top = 188
+      Top = 168
       Width = 118
       Height = 16
       Caption = 'EFEM Handling Unit'
@@ -70486,7 +68736,7 @@ object MainForm: TMainForm
     end
     object Label91: TLabel
       Left = 80
-      Top = 168
+      Top = 188
       Width = 63
       Height = 16
       Caption = 'SECS Unit'
@@ -70551,7 +68801,7 @@ object MainForm: TMainForm
     end
     object Label128: TLabel
       Left = 80
-      Top = 228
+      Top = 208
       Width = 77
       Height = 16
       Caption = 'Motion Home'
@@ -70575,22 +68825,9 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
     end
-    object Label312: TLabel
-      Left = 80
-      Top = 208
-      Width = 106
-      Height = 16
-      Caption = 'OLS5000 Connect'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = []
-      ParentFont = False
-    end
     object pnlYuanliUnit: TPanel
       Left = 207
-      Top = 248
+      Top = 228
       Width = 180
       Height = 17
       Font.Charset = ANSI_CHARSET
@@ -70603,7 +68840,7 @@ object MainForm: TMainForm
     end
     object pnlEFEMUnit: TPanel
       Left = 207
-      Top = 188
+      Top = 168
       Width = 180
       Height = 17
       Font.Charset = ANSI_CHARSET
@@ -70629,7 +68866,7 @@ object MainForm: TMainForm
     end
     object pnlSECSUnit: TPanel
       Left = 207
-      Top = 168
+      Top = 188
       Width = 180
       Height = 17
       Font.Charset = ANSI_CHARSET
@@ -71069,7 +69306,7 @@ object MainForm: TMainForm
     end
     object pnlMotionHomeUnit: TPanel
       Left = 207
-      Top = 228
+      Top = 208
       Width = 180
       Height = 17
       Font.Charset = ANSI_CHARSET
@@ -71174,33 +69411,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 12
     end
-    object pnlOLS5000UnitConnect: TPanel
-      Left = 207
-      Top = 208
-      Width = 180
-      Height = 17
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 13
-    end
-    object cbOLS5000Wait: TCheckBox
-      Left = 392
-      Top = 208
-      Width = 49
-      Height = 17
-      Caption = 'Wait'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 14
-    end
   end
   object pnlStartMessage: TPanel
     Left = 380
@@ -71251,18 +69461,6 @@ object MainForm: TMainForm
       TabOrder = 0
       Visible = False
     end
-  end
-  object ICImagingControl2: TICImagingControl
-    Left = 120
-    Top = 848
-    Width = 57
-    Height = 41
-    TabOrder = 32
-    Visible = False
-    ControlData = {
-      000A0000E40500003D0400001E000000FFFF0000020000000500000000000000
-      00000000FFFFFFFF000000000000803FFFFF0000000000000000000000000000
-      0000000000000000010000000000000002000000BB0000000000}
   end
   object tmSystem: TTimer
     Enabled = False
@@ -71478,10 +69676,10 @@ object MainForm: TMainForm
   end
   object tmISCCD: TTimer
     Enabled = False
-    Interval = 50
+    Interval = 80
     OnTimer = tmISCCDTimer
-    Left = 184
-    Top = 848
+    Left = 896
+    Top = 56
   end
   object pmMemo: TPopupMenu
     Left = 616
@@ -71512,10 +69710,9 @@ object MainForm: TMainForm
   end
   object pmLensSwitch: TPopupMenu
     Left = 584
-    Top = 744
+    Top = 736
     object mnToLens: TMenuItem
       Caption = 'To Lens(0)'
-      Hint = 'Switch To OLS5000CCD'
       OnClick = mnToLensClick
     end
     object mnToLens1: TMenuItem
@@ -71540,29 +69737,11 @@ object MainForm: TMainForm
     end
     object mnToCCD: TMenuItem
       Caption = 'To CCD'
-      Checked = True
-      Hint = 'Switch To MotionCCD'
       OnClick = mnToCCDClick
     end
     object mnToLensTilt: TMenuItem
       Caption = 'To Lens(45)'
-      Hint = 'Switch to TiltCCD'
       OnClick = mnToLensTiltClick
-    end
-    object mnSetLens0: TMenuItem
-      Caption = 'Set Lens0'
-      Hint = 'Now in the OLS5000CCD'
-      OnClick = mnSetLens0Click
-    end
-    object mnSetCCD: TMenuItem
-      Caption = 'Set CCD'
-      Hint = 'Now in the MotionCCD'
-      OnClick = mnSetCCDClick
-    end
-    object mnSetLens45: TMenuItem
-      Caption = 'Set Lens45'
-      Hint = 'Now in the TiltCCD'
-      OnClick = mnSetLens45Click
     end
   end
   object opkmfFile: TOpenDialog
@@ -71901,7 +70080,7 @@ object MainForm: TMainForm
     OnClientDisconnect = ssSECSSocketClientDisconnect
     OnClientRead = ssSECSSocketClientRead
     OnClientError = ssSECSSocketClientError
-    Left = 1208
+    Left = 1240
     Top = 243
   end
   object tmLoadPort1ORGN: TTimer
@@ -72042,7 +70221,7 @@ object MainForm: TMainForm
     OnDisconnect = csOLS5000Disconnect
     OnRead = csOLS5000Read
     OnError = csOLS5000Error
-    Left = 1234
+    Left = 1274
     Top = 240
   end
   object pm45Set: TPopupMenu
@@ -72065,7 +70244,7 @@ object MainForm: TMainForm
       OnClick = mn45CuDownClick
     end
     object mn45Save: TMenuItem
-      Caption = 'Save(Result)'
+      Caption = 'Save'
       OnClick = mn45SaveClick
     end
     object mn45Clear: TMenuItem
@@ -72085,42 +70264,5 @@ object MainForm: TMainForm
     OnTimer = tmFindCenterTimer
     Left = 1048
     Top = 824
-  end
-  object tmSetupOLS5000: TTimer
-    Enabled = False
-    Interval = 200
-    OnTimer = tmSetupOLS5000Timer
-    Left = 1080
-    Top = 824
-  end
-  object tmVieworks: TTimer
-    Enabled = False
-    Interval = 50
-    OnTimer = tmVieworksTimer
-    Left = 1112
-    Top = 824
-  end
-  object tmISCCD2: TTimer
-    Enabled = False
-    Interval = 50
-    OnTimer = tmISCCD2Timer
-    Left = 216
-    Top = 848
-  end
-  object pmPoint: TPopupMenu
-    Left = 376
-    Top = 352
-    object mnDeletePoint: TMenuItem
-      Caption = 'Delete'
-      OnClick = mnDeletePointClick
-    end
-    object mnDeleteAllPoint: TMenuItem
-      Caption = 'Delete All'
-      OnClick = mnDeleteAllPointClick
-    end
-    object mnSavePoint: TMenuItem
-      Caption = 'Save'
-      OnClick = mnSavePointClick
-    end
   end
 end

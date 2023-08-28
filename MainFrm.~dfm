@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 113
-  Top = 94
+  Left = -39
+  Top = 35
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Measure Motion'
@@ -21938,7 +21938,7 @@ object MainForm: TMainForm
                 Font.Height = -13
                 Font.Name = 'Arial'
                 Font.Style = []
-                ItemHeight = 0
+                ItemHeight = 16
                 ParentFont = False
                 TabOrder = 9
                 OnChange = comboPatternChange
@@ -22494,7 +22494,7 @@ object MainForm: TMainForm
                   Font.Height = -19
                   Font.Name = 'Arial'
                   Font.Style = []
-                  ItemHeight = 0
+                  ItemHeight = 22
                   ParentFont = False
                   TabOrder = 5
                   OnClick = comboOlympusVisionName1Click

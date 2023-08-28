@@ -1086,38 +1086,8 @@ X/Y: Command/Counter不一致
 //     a.測試明視野BF by Recipe做動
 //     b.測試偏光PO by Recipe做動
 //
-// 2023 8 21 - chc
-//  1. LiftPin表面要降速: false(1000), 高速為5000
 //
 //
-//
-//
-//
-//
-//
-//
-// LR: 同步發出E84.LOAD, 等GPIO ... 等STAT 1100/0000, Timeout做處理
-// UR: 同步發出E84.UNLD, 等GPIO ... 等STAT 1100/0000, Timeout做處理
-//
-// 1. 三點找中心參數: 不要
-//    => 保留
-// 2. 0,45,0+45
-//    => ok
-// 3. Recipe加入LED亮度: Motion/45
-//    => ok
-// 4. 2Port LoopTest
-// 5. system config加入: Macro timeout
-//    => ok
-// 6. yuanli socket測試判斷?
-//    => 看Log
-// 7. joystick
-//    => 待測試
-// 8. E84
-// 9. Autofocus?
-//    => 待測試
-// 10.Vieworks CCD display
-//    =>
-// 11. 連續Reset Vieworks CCD會讓Motion CCD當掉!!
 //
 //
 //
@@ -1397,11 +1367,6 @@ bool boolLogDateTime = true;
 #pragma link "ICImagingControl3_OCX"
 #pragma link "LMDBackPanel"
 #pragma link "LMDSimplePanel"
-#pragma link "LMDBaseImage"
-#pragma link "LMDCustomLImage"
-#pragma link "LMDLImage"
-#pragma link "LMDCustomNImage"
-#pragma link "LMDNImage"
 #pragma resource "*.dfm"
 
 // 2016 2 15 - chc 加入PCI-8154, 4XMO-C(32bit) <= 源自MaskAOI 7856(4XMO)
@@ -1473,6 +1438,7 @@ typedef struct {
 PYLON_STREAMGRABBER_HANDLE hStg;
 PYLON_WAITOBJECT_HANDLE    hWobj;
 // GigE CCD : scA1300
+bool bool_scA1300_Status;
 PylonGrabResult_t grabResult;
 _Bool bufferReady;
 bool boolInGigaBuffer = false;
@@ -1493,8 +1459,8 @@ struct CCDINFO_STRU        {
    AnsiString DeviceID;
 };
 struct CCDINFO_STRU        CCDInfoAry[3];
-TscA1300 *CCDThreadAry[3] = {NULL};
-bool bool_CCD_StatusAry[3] = {false, false, false};
+TscA1300 *scA1300ThreadAry[3] = {NULL};
+bool bool_scA1300_StatusAry[3] = {false, false, false};
 int CCDSelectNo = -1;
 
 // 2016 5 10 - chc Motion State: 由Motion.cpp移過來
@@ -1615,7 +1581,7 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 
    // 2023 8 2 - chc Position
    pnlHomeStep->Left = 380;
-   pnlHomeStep->Top = 216;
+   pnlHomeStep->Top = 232;
 
    WaferColor_Select = clYellow;
    WaferColor_No = clWhite;
@@ -1646,32 +1612,12 @@ __fastcall TMainForm::~TMainForm()
 
 }
 //---------------------------------------------------------------------------
-#define CCDTYPE_VIEWORKS                0
-#define CCDTYPE_DFK                     1
-int TiltCCDType = CCDTYPE_DFK;
-
 void __fastcall TMainForm::FormShow(TObject *Sender)
 {
 AnsiString name;
 
-   // 2023 8 23 - chc 手動量測
-   MeasureDataTitle();
-
-   // 2023 8 22 - chc in trigger
-   boolInTrigger = false;
-
-   // 2023 8 20 - chc true: 由MainForm 的timer來做
-   boolInVieworksDisplay = false;
-   tmVieworks->Enabled = true;
-
-   // 2023 8 6 - chc MoveToXYZT不用改變Z/Z1
-   boolMoveToXYZT_DoZ = true;
-
    // 2022 2 13 - chc RCMD: 1-Cancel, 2-Abort SECSRemoteCommand
    SECSRemoteCommand = SECS_REMOTE_NONE;
-
-   // 2023 8 17 - chc set Active page
-   pcOP->ActivePage = tsRun;
 
    // 2021 10 7 - chc 不能在這裡設定: true-正常, false-異常
    boolEFEMVacuum = true;
@@ -1760,10 +1706,6 @@ AnsiString name;
    pnlFocusDoneE->Top = 455;
    pnlFocusDoneE->Left = 48;
 
-   // 2023 8 20a - chc 位置
-   btnMeasureStop->Left = 48;
-   btnMeasureStop->Top = 759;
-
    // 2019 7 15 - chc Area / Point title
    AreaPointTitle();
 
@@ -1781,8 +1723,8 @@ AnsiString name;
    // 2016 7 27 - chc Check front door
    boolSystemStarted = false;
 
-   sbSystemMessage->Panels->Items[2]->Text = "C14";
-   WriteSystemLog(">>Version : C14");
+   sbSystemMessage->Panels->Items[2]->Text = "C13";
+   WriteSystemLog(">>Version : C13");
 
    // 產生ini檔名與目錄名
    SystemINIFilename = SystemDirectory + SYSTEM_INI_FILENAME;
@@ -1796,10 +1738,6 @@ AnsiString name;
    // 2023 8 13 - chc WaferColor.ini檔名與目錄名
    WaferColorINIFilename = SystemDirectory + WAFERCOLOR_INI_FILENAME;
    LoadWaferColor();
-
-   // 2023 8 15 - chc Trigger Parameters
-   TriggerINIFilename = SystemDirectory + TRIGGER_INI_FILENAME;
-   LoadTrigger();
 
    // 2016 7 29 - chc Log
    WriteSystemLog(">>LoadSystemParameter()");
@@ -1876,9 +1814,6 @@ AnsiString name;
    // 2019 6 24 - chc LED 2
    WriteSystemLog(">>InitLampControl2()");
    InitLampControl2();
-
-   // 2023 8 16 - chc Create Recipe & Macro
-   CreateRecipeMacro(0);
 
  // 2016 9 21 - chc for Magnification settting: lens.txt must read before LoadWDIParameter
  // try-catch
@@ -2125,57 +2060,39 @@ AnsiString name;
    }
 
    // 2016 11 25 - chc Log
-   //WriteSystemLog("SetupCCD()...");
+   //WriteSystemLog("SetupscA1300()...");
    WriteSystemLog("Setup CCD...");
 
    // 2023 8 2 - chc Init Start
    pnlInspCCDUnit->Caption = "Initialize...";
 
-   // 2023 8 21 - chc 換DFK
-   if(TiltCCDType == CCDTYPE_DFK) {
-      btnLive->Enabled = false;
-      btnGrab->Enabled = false;
-      btn45Reset->Enabled = false;
-      btnClearActive->Enabled = false;
-      cb45ExposureAuto->Enabled = false;
-      cbResetFirst->Enabled = false;
-      cbTimerDisplay->Enabled = false;
-      cbLoadFirst->Enabled = false;
-      cbGrabFirst->Enabled = false;
-      // 不設定, 用Default
-      //ed45Shutter->Text = "100";
+   // 2023 6 5 - chc init ViewWorks CCD
+   // 2023 8 6 - chc 另建module
+   //InitVworks();
+   //if(boolVworksCCD == true) {
+   if(boolForTest == true) {
+      pnlOpenCCD->Color = clRed;
    }
    else {
-      cbCCDTrigger->Enabled = false;
 
-      // 2023 6 5 - chc init ViewWorks CCD
-      // 2023 8 6 - chc 另建module
-      //InitVworks();
-      //if(boolVworksCCD == true) {
-      if(boolForTest == true) {
-         pnlOpenCCD->Color = clRed;
+      VieworksCCD = new VworksCCD();
+      if(VieworksCCD->boolVworksCCD == true) {
+
+         pnlOpenCCD->Color = clLime;
+
+         // 2023 8 2 - chc Init Start
+         pnlInspCCDUnit->Caption = "Completed.";
+
       }
       else {
+         pnlOpenCCD->Color = clRed;
 
-         VieworksCCD = new VworksCCD();
-         if(VieworksCCD->boolVworksCCD == true) {
-
-            pnlOpenCCD->Color = clLime;
-
-            // 2023 8 2 - chc Init Start
-            pnlInspCCDUnit->Caption = "Completed.";
-
-         }
-         else {
-            pnlOpenCCD->Color = clRed;
-
-            // 2023 8 2 - chc Init Start
-            pnlInspCCDUnit->Caption = "Fail!";
-            pnlInspCCDUnit->Font->Color = clRed;
-         }
+         // 2023 8 2 - chc Init Start
+         pnlInspCCDUnit->Caption = "Fail!";
+         pnlInspCCDUnit->Font->Color = clRed;
 
       }
-   }
+   }   
 
    // 2023 8 8 - chc OLS5000
    /*
@@ -2199,12 +2116,11 @@ AnsiString name;
 
    // 2023 8 2 - chc Init Start
    pnlMatchCCDUnit->Caption = "Initialize...";
-   pnlInspCCDUnit->Caption = "Initialize...";
 
-   // 2016 4 16 - chc CCD
+   // 2016 4 16 - chc scA1300 CCD
    // .2(Review)
-   SetupCCD();                                                                  // 要個自啟動Thread來取像
-   if(bool_CCD_StatusAry[0] == true) {
+   SetupscA1300();                                                              // 要個自啟動Thread來取像
+   if(bool_scA1300_StatusAry[0] == true) {
       pnlCCDStatus->Color = clLime;
       AlarmStatus.boolReviewCCD = false;
 
@@ -2318,7 +2234,7 @@ AnsiString name;
       //GigaWidth = 1280;
       //GigaHeight = 1024;
       //usb_ImageAry[0].SetSize(GigaWidth,GigaHeight);
-      //CCDInfoAry[0].Type = CCD_COLOR;
+      //CCDInfoAry[0].Type = BASLER_CCD_COLOR;
       //usb_ImageROIAry[0].Attach(&usb_ImageAry[0]);
       //usb_ImageMarkROIAry[0].Attach(&usb_ImageAry[0]);
       //CCDInfoAry[0].Width = 1280;
@@ -2327,10 +2243,10 @@ AnsiString name;
       GigaHeight = 1200;
       CCDInfoAry[0].Width = GigaWidth;
       CCDInfoAry[0].Height = GigaHeight;
-      CCDInfoAry[0].Type = CCD_BW;
-      CCDImageAry[0].SetSize(GigaWidth,GigaHeight);
-      CCDImageROIAry[0].Attach(&CCDImageAry[0]);
-      CCDImageROIAry[0].Attach(&CCDImageAry[0]);
+      CCDInfoAry[0].Type = BASLER_CCD_BW;
+      scA1300ImageAry[0].SetSize(GigaWidth,GigaHeight);
+      scA1300ImageROIAry[0].Attach(&scA1300ImageAry[0]);
+      scA1300ImageROIAry[0].Attach(&scA1300ImageAry[0]);
 
    }
 
@@ -2575,9 +2491,6 @@ AnsiString name;
    SetSECSCmdSet();
    boolInMeasure = false;
 
-   btn45Measured->Top = 824;
-   btn45Measured->Left = 686;
-
    // 2020 7 14 - chc Check Door
    //CheckStageDoor();
 
@@ -2671,11 +2584,6 @@ toexit:
 
       }
 
-      // 2023 8 17a - chc Local & Disconnect
-      btnOLSToLocalClick(this);
-      WaitTime(200);
-      btnOLS5000DisconnectClick(this);
-
    // 2016 5 20 - chc 加入Try-Catch
    }
    catch(Exception &e) {
@@ -2703,12 +2611,6 @@ static bool boolSetupTime = false;
 static int tmcnt = 0;
 static bool boolopen = true;
    tmcnt++;
-
-// 2023 8 25 - chc UnLoad改成3倍時間做一次(因Error退片需要做更新Status)
-static int tmlp1cnt = 0;
-static int tmlp2cnt = 0;
-   tmlp1cnt++;
-   tmlp2cnt++;
 
    // 2021 11 22 - chc EFEM With wafer Alarm: laAlarm
    if(WaferInSystem() == true) {
@@ -2781,9 +2683,7 @@ static int tmlp2cnt = 0;
       if(cbLoadPort1GPIO->Checked == true) {
 
          // 2023 8 4 - chc 在"Load"時才要做, 已Load就不檢查
-         // 2023 8 25 - chc UnLoad改成3倍時間做一次(因Error退片需要做更新Status)
-         //if(btnCassetteLoad->Caption == "Load")
-         if(btnCassetteLoad->Caption == "Load" || (btnCassetteLoad->Caption == "UnLoad" && (tmlp1cnt % 3) == 1))
+         if(btnCassetteLoad->Caption == "Load")
 
             btnLoadPort1GPIOClick(this);
       }
@@ -2792,7 +2692,7 @@ static int tmlp2cnt = 0;
       if(cbLoadPort2GPIO->Checked == true) {
 
          // 2023 8 4 - chc 在"Load"時才要做, 已Load就不檢查
-         if(btnCassette2Load->Caption == "Load" || (btnCassette2Load->Caption == "UnLoad" && (tmlp2cnt % 3) == 1))
+         if(btnCassette2Load->Caption == "Load")
 
             btnLoadPort2GPIOClick(this);
       }
@@ -2816,14 +2716,14 @@ static int tmlp2cnt = 0;
       // 是否要做?? @@
       //InspectThread->Resume();
       //RoutineThread->Resume();
-      //CCDThread->Resume();
+      //scA1300Thread->Resume();
       //usbCCDThread->Resume();
       //WriteSystemLog(">>RoutineThread->Resume().");
 
       // Motion Init
       if(bool_APS_Status == true) {
          pnl7856Status->Color = clLime;
-         pnlSystemMessage->Caption = "Wait: Motion SVON...";
+         pnlSystemMessage->Caption = "等待Motion SVON...";
          AxisSVON();
          if(btnHome->Enabled == true)
             pnlSystemMessage->Caption = "Motion SVON OK.";
@@ -3228,7 +3128,7 @@ AnsiString str;
 
    // 2016 2 25 - chc 檢查等級
    if(PriorityLevel < PRIORITY_AD) {
-      pnlSystemMessage->Caption = "Unauthorized! Unable to change parameter.";
+      pnlSystemMessage->Caption = "未授權! 無法變更參數.";
       return;
    }
 
@@ -3237,7 +3137,7 @@ AnsiString str;
       return;
    }
 
-   pnlSystemMessage->Caption = "parameter update...";
+   pnlSystemMessage->Caption = "參數更新中...";
    // ini檔名與目錄
    pSystemFile = new TIniFile(MainForm->SystemINIFilename);
 
@@ -3396,13 +3296,13 @@ AnsiString str;
    iCrossMark = rgRulerType->ItemIndex;
    pSystemFile->WriteInteger("System Parameter","int Cross Mark"                ,iCrossMark);
 
-   // Basler Shutter & Gain: 等setupCCD後才能設定
-   BaslerShutter = rgCCDShutter->ItemIndex;
-   BaslerGain = tbCCDGain->Position;
+   // Basler Shutter & Gain: 等setupsca1300後才能設定
+   BaslerShutter = rgBaslerShutter->ItemIndex;
+   BaslerGain = tbBaslerGain->Position;
    pSystemFile->WriteInteger("System Parameter","Basler Shutter"                ,BaslerShutter);
    pSystemFile->WriteInteger("System Parameter","Basler Gain"                   ,BaslerGain);
-   CCDShutterAry[0] = BaslerShutter;
-   CCDGainAry[0] = BaslerGain;
+   scA1300ShutterAry[0] = BaslerShutter;
+   scA1300GainAry[0] = BaslerGain;
 
    // 各軸資訊
    // X
@@ -3757,7 +3657,7 @@ static bool first = true;
    // 是否Motion Ready?
    if(pnl7856Status->Color == clRed) {
       //pnlSystemMessage->Caption = "Motion Not Ready, Can not do Home!";
-      pnlSystemMessage->Caption = "The axis control is abnormal, homing cannot be performed!";
+      pnlSystemMessage->Caption = "軸控異常, 無法執行原點復歸!";
       imClose->Enabled = true;
       return;
    }
@@ -3799,7 +3699,7 @@ static bool first = true;
 
    // Check上是否有Wafer
    // 2021 7 17 - chc EFEM Setup不檢察Stage
-   pnlSystemMessage->Caption = "Home: Is there a Wafer on the Stage?";
+   pnlSystemMessage->Caption = "Home: Stage上是否有Wafer?";
    if(IsChuckWithWafer() == true) {
       WriteSystemLog("btnHomeClick() Stage with wafer!");
       pnlAlarmMessage->Caption = "Stage上有Wafer!";
@@ -3871,7 +3771,7 @@ static bool first = true;
    WriteSystemLog(">btnHomeClick(): 呼叫AllHome().");
 
    // Home結束會自動到退料區, 並設定boolHomeDone = true;
-   pnlSystemMessage->Caption = "Axis control not ready, cannot reset!";
+   pnlSystemMessage->Caption = "軸控未備妥, 無法復歸!";
    AllHome();
    WriteSystemLog(">Leave AllHome()");
 
@@ -3997,6 +3897,7 @@ static bool first = true;
          SendSECSStatus(EQ_STATUS_IDLE);
 
       }
+
    }
 
    // 2019 11 27 - chc 第一次做Home
@@ -4019,10 +3920,6 @@ static bool first = true;
       pnlMatchKernelUnit->Font->Color != clRed && pnlCDAVacuumUnit->Font->Color != clRed && pnlEFEMUnit->Font->Color != clRed &&
       pnlSECSUnit->Font->Color != clRed && pnlMotionHomeUnit->Font->Color != clRed && pnlYuanliUnit->Font->Color != clRed) {
       pnlHomeStep->Visible = false;
-      pnlStartMessage->Visible = false;
-   }
-   else {
-      pnlStartMessage->Caption = "Not Ready!";
    }
    pnlMoving->Visible = false;
 
@@ -4399,18 +4296,10 @@ AnsiString str,fname;
       sgDot->Cells[5][i+1] = RecipeBuffer[RecipeTotalNo].DotBuf[i].Recipe;
       sgDot->Cells[6][i+1] = IntToStr(RecipeBuffer[RecipeTotalNo].DotBuf[i].Row);
       sgDot->Cells[7][i+1] = IntToStr(RecipeBuffer[RecipeTotalNo].DotBuf[i].Col);
-
-      // 2023 8 16 - chc 加入Macro
-      RecipeBuffer[RecipeTotalNo].DotBuf[i].Macro    = pSystemFile->ReadString(RECIPE_INFORMATION_SECTION,"Dot"+IntToStr(i+1)+" Macro"       ,"NA");
-      sgDot->Cells[8][i+1] = RecipeBuffer[RecipeTotalNo].DotBuf[i].Macro;
-
    }
 
    // 2019 12 13 - chc 清除最後一Row
-   // 2023 8 16 - chc 加入Macro
-   //for(int i=0 ; i<8 ; i++)
-   for(int i=0 ; i<sgDot->ColCount ; i++)
-
+   for(int i=0 ; i<8 ; i++)
       sgDot->Cells[i][sgDot->RowCount-1] = "";
 
    // 設定第1 Area/Dot值
@@ -4472,33 +4361,6 @@ AnsiString str,fname;
    // 2023 1 28 - chc edY45Offset
    RecipeBuffer[RecipeTotalNo].Y45Offset = pSystemFile->ReadInteger(RECIPE_INFORMATION_SECTION,"Y45Offset"                ,0);
    edY45Offset->Text = IntToStr(RecipeBuffer[RecipeTotalNo].Y45Offset);
-
-   // 2023 8 16 - chc 加入OperationMode, LightMode, Gain, Brightness
-   RecipeBuffer[RecipeTotalNo].OperationMode = pSystemFile->ReadInteger(OPERATION_MODE,"OperationMode"                  ,OPERATION_ALL);
-   rgOperationMode->ItemIndex = RecipeBuffer[RecipeTotalNo].OperationMode;
-   rgOperationMode1->ItemIndex = RecipeBuffer[RecipeTotalNo].OperationMode;
-   RecipeBuffer[RecipeTotalNo].LightMode = pSystemFile->ReadInteger(LIGHT_MODE,"LightMode"                              ,LIGHT_BF);
-   rgLightMode->ItemIndex = RecipeBuffer[RecipeTotalNo].OperationMode;
-   rgLightMode1->ItemIndex = RecipeBuffer[RecipeTotalNo].OperationMode;
-   RecipeBuffer[RecipeTotalNo].Gain = pSystemFile->ReadInteger(RECIPE_INFORMATION_SECTION,"Gain"                        ,15);
-   edRecipeGain->Text = IntToStr(RecipeBuffer[RecipeTotalNo].Gain);
-   RecipeBuffer[RecipeTotalNo].Brightness = pSystemFile->ReadInteger(RECIPE_INFORMATION_SECTION,"Brightness"              ,48);
-   edRecipeBrightness->Text = IntToStr(RecipeBuffer[RecipeTotalNo].Brightness);
-
-   // 2023 8 22 - chc Shutter
-   RecipeBuffer[RecipeTotalNo].Shutter = pSystemFile->ReadInteger(RECIPE_INFORMATION_SECTION,"Shutter"              ,100);
-   edRecipeShutter->Text = IntToStr(RecipeBuffer[RecipeTotalNo].Shutter);
-
-   // 2023 8 19 - chc 加入LED
-   RecipeBuffer[RecipeTotalNo].LED1 = pSystemFile->ReadInteger("LED","LED1"                  ,20);
-   edRecipeLED1->Text = IntToStr(RecipeBuffer[RecipeTotalNo].LED1);
-   RecipeBuffer[RecipeTotalNo].LED2 = pSystemFile->ReadInteger("LED","LED2"                  ,20);
-   edRecipeLED2->Text = IntToStr(RecipeBuffer[RecipeTotalNo].LED2);
-
-   // 2023 8 24 - chc 加入Start
-   RecipeBuffer[RecipeTotalNo].Start = pSystemFile->ReadInteger("Trigger","Start"                  ,200);
-   edRecipeStart->Text = IntToStr(RecipeBuffer[RecipeTotalNo].Start);
-   edTriggerStart->Text = edRecipeStart->Text;
 
    // 2021 8 6 - chc 加入Wafer角度設定
    RecipeBuffer[RecipeTotalNo].Pos1X = pSystemFile->ReadInteger(RECIPE_INFORMATION_SECTION,"Pos1X"                 ,0);
@@ -4582,17 +4444,10 @@ AnsiString str;
       sgDot->Cells[5][i+1] = RecipeBuffer[no].DotBuf[i].Recipe;
       sgDot->Cells[6][i+1] = IntToStr(RecipeBuffer[no].DotBuf[i].Row);
       sgDot->Cells[7][i+1] = IntToStr(RecipeBuffer[no].DotBuf[i].Col);
-
-      // 2023 8 16 - chc 加入Macro
-      sgDot->Cells[8][i+1] = RecipeBuffer[no].DotBuf[i].Macro;
-
    }
 
    // 2019 12 11 - chc 清除最後一Row
-   // 2023 8 16 - chc 加入Macro
-   //for(int i=0 ; i<8 ; i++)
-   for(int i=0 ; i<sgDot->ColCount ; i++)
-
+   for(int i=0 ; i<8 ; i++)
       sgDot->Cells[i][sgDot->RowCount-1] = "";
 
    // 設定第1 Area/Dot值
@@ -4619,16 +4474,6 @@ AnsiString str;
    pnlBase2X->Caption = IntToStr(RecipeBuffer[no].BaseBuf[1].X);
    pnlBase2Y->Caption = IntToStr(RecipeBuffer[no].BaseBuf[1].Y);
    pnlBase2Z->Caption = IntToStr(RecipeBuffer[no].BaseBuf[1].Z);
-
-   // 2023 8 20 - chc 加入OperationMode, LightMode, Gain, Brightness, LED1, LED2
-   rgOperationMode->ItemIndex = RecipeBuffer[no].OperationMode;
-   rgOperationMode1->ItemIndex = RecipeBuffer[no].OperationMode;
-   rgLightMode->ItemIndex = RecipeBuffer[no].LightMode;
-   rgLightMode1->ItemIndex = RecipeBuffer[no].LightMode;
-   edRecipeGain->Text = IntToStr(RecipeBuffer[no].Gain);
-   edRecipeBrightness->Text = IntToStr(RecipeBuffer[no].Brightness);
-   edRecipeLED1->Text = IntToStr(RecipeBuffer[no].LED1);
-   edRecipeLED2->Text = IntToStr(RecipeBuffer[no].LED2);
 
    // 2019 12 13 - chc 要設定Recipe的Recipe Name
    combRecipe->Text = cbRecipe->Text;
@@ -4726,10 +4571,6 @@ AnsiString str;
       sgDot->Cells[5][i+1] = RecipeBuffer[no].DotBuf[i].Recipe;
       sgDot->Cells[6][i+1] = IntToStr(RecipeBuffer[no].DotBuf[i].Row);
       sgDot->Cells[7][i+1] = IntToStr(RecipeBuffer[no].DotBuf[i].Col);
-
-      // 2023 8 16 - chc 加入Macro
-      sgDot->Cells[8][i+1] = RecipeBuffer[no].DotBuf[i].Macro;
-
    }
 
    // 2021 6 16 - chc 更新DieSize
@@ -4769,18 +4610,6 @@ AnsiString str;
    // 2023 2 8 - chc Y45Offset Update - DisplayRecipeSet()
    edY45Offset->Text = IntToStr(RecipeBuffer[no].Y45Offset);
 
-   // 2023 8 16 - chc 加入OperationMode, LightMode, Gain, Brightness
-   rgOperationMode->ItemIndex = RecipeBuffer[no].OperationMode;
-   rgOperationMode1->ItemIndex = RecipeBuffer[no].OperationMode;
-   rgLightMode->ItemIndex = RecipeBuffer[no].LightMode;
-   rgLightMode1->ItemIndex = RecipeBuffer[no].LightMode;
-   edRecipeGain->Text = IntToStr(RecipeBuffer[no].Gain);
-   edRecipeBrightness->Text = IntToStr(RecipeBuffer[no].Brightness);
-
-   // 2023 8 19 - chc 加入LED
-   edRecipeLED1->Text = IntToStr(RecipeBuffer[no].LED1);
-   edRecipeLED2->Text = IntToStr(RecipeBuffer[no].LED2);
-
    // 2021 10 6 - chc 若未定義用尋找中心
    // => 若偏移量太大就不做偏移量就好
    //if(RecipeBuffer[no].DieCenterX == 0)
@@ -4789,10 +4618,7 @@ AnsiString str;
    //   pnlWaferDieCenterY->Caption = pnlCenterYFind->Caption;
 
    // 2019 12 11 - chc 清除最後一Row
-   // 2023 8 16 - chc 加入Macro
-   //for(int i=0 ; i<8 ; i++)
-   for(int i=0 ; i<sgDot->ColCount ; i++)
-
+   for(int i=0 ; i<8 ; i++)
       sgDot->Cells[i][sgDot->RowCount-1] = "";
 
    // 2019 12 11 - chc 找量測影像檔: comboPattern
@@ -4958,11 +4784,6 @@ AnsiString str;
       pSystemFile->WriteString(RECIPE_INFORMATION_SECTION,"Dot"+IntToStr(i+1)+" Recipe"          ,RecipeBuffer[no].DotBuf[i].Recipe);
       pSystemFile->WriteInteger(RECIPE_INFORMATION_SECTION,"Dot"+IntToStr(i+1)+" Row"            ,RecipeBuffer[no].DotBuf[i].Row);
       pSystemFile->WriteInteger(RECIPE_INFORMATION_SECTION,"Dot"+IntToStr(i+1)+" Col"            ,RecipeBuffer[no].DotBuf[i].Col);
-
-      // 2023 8 16 - chc 加入Macro
-      RecipeBuffer[no].DotBuf[i].Macro         = sgDot->Cells[8][i+1];
-      pSystemFile->WriteString(RECIPE_INFORMATION_SECTION,"Dot"+IntToStr(i+1)+" Macro"           ,RecipeBuffer[no].DotBuf[i].Macro);
-
    }
 
    // 2021 6 16 - chc 加入Die size
@@ -4985,30 +4806,6 @@ AnsiString str;
    // 2023 1 28 - chc edY45Offset
    RecipeBuffer[no].Y45Offset = edY45Offset->Text.ToInt();
    pSystemFile->WriteInteger(RECIPE_INFORMATION_SECTION,"Y45Offset"             ,RecipeBuffer[no].Y45Offset);
-
-   // 2023 8 16 - chc 加入OperationMode, LightMode, Gain, Brightness
-   RecipeBuffer[no].OperationMode = rgOperationMode->ItemIndex;
-   pSystemFile->WriteInteger(OPERATION_MODE,"OperationMode"                     ,RecipeBuffer[no].OperationMode);
-   RecipeBuffer[no].LightMode = rgLightMode->ItemIndex;
-   pSystemFile->WriteInteger(LIGHT_MODE,"LightMode"                             ,RecipeBuffer[no].LightMode);
-   RecipeBuffer[no].Gain = edRecipeGain->Text.ToInt();
-   pSystemFile->WriteInteger(RECIPE_INFORMATION_SECTION,"Gain"                  ,RecipeBuffer[no].Gain);
-   RecipeBuffer[no].Brightness = edRecipeBrightness->Text.ToInt();
-   pSystemFile->WriteInteger(RECIPE_INFORMATION_SECTION,"Brightness"            ,RecipeBuffer[no].Brightness);
-
-   // 2023 8 22 - chc Shutter
-   RecipeBuffer[no].Shutter = edRecipeShutter->Text.ToInt();
-   pSystemFile->WriteInteger(RECIPE_INFORMATION_SECTION,"Shutter"               ,RecipeBuffer[no].Shutter);
-
-   // 2023 8 19 - chc 加入LED
-   RecipeBuffer[no].LED1 = edRecipeLED1->Text.ToInt();
-   pSystemFile->WriteInteger("LED","LED1"                                       ,RecipeBuffer[no].LED1);
-   RecipeBuffer[no].LED2 = edRecipeLED2->Text.ToInt();
-   pSystemFile->WriteInteger("LED","LED2"                                       ,RecipeBuffer[no].LED2);
-
-   // 2023 8 24 - chc 加入Start
-   RecipeBuffer[no].Start = edRecipeStart->Text.ToInt();
-   pSystemFile->WriteInteger("Trigger","Start"                                  ,RecipeBuffer[no].Start);
 
    // 2021 9 27 - chc 以WaferMap為主
    //edDieSizeX->Text = str;
@@ -5463,12 +5260,9 @@ void __fastcall TMainForm::SwitchLevel()
       pnlFocusWin->Visible = false;
       tsHelp->TabVisible = false;
       tsUser->TabVisible = false;
-      tsOLS5000->TabVisible = false;
 
       // 2021 4 25 - chc 要關EFEMR & Focus
       tsMatch->TabVisible = false;
-      tsSystemConfig->TabVisible = false;
-      tsHome->TabVisible = false;
 
       // 不可用Laser Center
       btnResetLaserCenter->Enabled = false;
@@ -5511,11 +5305,8 @@ void __fastcall TMainForm::SwitchLevel()
       pnlFocusWin->Visible = false;
       tsHelp->TabVisible = false;
       tsUser->TabVisible = false;
-      tsOLS5000->TabVisible = false;
 
       tsMatch->TabVisible = false;
-      tsSystemConfig->TabVisible = false;
-      tsHome->TabVisible = false;
 
       // 可用Laser Center
       btnResetLaserCenter->Enabled = true;
@@ -5552,11 +5343,8 @@ void __fastcall TMainForm::SwitchLevel()
       pnlFocusWin->Visible = true;
       tsHelp->TabVisible = true;
       tsUser->TabVisible = true;
-      tsOLS5000->TabVisible = true;
 
       tsMatch->TabVisible = true;
-      tsSystemConfig->TabVisible = true;
-      tsHome->TabVisible = true;
 
       // 可用Laser Center
       btnResetLaserCenter->Enabled = true;
@@ -5597,11 +5385,8 @@ void __fastcall TMainForm::SwitchLevel()
       pnlFocusWin->Visible = true;
       tsHelp->TabVisible = true;
       tsUser->TabVisible = true;
-      tsOLS5000->TabVisible = true;
 
       tsMatch->TabVisible = true;
-      tsSystemConfig->TabVisible = true;
-      tsHome->TabVisible = true;
 
       // 可用Laser Center
       btnResetLaserCenter->Enabled = true;
@@ -5994,7 +5779,7 @@ GENAPIC_RESULT res;                    // Return value of pylon methods.
 
    no = 0;
    // 加入取像時間顯示
-   GetTimeTic(&CCDCaptureStartTimeAry[no],&CCDCaptureStartTickAry[no]);
+   GetTimeTic(&BaslerCaptureStartTimeAry[no],&BaslerCaptureStartTickAry[no]);
    //lbGiga->Items->Add("Trigger CCD1...");
    res = PylonDeviceGrabSingleFrame(hDevGigaAry[no], 0, imgBufAry[no], CCDInfoAry[no].TotalSize, &grabResultAry[no], &bufferReadyAry[no], 1000);
    //lbGiga->Items->Add("Trigger CCD1: " + IntToStr(res) + "," + IntToStr(GENAPI_E_OK));
@@ -6019,7 +5804,7 @@ GENAPIC_RESULT res;                    // Return value of pylon methods.
 
    no = 1;
    // 加入取像時間顯示
-   GetTimeTic(&CCDCaptureStartTimeAry[no],&CCDCaptureStartTickAry[no]);
+   GetTimeTic(&BaslerCaptureStartTimeAry[no],&BaslerCaptureStartTickAry[no]);
    //lbGiga->Items->Add("Trigger CCD...");
    res = PylonDeviceGrabSingleFrame(hDevGigaAry[no], 0, imgBufAry[no], CCDInfoAry[no].TotalSize, &grabResultAry[no], &bufferReadyAry[no], 1000);
    //lbGiga->Items->Add("Trigger CCD: " + IntToStr(res) + "," + IntToStr(GENAPI_E_OK));
@@ -6033,7 +5818,7 @@ GENAPIC_RESULT res;                    // Return value of pylon methods.
 
    no = 2;
    // 加入取像時間顯示
-   GetTimeTic(&CCDCaptureStartTimeAry[no],&CCDCaptureStartTickAry[no]);
+   GetTimeTic(&BaslerCaptureStartTimeAry[no],&BaslerCaptureStartTickAry[no]);
    //lbGiga->Items->Add("Trigger CCD...");
    res = PylonDeviceGrabSingleFrame(hDevGigaAry[no], 0, imgBufAry[no], CCDInfoAry[no].TotalSize, &grabResultAry[no], &bufferReadyAry[no], 1000);
    //lbGiga->Items->Add("Trigger CCD: " + IntToStr(res) + "," + IntToStr(GENAPI_E_OK));
@@ -6109,8 +5894,8 @@ static int Table_fu2[256] = { -227, -226, -224, -222, -220, -219, -217, -215, -2
 //---------------------------------------------------------------------------
 
 // 2015 9 4 - chc GigE CCD : 取得影像並顯示(BW/Color)
-//   #define CCD_BW                0
-//   #define CCD_COLOR             1
+//   #define BASLER_CCD_BW                0
+//   #define BASLER_CCD_COLOR             1
 //   int BaslerCCDType[3];
 // mode : 0 - 要呼叫 PylonDeviceGrabSingleFrame()
 //        1 - 不要呼叫 PylonDeviceGrabSingleFrame()
@@ -6155,10 +5940,10 @@ static bool first = false;
          res = PylonDeviceGrabSingleFrame(hDevGigaAry[no], 0,  imgBufAry[no], CCDInfoAry[no].TotalSize, &grabResultAry[no], &bufferReadyAry[no], 5000);
 
       // 取像時間顯示
-      GetTimeTic(&CCDCaptureStopTimeAry[no],&CCDCaptureStopTickAry[no]);
-      CCDCaptureElapsedmsAry[no] = ((CCDCaptureStopTimeAry[no]*1000+CCDCaptureStopTickAry[no]) -
-                                       (CCDCaptureStartTimeAry[no]*1000+CCDCaptureStartTickAry[no]));
-      pnlCaptureTime->Caption = IntToStr(CCDCaptureElapsedmsAry[no]);
+      GetTimeTic(&BaslerCaptureStopTimeAry[no],&BaslerCaptureStopTickAry[no]);
+      BaslerCaptureElapsedmsAry[no] = ((BaslerCaptureStopTimeAry[no]*1000+BaslerCaptureStopTickAry[no]) -
+                                       (BaslerCaptureStartTimeAry[no]*1000+BaslerCaptureStartTickAry[no]));
+      pnlCaptureTime->Caption = IntToStr(BaslerCaptureElapsedmsAry[no]);
 
       switch(res) {
          case GENAPI_E_FAIL:
@@ -6290,22 +6075,22 @@ static bool first = false;
       //lbGiga->Items->Add("CCD1進入取像2...");
 
       // 全取: 要區分BW/C24
-      // BW : CCDImageAry
-      if(CCDInfoAry[no].Type == CCD_BW) {
+      // BW : scA1300ImageAry
+      if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
 
          // Log
          //lbGiga->Items->Add("CCD1進入取像2BW...");
 
          i = 0;
          for(int row=0 ; row<grabResultAry[no].SizeY ; row++) {
-            pt = (unsigned char *)CCDImageAry[no].GetImagePtr(0,row);
+            pt = (unsigned char *)scA1300ImageAry[no].GetImagePtr(0,row);
             memcpy(pt,&imgBufAry[no][i],grabResultAry[no].SizeX);
             i += grabResultAry[no].SizeX;
          }
          // 要顯示在主畫面 ###@@@
          GetImageXY(width,height,sx,sy,w,h,&x,&y);
-         CCDImageROIAry[no].SetPlacement(x,y,w,h);
-         CCDImageROIAry[no].Draw(imCCD->Canvas->Handle);
+         scA1300ImageROIAry[no].SetPlacement(x,y,w,h);
+         scA1300ImageROIAry[no].Draw(imCCD->Canvas->Handle);
          // 若沒有Refresh就不會顯示
          imCCD->Refresh();
       }
@@ -6418,18 +6203,18 @@ static bool first = false;
       }
 
       // Basler Pylon GigE CCD
-      boolCCDImageLoadedAry[no] = true;
-      CCDCaptureNoAry[no]++;
+      boolBaslerImageLoadedAry[no] = true;
+      BaslerCaptureNoAry[no]++;
       if((count % 5) == 0) {
-         GetTimeTic(&CCDStopTimeAry[no],&CCDStopTickAry[no]);
-         CCDElapsedmsAry[no] = ((CCDStopTimeAry[no]*1000+CCDStopTickAry[no]) - (CCDStartTimeAry[no]*1000+CCDStartTickAry[no]));
+         GetTimeTic(&BaslerStopTimeAry[no],&BaslerStopTickAry[no]);
+         BaslerElapsedmsAry[no] = ((BaslerStopTimeAry[no]*1000+BaslerStopTickAry[no]) - (BaslerStartTimeAry[no]*1000+BaslerStartTickAry[no]));
          double ratio;
          AnsiString msg;
 
          // 2016 7 23 - chc Devide by zero
-         if(CCDElapsedmsAry[no] != 0) {
+         if(BaslerElapsedmsAry[no] != 0) {
 
-            ratio = ((double)CCDCaptureNoAry[no] * 1000.0) / CCDElapsedmsAry[no];
+            ratio = ((double)BaslerCaptureNoAry[no] * 1000.0) / BaslerElapsedmsAry[no];
             msg.sprintf("%.1f",ratio);
             pnlCapturedNo->Caption = msg;
          }
@@ -6454,10 +6239,10 @@ static bool first = false;
       if(mode == 0)
          res = PylonDeviceGrabSingleFrame(hDevGigaAry[no], 0,  imgBufAry[no], CCDInfoAry[no].TotalSize, &grabResultAry[no], &bufferReadyAry[no], 5000);
       // 取像時間顯示
-      GetTimeTic(&CCDCaptureStopTimeAry[no],&CCDCaptureStopTickAry[no]);
-      CCDCaptureElapsedmsAry[no] = ((CCDCaptureStopTimeAry[no]*1000+CCDCaptureStopTickAry[no]) -
-                                       (CCDCaptureStartTimeAry[no]*1000+CCDCaptureStartTickAry[no]));
-      pnlCaptureTime->Caption = IntToStr(CCDCaptureElapsedmsAry[no]);
+      GetTimeTic(&BaslerCaptureStopTimeAry[no],&BaslerCaptureStopTickAry[no]);
+      BaslerCaptureElapsedmsAry[no] = ((BaslerCaptureStopTimeAry[no]*1000+BaslerCaptureStopTickAry[no]) -
+                                       (BaslerCaptureStartTimeAry[no]*1000+BaslerCaptureStartTickAry[no]));
+      pnlCaptureTime->Caption = IntToStr(BaslerCaptureElapsedmsAry[no]);
       // Timeout?
       if(GENAPI_E_OK == res && !bufferReadyAry[no]) {
          // Timeout occurred.
@@ -6472,8 +6257,8 @@ static bool first = false;
 }
 //---------------------------------------------------------------------------
 // 2016 5 12 - chc 新寫法, GigE CCD : 取得影像並顯示(BW/Color)
-//   #define CCD_BW                0
-//   #define CCD_COLOR             1
+//   #define BASLER_CCD_BW                0
+//   #define BASLER_CCD_COLOR             1
 //   int BaslerCCDType[3];
 // mode : 0 - 要呼叫 PylonDeviceGrabSingleFrame()
 //        1 - 不要呼叫 PylonDeviceGrabSingleFrame()
@@ -6540,22 +6325,22 @@ static bool first = false;
       //lbGiga->Items->Add("CCD1進入取像2...");
 
       // 全取: 要區分BW/C24
-      // BW : CCDImageAry
-      if(CCDInfoAry[no].Type == CCD_BW) {
+      // BW : scA1300ImageAry
+      if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
 
          // Log
          //lbGiga->Items->Add("CCD1進入取像2BW...");
 
          i = 0;
          for(int row=0 ; row<grabResultAry[no].SizeY ; row++) {
-            pt = (unsigned char *)CCDImageAry[no].GetImagePtr(0,row);
+            pt = (unsigned char *)scA1300ImageAry[no].GetImagePtr(0,row);
             memcpy(pt,&imgBufAry[no][i],grabResultAry[no].SizeX);
             i += grabResultAry[no].SizeX;
          }
          // 要顯示在主畫面 ###@@@
          GetImageXY(width,height,sx,sy,w,h,&x,&y);
-         CCDImageROIAry[no].SetPlacement(x,y,w,h);
-         CCDImageROIAry[no].Draw(imCCD->Canvas->Handle);
+         scA1300ImageROIAry[no].SetPlacement(x,y,w,h);
+         scA1300ImageROIAry[no].Draw(imCCD->Canvas->Handle);
          // 若沒有Refresh就不會顯示
          imCCD->Refresh();
       }
@@ -6668,18 +6453,18 @@ static bool first = false;
       }
 
       // Basler Pylon GigE CCD
-      boolCCDImageLoadedAry[no] = true;
-      CCDCaptureNoAry[no]++;
+      boolBaslerImageLoadedAry[no] = true;
+      BaslerCaptureNoAry[no]++;
       if((count % 5) == 0) {
-         GetTimeTic(&CCDStopTimeAry[no],&CCDStopTickAry[no]);
-         CCDElapsedmsAry[no] = ((CCDStopTimeAry[no]*1000+CCDStopTickAry[no]) - (CCDStartTimeAry[no]*1000+CCDStartTickAry[no]));
+         GetTimeTic(&BaslerStopTimeAry[no],&BaslerStopTickAry[no]);
+         BaslerElapsedmsAry[no] = ((BaslerStopTimeAry[no]*1000+BaslerStopTickAry[no]) - (BaslerStartTimeAry[no]*1000+BaslerStartTickAry[no]));
          double ratio;
          AnsiString msg;
 
          // 2016 7 23 - chc Devide by zero
-         if(CCDElapsedmsAry[no] != 0) {
+         if(BaslerElapsedmsAry[no] != 0) {
 
-            ratio = ((double)CCDCaptureNoAry[no] * 1000.0) / CCDElapsedmsAry[no];
+            ratio = ((double)BaslerCaptureNoAry[no] * 1000.0) / BaslerElapsedmsAry[no];
             msg.sprintf("%.1f",ratio);
             pnlCapturedNo->Caption = msg;
          }
@@ -6700,18 +6485,18 @@ static bool first = false;
    }
 
    // 取像時間顯示
-   GetTimeTic(&CCDCaptureStopTimeAry[no],&CCDCaptureStopTickAry[no]);
-   CCDCaptureElapsedmsAry[no] = ((CCDCaptureStopTimeAry[no]*1000+CCDCaptureStopTickAry[no]) -
-                                    (CCDCaptureStartTimeAry[no]*1000+CCDCaptureStartTickAry[no]));
-   pnlCaptureTime->Caption = IntToStr(CCDCaptureElapsedmsAry[no]);
+   GetTimeTic(&BaslerCaptureStopTimeAry[no],&BaslerCaptureStopTickAry[no]);
+   BaslerCaptureElapsedmsAry[no] = ((BaslerCaptureStopTimeAry[no]*1000+BaslerCaptureStopTickAry[no]) -
+                                    (BaslerCaptureStartTimeAry[no]*1000+BaslerCaptureStartTickAry[no]));
+   pnlCaptureTime->Caption = IntToStr(BaslerCaptureElapsedmsAry[no]);
 
    // 未在影像處理中
    boolInGigaBufferAry[no] = false;
 }
 //---------------------------------------------------------------------------
 // 2015 9 4 - chc GigE CCD : 取得影像並顯示(BW/Color)
-//   #define CCD_BW                0
-//   #define CCD_COLOR             1
+//   #define BASLER_CCD_BW                0
+//   #define BASLER_CCD_COLOR             1
 //   int BaslerCCDType[3];
 // mode : 0 - 要呼叫 PylonDeviceGrabSingleFrame()
 //        1 - 不要呼叫 PylonDeviceGrabSingleFrame()
@@ -6756,10 +6541,10 @@ static bool first = false;
          res = PylonDeviceGrabSingleFrame(hDevGigaAry[no], 0,  imgBufAry[no], CCDInfoAry[no].TotalSize, &grabResultAry[no], &bufferReadyAry[no], 5000);
 
       // 取像時間顯示
-      GetTimeTic(&CCDCaptureStopTimeAry[no],&CCDCaptureStopTickAry[no]);
-      CCDCaptureElapsedmsAry[no] = ((CCDCaptureStopTimeAry[no]*1000+CCDCaptureStopTickAry[no]) -
-                                       (CCDCaptureStartTimeAry[no]*1000+CCDCaptureStartTickAry[no]));
-      pnlCaptureTime->Caption = IntToStr(CCDCaptureElapsedmsAry[no]);
+      GetTimeTic(&BaslerCaptureStopTimeAry[no],&BaslerCaptureStopTickAry[no]);
+      BaslerCaptureElapsedmsAry[no] = ((BaslerCaptureStopTimeAry[no]*1000+BaslerCaptureStopTickAry[no]) -
+                                       (BaslerCaptureStartTimeAry[no]*1000+BaslerCaptureStartTickAry[no]));
+      pnlCaptureTime->Caption = IntToStr(BaslerCaptureElapsedmsAry[no]);
 
       switch(res) {
          case GENAPI_E_FAIL:
@@ -6884,18 +6669,18 @@ static bool first = false;
       pnlCCDStatus->Color = clLime;
 
       // 全取: 要區分BW/C24
-      // BW : CCDImageAry
-      if(CCDInfoAry[no].Type == CCD_BW) {
+      // BW : scA1300ImageAry
+      if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
          i = 0;
          for(int row=0 ; row<grabResultAry[no].SizeY ; row++) {
-            pt = (unsigned char *)CCDImageAry[no].GetImagePtr(0,row);
+            pt = (unsigned char *)scA1300ImageAry[no].GetImagePtr(0,row);
             memcpy(pt,&imgBufAry[no][i],grabResultAry[no].SizeX);
             i += grabResultAry[no].SizeX;
          }
          // 要顯示在主畫面 ###@@@
          GetImageXY(width,height,sx,sy,w,h,&x,&y);
-         CCDImageROIAry[no].SetPlacement(x,y,w,h);
-         CCDImageROIAry[no].Draw(imCCD->Canvas->Handle);
+         scA1300ImageROIAry[no].SetPlacement(x,y,w,h);
+         scA1300ImageROIAry[no].Draw(imCCD->Canvas->Handle);
          // 若沒有Refresh就不會顯示
          imCCD->Refresh();
       }
@@ -6916,18 +6701,18 @@ static bool first = false;
       }
 
       // Basler Pylon GigE CCD
-      boolCCDImageLoadedAry[no] = true;
-      CCDCaptureNoAry[no]++;
+      boolBaslerImageLoadedAry[no] = true;
+      BaslerCaptureNoAry[no]++;
       if((count % 5) == 0) {
-         GetTimeTic(&CCDStopTimeAry[no],&CCDStopTickAry[no]);
-         CCDElapsedmsAry[no] = ((CCDStopTimeAry[no]*1000+CCDStopTickAry[no]) - (CCDStartTimeAry[no]*1000+CCDStartTickAry[no]));
+         GetTimeTic(&BaslerStopTimeAry[no],&BaslerStopTickAry[no]);
+         BaslerElapsedmsAry[no] = ((BaslerStopTimeAry[no]*1000+BaslerStopTickAry[no]) - (BaslerStartTimeAry[no]*1000+BaslerStartTickAry[no]));
          double ratio;
          AnsiString msg;
 
          // 2016 7 23 - chc Devide by zero
-         if(CCDElapsedmsAry[no] != 0) {
+         if(BaslerElapsedmsAry[no] != 0) {
 
-            ratio = ((double)CCDCaptureNoAry[no] * 1000.0) / CCDElapsedmsAry[no];
+            ratio = ((double)BaslerCaptureNoAry[no] * 1000.0) / BaslerElapsedmsAry[no];
             msg.sprintf("%.1f",ratio);
             pnlCapturedNo->Caption = msg;
          }
@@ -6952,10 +6737,10 @@ static bool first = false;
       if(mode == 0)
          res = PylonDeviceGrabSingleFrame(hDevGigaAry[no], 0,  imgBufAry[no], CCDInfoAry[no].TotalSize, &grabResultAry[no], &bufferReadyAry[no], 5000);
       // 取像時間顯示
-      GetTimeTic(&CCDCaptureStopTimeAry[no],&CCDCaptureStopTickAry[no]);
-      CCDCaptureElapsedmsAry[no] = ((CCDCaptureStopTimeAry[no]*1000+CCDCaptureStopTickAry[no]) -
-                                       (CCDCaptureStartTimeAry[no]*1000+CCDCaptureStartTickAry[no]));
-      pnlCaptureTime->Caption = IntToStr(CCDCaptureElapsedmsAry[no]);
+      GetTimeTic(&BaslerCaptureStopTimeAry[no],&BaslerCaptureStopTickAry[no]);
+      BaslerCaptureElapsedmsAry[no] = ((BaslerCaptureStopTimeAry[no]*1000+BaslerCaptureStopTickAry[no]) -
+                                       (BaslerCaptureStartTimeAry[no]*1000+BaslerCaptureStartTickAry[no]));
+      pnlCaptureTime->Caption = IntToStr(BaslerCaptureElapsedmsAry[no]);
       // Timeout?
       if(GENAPI_E_OK == res && !bufferReadyAry[no]) {
          // Timeout occurred.
@@ -6970,8 +6755,8 @@ static bool first = false;
 }
 //---------------------------------------------------------------------------
 // 2015 9 4 - chc GigE CCD : 取得影像並顯示(BW/Color)
-//   #define CCD_BW                0
-//   #define CCD_COLOR             1
+//   #define BASLER_CCD_BW                0
+//   #define BASLER_CCD_COLOR             1
 //   int BaslerCCDType[3];
 // mode : 0 - 要呼叫 PylonDeviceGrabSingleFrame()
 //        1 - 不要呼叫 PylonDeviceGrabSingleFrame()
@@ -7016,10 +6801,10 @@ static bool first = false;
          res = PylonDeviceGrabSingleFrame(hDevGigaAry[no], 0,  imgBufAry[no], CCDInfoAry[no].TotalSize, &grabResultAry[no], &bufferReadyAry[no], 5000);
 
       // 取像時間顯示
-      GetTimeTic(&CCDCaptureStopTimeAry[no],&CCDCaptureStopTickAry[no]);
-      CCDCaptureElapsedmsAry[no] = ((CCDCaptureStopTimeAry[no]*1000+CCDCaptureStopTickAry[no]) -
-                                       (CCDCaptureStartTimeAry[no]*1000+CCDCaptureStartTickAry[no]));
-      pnlCaptureTime->Caption = IntToStr(CCDCaptureElapsedmsAry[no]);
+      GetTimeTic(&BaslerCaptureStopTimeAry[no],&BaslerCaptureStopTickAry[no]);
+      BaslerCaptureElapsedmsAry[no] = ((BaslerCaptureStopTimeAry[no]*1000+BaslerCaptureStopTickAry[no]) -
+                                       (BaslerCaptureStartTimeAry[no]*1000+BaslerCaptureStartTickAry[no]));
+      pnlCaptureTime->Caption = IntToStr(BaslerCaptureElapsedmsAry[no]);
 
       switch(res) {
          case GENAPI_E_FAIL:
@@ -7144,18 +6929,18 @@ static bool first = false;
       pnlCCDStatus->Color = clLime;
 
       // 全取: 要區分BW/C24
-      // BW : CCDImageAry
-      if(CCDInfoAry[no].Type == CCD_BW) {
+      // BW : scA1300ImageAry
+      if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
          i = 0;
          for(int row=0 ; row<grabResultAry[no].SizeY ; row++) {
-            pt = (unsigned char *)CCDImageAry[no].GetImagePtr(0,row);
+            pt = (unsigned char *)scA1300ImageAry[no].GetImagePtr(0,row);
             memcpy(pt,&imgBufAry[no][i],grabResultAry[no].SizeX);
             i += grabResultAry[no].SizeX;
          }
          // 要顯示在主畫面 ###@@@
          GetImageXY(width,height,sx,sy,w,h,&x,&y);
-         CCDImageROIAry[no].SetPlacement(x,y,w,h);
-         CCDImageROIAry[no].Draw(imCCD->Canvas->Handle);
+         scA1300ImageROIAry[no].SetPlacement(x,y,w,h);
+         scA1300ImageROIAry[no].Draw(imCCD->Canvas->Handle);
          // 若沒有Refresh就不會顯示
          imCCD->Refresh();
       }
@@ -7176,18 +6961,18 @@ static bool first = false;
       }
 
       // Basler Pylon GigE CCD
-      boolCCDImageLoadedAry[no] = true;
-      CCDCaptureNoAry[no]++;
+      boolBaslerImageLoadedAry[no] = true;
+      BaslerCaptureNoAry[no]++;
       if((count % 5) == 0) {
-         GetTimeTic(&CCDStopTimeAry[no],&CCDStopTickAry[no]);
-         CCDElapsedmsAry[no] = ((CCDStopTimeAry[no]*1000+CCDStopTickAry[no]) - (CCDStartTimeAry[no]*1000+CCDStartTickAry[no]));
+         GetTimeTic(&BaslerStopTimeAry[no],&BaslerStopTickAry[no]);
+         BaslerElapsedmsAry[no] = ((BaslerStopTimeAry[no]*1000+BaslerStopTickAry[no]) - (BaslerStartTimeAry[no]*1000+BaslerStartTickAry[no]));
          double ratio;
          AnsiString msg;
 
          // 2016 7 23 - chc Devide by zero
-         if(CCDElapsedmsAry[no] != 0) {
+         if(BaslerElapsedmsAry[no] != 0) {
 
-            ratio = ((double)CCDCaptureNoAry[no] * 1000.0) / CCDElapsedmsAry[no];
+            ratio = ((double)BaslerCaptureNoAry[no] * 1000.0) / BaslerElapsedmsAry[no];
             msg.sprintf("%.1f",ratio);
             pnlCapturedNo->Caption = msg;
          }
@@ -7212,10 +6997,10 @@ static bool first = false;
       if(mode == 0)
          res = PylonDeviceGrabSingleFrame(hDevGigaAry[no], 0,  imgBufAry[no], CCDInfoAry[no].TotalSize, &grabResultAry[no], &bufferReadyAry[no], 5000);
       // 取像時間顯示
-      GetTimeTic(&CCDCaptureStopTimeAry[no],&CCDCaptureStopTickAry[no]);
-      CCDCaptureElapsedmsAry[no] = ((CCDCaptureStopTimeAry[no]*1000+CCDCaptureStopTickAry[no]) -
-                                       (CCDCaptureStartTimeAry[no]*1000+CCDCaptureStartTickAry[no]));
-      pnlCaptureTime->Caption = IntToStr(CCDCaptureElapsedmsAry[no]);
+      GetTimeTic(&BaslerCaptureStopTimeAry[no],&BaslerCaptureStopTickAry[no]);
+      BaslerCaptureElapsedmsAry[no] = ((BaslerCaptureStopTimeAry[no]*1000+BaslerCaptureStopTickAry[no]) -
+                                       (BaslerCaptureStartTimeAry[no]*1000+BaslerCaptureStartTickAry[no]));
+      pnlCaptureTime->Caption = IntToStr(BaslerCaptureElapsedmsAry[no]);
       // Timeout?
       if(GENAPI_E_OK == res && !bufferReadyAry[no]) {
          // Timeout occurred.
@@ -7242,7 +7027,7 @@ static bool first = false;
 //   AnsiString Name;
 //};
 //struct CCDINFO_STRU        CCDInfoAry[3];
-void __fastcall TMainForm::SetupCCD()
+void __fastcall TMainForm::SetupscA1300()
 {
 int baslerccdno;
 AnsiString msg;
@@ -7252,59 +7037,63 @@ AnsiString ccdname,deviceid;
 // 2019 7 5 - chc 設定為自動還是手動
 bool boolauto = true;
 
+   // 2019 7 5 - chc Log
    WriteSystemLog("Setup CCD: 1");
 
    // CCD編號(0/1/2/3...)
    baslerccdno = 0;
    lbGiga->Items->Add("Setup CCD...");
+
+   // 2019 7 5 - chc Log
    WriteSystemLog("Setup CCD: 2");
 
    // 最多三個CCD
    for(int i=0 ; i<3 ; i++)
-      bool_CCD_StatusAry[i] = false;
+      bool_scA1300_StatusAry[i] = false;
 
-   WriteSystemLog("Setup CCD1: [" + ISCCDName + "], [" + ISCCDSerialNo + "]");
-   // for test
+   // 2019 7 5 - chc Log
+   WriteSystemLog("Setup CCD: [" + ISCCDName + "], [" + ISCCDSerialNo + "]");
+
+   // 2019 12 7 - chc for test
    if(boolForTest == true)
       return;
 
-   // CCD?
+   // 2020 2 28 - chc CCD
    if(boolCCD == false)
       return;
 
-   // CCD1
+   // 2019 7 5 - chc 透過ShowDeviceSettingDialog來設定
    if(boolauto == false) {
-      // 透過ShowDeviceSettingDialog來設定
       ICImagingControl1->ShowDeviceSettingsDialog();
-      WriteSystemLog("CCD1: " + ICImagingControl1->Device + "," + ICImagingControl1->DeviceUniqueName + "," + IntToStr(ICImagingControl1->ImageWidth));
-      WriteSystemLog("CCD1: bit= " + IntToStr(ICImagingControl1->ImageBitsPerPixel));
+      WriteSystemLog("CCD: " + ICImagingControl1->Device + "," + ICImagingControl1->DeviceUniqueName + "," + IntToStr(ICImagingControl1->ImageWidth));
+      WriteSystemLog("CCD: bit= " + IntToStr(ICImagingControl1->ImageBitsPerPixel));
    }
    else {
-      try {
-         // 改用ImagingSource
-         ICImagingControl1->Device = ISCCDName;                                       // "DFK 33G274";
-         WriteSystemLog("Setup CCD1: ISCCDName");
-         ICImagingControl1->DeviceUniqueName = ISCCDName + " " + ISCCDSerialNo;       // "DFK 33G274 11124360";
-      }
-      catch(Exception &e) {
-         pnlISCCDStaus->Color = clRed;
-         WriteSystemLog("Setup ImagingSource CCD1 - Exception error");
-         //sbSystem->Panels->Items[1]->Text = "Setup ImagingSource CCD - Exception Error";
-         boolCCD = false;
-         goto setccd2;
-      }
+
+      // 2016 11 25 - chc 改用ImagingSource
+      ICImagingControl1->Device = ISCCDName;                                       // "DFK 33G274";
+      WriteSystemLog("Setup CCD: ISCCDName");
+      ICImagingControl1->DeviceUniqueName = ISCCDName + " " + ISCCDSerialNo;       // "DFK 33G274 11124360";
    }
 
-   WriteSystemLog("Setup CCD1: Enable...");
+   // 2019 7 5 - chc Log
+   WriteSystemLog("Setup CCD: Enable...");
+
+   // 2016 12 17 - chc 加入Try-catch
    try {
+
       if(boolauto == true) {                                                                         // 43614991(AUO1)
          ICImagingControl1->Enabled = true;
          MakeDeviceSettings();
       }
+
       if(ICImagingControl1->DeviceValid == true) {
-         WriteSystemLog("Setup CCD1 Device: ok");
+
+         // 2019 7 5 - chc Log
+         WriteSystemLog("Setup CCD Device: ok");
          numDevices = 1;
-         bool_CCD_StatusAry[0] = true;
+
+         bool_scA1300_StatusAry[0] = true;
          // CCD: 取得編號, 名稱, Bit數, Width, Height
          CCDInfoAry[baslerccdno].No = 0;                                           // First CCD
          CCDInfoAry[baslerccdno].Name = ISCCDName;
@@ -7312,15 +7101,16 @@ bool boolauto = true;
          CCDInfoAry[baslerccdno].Width = ICImagingControl1->ImageWidth;
          CCDInfoAry[baslerccdno].Height = ICImagingControl1->ImageHeight;
          CCDInfoAry[baslerccdno].DeviceID = ISCCDSerialNo;;
-         // Color or BW
+
+         // 2019 7 5 - chc Color or BW
          WriteSystemLog("CCD Bits: " + IntToStr(ICImagingControl1->ImageBitsPerPixel));
          if(ICImagingControl1->ImageBitsPerPixel > 8) {
-            CCDInfoAry[baslerccdno].Type = CCD_COLOR;
+            CCDInfoAry[baslerccdno].Type = BASLER_CCD_COLOR;
             WriteSystemLog("CCD: Color");
          }
          else {
-            CCDInfoAry[baslerccdno].Type = CCD_BW;
-            WriteSystemLog("CCD1: Gray");
+            CCDInfoAry[baslerccdno].Type = BASLER_CCD_BW;
+            WriteSystemLog("CCD: Gray");
          }
 
          // Live
@@ -7328,149 +7118,38 @@ bool boolauto = true;
          tmISCCD->Enabled = true;
 
          pnlISCCDStaus->Color = clLime;
-         msg.sprintf("%dx%d %d %s 3.45um",CCDInfoAry[baslerccdno].Width,CCDInfoAry[baslerccdno].Height,CCDInfoAry[baslerccdno].PixelSize,CCDInfoAry[baslerccdno].DeviceID.c_str());
+         msg.sprintf("%dx%d %d %s 4.4um",CCDInfoAry[baslerccdno].Width,CCDInfoAry[baslerccdno].Height,CCDInfoAry[baslerccdno].PixelSize,CCDInfoAry[baslerccdno].DeviceID.c_str());
          pnlISCCDInfo->Caption = msg;
          WriteSystemLog(msg);
          msg.sprintf("%dx%d %d",CCDInfoAry[baslerccdno].Width,CCDInfoAry[baslerccdno].Height,CCDInfoAry[baslerccdno].PixelSize);
          pnlCCDSize->Caption = msg;
          // 不能設為Live, 設為Live就會啟動Basler的取像與顯示作業
-         //CCDThreadAry[baslerccdno]->boolBaslerLive = true;
-         CCDCaptureNoAry[baslerccdno] = 0;
-         GetTimeTic(&CCDStartTimeAry[baslerccdno],&CCDStartTickAry[baslerccdno]);
+         //scA1300ThreadAry[baslerccdno]->boolBaslerLive = true;
+         BaslerCaptureNoAry[baslerccdno] = 0;
+         GetTimeTic(&BaslerStartTimeAry[baslerccdno],&BaslerStartTickAry[baslerccdno]);
          btnReviewLive->Caption = "Grab";
-         // 設定Gain/Shutter: BaslerShutter, BaslerGain
-         rgCCDShutter->ItemIndex = CCDShutterAry[0];
-         rgCCDShutterClick(this);
-         tbCCDGain->Position = BaslerGain;
-         pnlCCDGain->Caption = IntToStr(BaslerGain);
+
+         // 2019 11 26 - chc 設定Gain/Shutter: BaslerShutter, BaslerGain
+         rgBaslerShutter->ItemIndex = scA1300ShutterAry[0];
+         rgBaslerShutterClick(this);
+         tbBaslerGain->Position = BaslerGain;
+         pnlBaslerGain->Caption = IntToStr(BaslerGain);
+
       }
       else {
-         WriteSystemLog("Setup CCD1 Device: fail");
+
+         // 2019 7 5 - chc Log
+         WriteSystemLog("Setup CCD Device: fail");
+
          pnlISCCDStaus->Color = clRed;
       }
 
    }
    catch(Exception &e) {
       pnlISCCDStaus->Color = clRed;
-      WriteSystemLog("Setup ImagingSource CCD1 - Error");
-      sbSystemMessage->Panels->Items[1]->Text = "Setup ImagingSource CCD1 - Error";
+      WriteSystemLog("Setup ImagingSource CCD - Error");
+      sbSystemMessage->Panels->Items[1]->Text = "Setup ImagingSource CCD - Error";
    }
-
-   //---------------------------------------------------------------------------
-setccd2:
-   // 2023 8 21 - chc 換DFK
-   if(TiltCCDType == CCDTYPE_VIEWORKS)
-      goto setccd3;
-   WriteSystemLog("Setup CCD2: [" + ISCCD2Name + "], [" + ISCCD2SerialNo + "]");
-
-   // CCD2
-   baslerccdno++;
-   if(boolauto == false) {
-      ICImagingControl2->ShowDeviceSettingsDialog();
-      WriteSystemLog("CCD2: " + ICImagingControl2->Device + "," + ICImagingControl2->DeviceUniqueName + "," + IntToStr(ICImagingControl2->ImageWidth));
-      WriteSystemLog("CCD2: bit= " + IntToStr(ICImagingControl2->ImageBitsPerPixel));
-   }
-   else {
-      try {
-         ICImagingControl2->Device = ISCCD2Name;                                       // "DFK 33G274";
-         WriteSystemLog("Setup CCD2: ISCCD2Name");
-         ICImagingControl2->DeviceUniqueName = ISCCD2Name + " " + ISCCD2SerialNo;       // "DFK 33G274 11124360";
-      }
-      catch(Exception &e) {
-         pnlISCCD2Staus->Color = clRed;
-         boolCCD2 = false;
-         WriteSystemLog("Setup ImagingSource CCD2 - Exception error");
-         //sbSystem->Panels->Items[1]->Text = "Setup ImagingSource CCD2 - Exception Error";
-         pnlInspCCDUnit->Caption = "Fail!";
-         pnlInspCCDUnit->Font->Color = clRed;
-         goto setccd3;
-      }
-   }
-   WriteSystemLog("Setup CCD2: Enable...");
-   try {
-      if(boolauto == true) {                                                                         // 43614991(AUO1)
-         ICImagingControl2->Enabled = true;
-         MakeDeviceSettings_2();
-      }
-      if(ICImagingControl2->DeviceValid == true) {
-         WriteSystemLog("Setup CCD2 Device: ok");
-         numDevices++;
-         bool_CCD_StatusAry[baslerccdno] = true;
-         // CCD: 取得編號, 名稱, Bit數, Width, Height
-         CCDInfoAry[baslerccdno].No = 0;                                           // First CCD
-         CCDInfoAry[baslerccdno].Name = ISCCD2Name;
-         CCDInfoAry[baslerccdno].PixelSize = ICImagingControl2->ImageBitsPerPixel / 8;
-         CCDInfoAry[baslerccdno].Width = ICImagingControl2->ImageWidth;
-         CCDInfoAry[baslerccdno].Height = ICImagingControl2->ImageHeight;
-         CCDInfoAry[baslerccdno].DeviceID = ISCCD2SerialNo;;
-
-         GigaWidth = CCDInfoAry[baslerccdno].Width;
-         GigaHeight = CCDInfoAry[baslerccdno].Height;
-
-         AlignWidth = imCCD->Width;
-         AlignHeight = imCCD->Height - 50;
-
-         // Color or BW
-         WriteSystemLog("CCD2 Bits: " + IntToStr(ICImagingControl2->ImageBitsPerPixel));
-         if(ICImagingControl2->ImageBitsPerPixel > 8) {
-            CCDInfoAry[baslerccdno].Type = CCD_COLOR;
-            WriteSystemLog("CCD2: Color");
-         }
-         else {
-            CCDInfoAry[baslerccdno].Type = CCD_BW;
-            WriteSystemLog("CCD2: Gray");
-         }
-
-         // Live
-         ICImagingControl2->LiveStart();
-         tmISCCD2->Enabled = true;
-
-         pnlISCCD2Staus->Color = clLime;
-         msg.sprintf("%dx%d %d %s 3.45um",CCDInfoAry[baslerccdno].Width,CCDInfoAry[baslerccdno].Height,CCDInfoAry[baslerccdno].PixelSize,CCDInfoAry[baslerccdno].DeviceID.c_str());
-         pnlISCCD2Info->Caption = msg;
-         WriteSystemLog(msg);
-         msg.sprintf("%dx%d %d",CCDInfoAry[baslerccdno].Width,CCDInfoAry[baslerccdno].Height,CCDInfoAry[baslerccdno].PixelSize);
-         //pnlCCDSize->Caption = msg;
-         //btnReviewLive->Caption = "Grab";
-         // 不能設為Live, 設為Live就會啟動Basler的取像與顯示作業
-         //CCDThreadAry[baslerccdno]->boolBaslerLive = true;
-         CCDCaptureNoAry[baslerccdno] = 0;
-         GetTimeTic(&CCDStartTimeAry[baslerccdno],&CCDStartTickAry[baslerccdno]);
-
-/*
-         WriteSystemLog("Set CCD2 Shutter and Gain");
-         // 設定Gain/Shutter: CCDShutter, CCDGain
-         rgCCDShutter->ItemIndex = CCDShutterAry[baslerccdno];
-         WriteSystemLog("Set CCD2 Shutter and Gain - 1");
-         rgCCDShutterClick(this);
-         WriteSystemLog("Set CCD2 Shutter and Gain - 2");
-         tbCCDGain->Position = CCDGainAry[baslerccdno];
-         pnlCCDGain->Caption = IntToStr(CCDGainAry[baslerccdno]);
-         WriteSystemLog("Setup CCD2: Shutter,Gain= " + IntToStr(CCDShutterAry[baslerccdno]) + "," + IntToStr(CCDGainAry[baslerccdno]));
-*/
-         // 2023 4 17 - chc Flip Vertical
-         //ICImagingControl2->OverlayBitmap->FlipVertical = true;
-
-         pnlInspCCDUnit->Caption = "Completed.";
-         pnlCCD2Status->Color = clLime;
-
-      }
-      else {
-         WriteSystemLog("Setup CCD2 Device: fail");
-         pnlISCCD2Staus->Color = clRed;
-         pnlInspCCDUnit->Caption = "Fail!";
-         pnlInspCCDUnit->Font->Color = clRed;
-      }
-   }
-   catch(Exception &e) {
-      pnlISCCD2Staus->Color = clRed;
-      WriteSystemLog("Setup ImagingSource CCD2 - Error");
-      sbSystemMessage->Panels->Items[1]->Text = "Setup ImagingSource CCD2 - Error";
-      pnlInspCCDUnit->Caption = "Fail!";
-      pnlInspCCDUnit->Font->Color = clRed;
-   }
-   //---------------------------------------------------------------------------
-setccd3:
 
    return;
 
@@ -7560,7 +7239,7 @@ setccd3:
       if(pos == 0) {
          // CCD: 取得Type
          lbGiga->Items->Add("Gray CCD");
-         CCDInfoAry[baslerccdno].Type = CCD_BW;
+         CCDInfoAry[baslerccdno].Type = BASLER_CCD_BW;
          WriteSystemLog(">CCD" + IntToStr(baslerccdno+1) + ": Gray");
          // Set the pixel format to Mono8, where gray values will be output as 8 bit values for each pixel.
          // ... Check first to see if the device supports the Mono8 format.
@@ -7580,7 +7259,7 @@ setccd3:
       else {
          lbGiga->Items->Add("Color CCD: PixelSize=" + IntToStr(pixelsize));
          // CCD: 取得Type
-         CCDInfoAry[baslerccdno].Type = CCD_COLOR;
+         CCDInfoAry[baslerccdno].Type = BASLER_CCD_COLOR;
          WriteSystemLog(">CCD" + IntToStr(baslerccdno+1) + ": Color");
          // Set the pixel format to Mono8, where gray values will be output as 8 bit values for each pixel.
          // ... Check first to see if the device supports the Mono8 format.
@@ -7678,17 +7357,17 @@ setccd3:
       AlignHeight = imCCD->Height;
 
       // 區分BW/Color
-      if(CCDInfoAry[baslerccdno].Type == CCD_BW) {
+      if(CCDInfoAry[baslerccdno].Type == BASLER_CCD_BW) {
          // 前面已Initial, 要先Detech
-         CCDImageROIAry[baslerccdno].Detach();
-         // CCD的影像顯示改由EImageBW8 - CPU效能問題!!!!
-         CCDImageAry[baslerccdno].SetSize(GigaWidth,GigaHeight);
-         CCDImageROIAry[baslerccdno].Attach(&CCDImageAry[baslerccdno]);
-         CCDImageROIAry[baslerccdno].SetPlacement((GigaWidth-AlignWidth)/2,(GigaHeight-AlignHeight)/2,AlignWidth,AlignHeight);
+         scA1300ImageROIAry[baslerccdno].Detach();
+         // scA1300的影像顯示改由EImageBW8 - CPU效能問題!!!!
+         scA1300ImageAry[baslerccdno].SetSize(GigaWidth,GigaHeight);
+         scA1300ImageROIAry[baslerccdno].Attach(&scA1300ImageAry[baslerccdno]);
+         scA1300ImageROIAry[baslerccdno].SetPlacement((GigaWidth-AlignWidth)/2,(GigaHeight-AlignHeight)/2,AlignWidth,AlignHeight);
 
          // 2016 4 17 - chc 加入Mark
-         CCDImageMarkROIAry[baslerccdno].Detach();
-         CCDImageMarkROIAry[baslerccdno].Attach(&CCDImageAry[baslerccdno]);
+         scA1300ImageMarkROIAry[baslerccdno].Detach();
+         scA1300ImageMarkROIAry[baslerccdno].Attach(&scA1300ImageAry[baslerccdno]);
 
       }
       else {
@@ -7704,12 +7383,12 @@ setccd3:
 
       }
       lbGiga->Items->Add("CCD " + IntToStr(baslerccdno+1) + " Initial Success.");
-      bool_CCD_StatusAry[baslerccdno] = true;
-      boolCCDGrabbedAry[baslerccdno] = false;
-      boolCCDImageLoadedAry[baslerccdno] = false;
+      bool_scA1300_StatusAry[baslerccdno] = true;
+      boolBaslerGrabbedAry[baslerccdno] = false;
+      boolBaslerImageLoadedAry[baslerccdno] = false;
       boolInGigaSaveAry[baslerccdno] = false;
       // 建立Thread
-      CCDThreadAry[baslerccdno] = new TscA1300(true, baslerccdno+1, CCDInfoAry[baslerccdno].Name, CCDInfoAry[baslerccdno].Type,
+      scA1300ThreadAry[baslerccdno] = new TscA1300(true, baslerccdno+1, CCDInfoAry[baslerccdno].Name, CCDInfoAry[baslerccdno].Type,
                                    CCDInfoAry[baslerccdno].Width, CCDInfoAry[baslerccdno].Height);
 
       lbGiga->Items->Add("CCD Thread Created.");
@@ -7737,11 +7416,11 @@ setccd3:
       PylonDeviceGetStreamGrabber(hDevGigaAry[baslerccdno], 0, &hStg);
 
       // 改變Shutter/Gain
-      rgCCDShutter->ItemIndex = CCDShutterAry[baslerccdno];
-      //rgCCDShutterClick(this);
-      lbGiga->Items->Add("Basler CCD Gain: " + IntToStr(CCDGainAry[baslerccdno]));
-      tbCCDGain->Position = CCDGainAry[baslerccdno];
-      //tbCCDGainChange(this);
+      rgBaslerShutter->ItemIndex = scA1300ShutterAry[baslerccdno];
+      //rgBaslerShutterClick(this);
+      lbGiga->Items->Add("Basler CCD Gain: " + IntToStr(scA1300GainAry[baslerccdno]));
+      tbBaslerGain->Position = scA1300GainAry[baslerccdno];
+      //tbBaslerGainChange(this);
 
       lbGiga->Items->Add("Setup CCD Ok.");
    }
@@ -7768,18 +7447,6 @@ int px,py;
 void __fastcall TMainForm::btnReviewLiveClick(TObject *Sender)
 {
 int no;
-
-   if(!ICImagingControl1->LiveVideoRunning) {
-      WriteSystemLog("btnReviewLiveClick(1): LiveStart...");
-      ICImagingControl1->LiveStart();
-      WriteSystemLog("btnReviewLiveClick(1): LiveStart end.");
-   }
-
-   if(!ICImagingControl2->LiveVideoRunning) {
-      WriteSystemLog("btnReviewLiveClick(2): LiveStart...");
-      ICImagingControl2->LiveStart();
-      WriteSystemLog("btnReviewLiveClick(2): LiveStart end.");
-   }
 
    // 2016 12 8 - chc 暫不提供!
    return;
@@ -7814,11 +7481,11 @@ int no,width,height,sx,sy,x,y,w,h;
 
    opCCDImage->InitialDir = BaslerBitmapDirectory;
    if(opCCDImage->Execute()) {
-      if(CCDInfoAry[no].Type == CCD_BW) {
-         CCDImageAry[no].Load(opCCDImage->FileName.c_str());
+      if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+         scA1300ImageAry[no].Load(opCCDImage->FileName.c_str());
          GetImageXY(width,height,sx,sy,w,h,&x,&y);
-         CCDImageROIAry[no].SetPlacement(x,y,w,h);
-         CCDImageROIAry[no].Draw(imCCD->Canvas->Handle);
+         scA1300ImageROIAry[no].SetPlacement(x,y,w,h);
+         scA1300ImageROIAry[no].Draw(imCCD->Canvas->Handle);
       }
       else {
          usb_ImageAry[no].Load(opCCDImage->FileName.c_str());
@@ -7829,7 +7496,7 @@ int no,width,height,sx,sy,x,y,w,h;
       // 若沒有Refresh就不會顯示
       imCCD->Refresh();
 
-      boolCCDImageLoadedAry[no] = true;
+      boolBaslerImageLoadedAry[no] = true;
       pnlSystemMessage->Caption = "Image Loaded.";
    }
 
@@ -7841,12 +7508,6 @@ void __fastcall TMainForm::btnReviewSaveClick(TObject *Sender)
 AnsiString filename;
 int no;
 
-   // 2023 8 21 - chc 分0/45
-   if(rgCCDSource->ItemIndex == 1) {
-      btn45SaveImageClick(this);
-      return;
-   }
-
    // 固定為0
    no = 0;
 
@@ -7855,7 +7516,7 @@ int no;
    //if(btnReviewLive->Caption == "Grab")
    //   btnReviewLiveClick(this);
 
-   if(boolCCDImageLoadedAry[no]) {
+   if(boolBaslerImageLoadedAry[no]) {
       spCCDImage->InitialDir = BaslerBitmapDirectory;
 
       // 2016 12 21 - chc 設定filtet
@@ -7865,20 +7526,21 @@ int no;
          // 改變副檔名
          filename = ChangeFileExt(spCCDImage->FileName,".bmp");
 
-         // 2023 8 21 - chc 換DFK
-         if(TiltCCDType == CCDTYPE_DFK) {
-            if(rgCCDSource->ItemIndex == 0)
-               no = 0;
-            else
-               no = 1;
-            if(CCDInfoAry[no].Type == CCD_BW)
-               CCDImageAry[no].Save(filename.c_str(),E_FILE_FORMAT_GRAY_LEVEL_BMP);
-            else
-               usb_ImageROIAry[no].Save(filename.c_str(),E_FILE_FORMAT_COLOR_BMP);
+         // 2016 12 8 - chc 存ROI
+         /*
+         if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+            scA1300ImageAry[no].Save(filename.c_str(),E_FILE_FORMAT_GRAY_LEVEL_BMP);
          }
          else {
-            EImageAry.Save(filename.c_str(),E_FILE_FORMAT_COLOR_BMP);
+            usb_ImageAry[no].Save(filename.c_str(),E_FILE_FORMAT_COLOR_BMP);
          }
+         */
+         // 2019 11 27 - chc 是Gray才對
+         if(CCDInfoAry[no].Type == BASLER_CCD_BW)
+            scA1300ImageAry[no].Save(filename.c_str(),E_FILE_FORMAT_GRAY_LEVEL_BMP);
+         else
+
+            usb_ImageROIAry[no].Save(filename.c_str(),E_FILE_FORMAT_COLOR_BMP);
          pnlSystemMessage->Caption = "Image Saved.";
       }
    }
@@ -9164,11 +8826,11 @@ again:
    // 固定為0
    no = 0;
    if(boolfirst == false) {
-      // BW : CCDImageAry
-      if(CCDInfoAry[no].Type == CCD_BW) {
-         ProcessImage.SetSize(&CCDImageAry[no]);
-         w = CCDImageAry[no].GetWidth();
-         h = CCDImageAry[no].GetHeight();
+      // BW : scA1300ImageAry
+      if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+         ProcessImage.SetSize(&scA1300ImageAry[no]);
+         w = scA1300ImageAry[no].GetWidth();
+         h = scA1300ImageAry[no].GetHeight();
       }
       else {
          ProcessImage.SetSize(&usb_ImageAry[no]);
@@ -9182,9 +8844,9 @@ again:
    WriteSystemLog("DoNCCMatch: SetSize.");
    // Image => ProcessImage
    for(row=0 ; row<h ; row++) {
-      // BW : CCDImageAry
-      if(CCDInfoAry[no].Type == CCD_BW) {
-         ptr1 = (unsigned char *)CCDImageAry[no].GetImagePtr(0,row);
+      // BW : scA1300ImageAry
+      if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+         ptr1 = (unsigned char *)scA1300ImageAry[no].GetImagePtr(0,row);
          ptr2 = (unsigned char *)ProcessImage.GetImagePtr(0,row);
          memcpy(ptr2,ptr1,w);
       }
@@ -9230,8 +8892,8 @@ again:
    MatchImageROI.SetPlacement(x1,y1,(x2-x1+1),(y2-y1+1));                        // X,Y,Width,Height
    AnsiString imgfilename;
 
-   // BW : CCDImageAry
-   if(CCDInfoAry[no].Type == CCD_BW) {
+   // BW : scA1300ImageAry
+   if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
       imgfilename = SystemDirectory + "\\GrayImg.bmp";
       MatchImageROI.Save(imgfilename.c_str(),E_FILE_FORMAT_GRAY_LEVEL_BMP);
       WriteSystemLog("DoNCCMatch: Save GrayImg.bmp.");
@@ -9296,8 +8958,8 @@ again:
    //StdImage.Load(learnfname.c_str());
    learnfname = patternfname;
 
-   // BW : CCDImageAry
-   if(CCDInfoAry[no].Type == CCD_BW)
+   // BW : scA1300ImageAry
+   if(CCDInfoAry[no].Type == BASLER_CCD_BW)
       NCCError = iReadImage(GrayLearnImg,learnfname.c_str());
    else
       NCCError = iReadImage(ColorLearnImg,learnfname.c_str());
@@ -9314,7 +8976,7 @@ again:
    LoadColor = true;
    iSetDontCareThreshold(iMatchModel, DontcareThreshold);
 
-   if(CCDInfoAry[no].Type == CCD_BW)
+   if(CCDInfoAry[no].Type == BASLER_CCD_BW)
       NCCError = CreateNCCModel(GrayLearnImg,iMatchModel,UsingDoncare);
    else
       NCCError = CreateNCCModel(ColorLearnImg,iMatchModel,UsingDoncare);
@@ -9328,7 +8990,7 @@ again:
    }
    WriteSystemLog("DoNCCMatch: CreateNCCModel.");
 
-   if(CCDInfoAry[no].Type == CCD_BW)
+   if(CCDInfoAry[no].Type == BASLER_CCD_BW)
       NCCError = MatchNCCModel(GrayImg,iMatchModel);
    else
       NCCError = MatchNCCModel(ColorImg,iMatchModel);
@@ -9587,16 +9249,13 @@ AnsiString msg;
    no = 0;
    pnlNCC->Color = clSilver;
    pnlNCC1->Color = clSilver;
-   if(boolCCDImageLoadedAry[no] == false) {
+   if(boolBaslerImageLoadedAry[no] == false) {
       pnlNCC->Color = clRed;
       pnlNCC1->Color = clRed;
       pnlSystemMessage->Caption = "No Image! Load/Capture image first.";
       WriteSystemLog("btnAutoMatchClick: " + pnlSystemMessage->Caption);
       return;
    }
-
-   // 2023 8 23 - chc 初始為Null[彰化]
-   pnlScore->Caption = "";
 
    // 2016 11 13 - chc 由內到外搜尋: sno為單邊Pattern數量, 固範圍為sno*PatternWidth,sno*PatternHeight
    //ret = DoNCCMatch();
@@ -11297,21 +10956,22 @@ AnsiString str;
    iCrossMark             = pSystemFile->ReadInteger("System Parameter","int Cross Mark"         ,0);
    rgRulerType->ItemIndex = iCrossMark;
 
-   // Basler Shutter & Gain: 等setupCCD後才能設定
+   // Basler Shutter & Gain: 等setupsca1300後才能設定
    BaslerShutter          = pSystemFile->ReadInteger("System Parameter","Basler Shutter"         ,6);
-   BaslerGain             = pSystemFile->ReadInteger("System Parameter","Basler Gain"            ,0);
-   CCDShutterAry[0] = BaslerShutter;
-   CCDGainAry[0] = BaslerGain;
+   BaslerGain             = pSystemFile->ReadInteger("System Parameter","Basler Gain"            ,300);
+   scA1300ShutterAry[0] = BaslerShutter;
+   scA1300GainAry[0] = BaslerGain;
 
    // 2016 11 28 - chc ImagingSource Name: DFK 33GP1300 + 44614266
-   ISCCDName              = pSystemFile->ReadString("System Parameter","ImagingSource CCDName"   ,"DFK 33GX264e");
+   ISCCDName              = pSystemFile->ReadString("System Parameter","ImagingSource CCDName"   ,"DFK 33GP1300");
    ISCCDSerialNo          = pSystemFile->ReadString("System Parameter","ImagingSource CCDSerialNo"   ,"44614266");
 
-   // 2023 8 21 - chc ImagingSource Name: DFK 33GX264e + 44614266
-   ISCCD2Name              = pSystemFile->ReadString("System Parameter","ImagingSource CCD2Name"            ,"DFK 33GX264e");
-   ISCCD2SerialNo          = pSystemFile->ReadString("System Parameter","ImagingSource CCD2SerialNo"        ,"52024109");
-   ISCCD3Name              = pSystemFile->ReadString("System Parameter","ImagingSource CCD3Name"            ,"DFK 33GX264e");
-   ISCCD3SerialNo          = pSystemFile->ReadString("System Parameter","ImagingSource CCD3SerialNo"        ,"52024109");
+   // 2019 11 12 - chc Vision64: boolVision64
+   boolVision64           = pSystemFile->ReadBool("Vision64","Enabled"                           ,false);
+   //if(boolVision64 == false) {
+   //   gbOlympus->Caption = "Olympus Controller(Disable)";
+   //   gbOlympus->Enabled = boolVision64;
+   //}
 
    // 2020 2 28 - chc CCD
    boolCCD           = pSystemFile->ReadBool("CCD","Enabled"                           ,false);
@@ -11657,7 +11317,7 @@ static bool active = false;
 }
 //---------------------------------------------------------------------------
 // Basler Shutter
-void __fastcall TMainForm::rgCCDShutterClick(TObject *Sender)
+void __fastcall TMainForm::rgBaslerShutterClick(TObject *Sender)
 {
 int us;
 double dus;
@@ -11665,7 +11325,7 @@ double dus;
    // 2016 12 8 - chc ImagingSource
    if(pnlISCCDStaus->Color != clLime)
       return;
-   us = rgCCDShutter->ItemIndex;
+   us = rgBaslerShutter->ItemIndex;
    if(us == 0)
       us = 1000000 / 15;
    else if(us == 1)
@@ -11703,7 +11363,7 @@ double dus;
    return;
 
    // Shutter
-   us = rgCCDShutter->ItemIndex;
+   us = rgBaslerShutter->ItemIndex;
    if(us == 0)
       us = 1000000 / 15;
    else if(us == 1)
@@ -11743,15 +11403,15 @@ double dus;
    // hDevGigaAry[baslerccdno]
    //PylonDeviceSetFloatFeature(hDevscA1300, STRING_PAR const char *pName, double value);
    res = PylonDeviceSetFloatFeature( hDevGigaAry[no], "ExposureTimeAbs", dus );
-   WriteSystemLog("Set Basler CCD Shutter to " + IntToStr(rgCCDShutter->ItemIndex));
-   pnlSystemMessage->Caption = "Set Basler CCD Shutter to " + IntToStr(rgCCDShutter->ItemIndex);
-   lbGiga->Items->Add("Basler CCD Shutter: " + IntToStr(rgCCDShutter->ItemIndex));
-   CCDShutterAry[0] = rgCCDShutter->ItemIndex;
-   BaslerShutter = rgCCDShutter->ItemIndex;
+   WriteSystemLog("Set Basler CCD Shutter to " + IntToStr(rgBaslerShutter->ItemIndex));
+   pnlSystemMessage->Caption = "Set Basler CCD Shutter to " + IntToStr(rgBaslerShutter->ItemIndex);
+   lbGiga->Items->Add("Basler CCD Shutter: " + IntToStr(rgBaslerShutter->ItemIndex));
+   scA1300ShutterAry[0] = rgBaslerShutter->ItemIndex;
+   BaslerShutter = rgBaslerShutter->ItemIndex;
 }
 //---------------------------------------------------------------------------
 // Basler Gain
-void __fastcall TMainForm::tbCCDGainChange(TObject *Sender)
+void __fastcall TMainForm::tbBaslerGainChange(TObject *Sender)
 {
 int gain;
 double fgain;
@@ -11759,15 +11419,14 @@ double fgain;
    // 2016 12 8 - chc ImagingSource
    if(pnlISCCDStaus->Color != clLime)
       return;
-   gain = tbCCDGain->Position;
-   pnlCCDGain->Caption = IntToStr(gain);
+   gain = tbBaslerGain->Position;
+   pnlBaslerGain->Caption = IntToStr(gain);
 
    // 2019 11 28 - chc Gain[175 ~ 1020]
    // 0 - 9.21(0-921 ?)
    try {
       ICImagingControl1->Gain = gain;
       pnlAlarmMessage->Caption = "Gain Changed.";
-      MainForm->WriteSystemLog(">>Set CCD1 Gain: " + IntToStr(gain));
    }
    catch(Exception &e) {
       MainForm->WriteSystemLog(">>Error(GainChange): " + IntToStr(gain) + "," + e.Message);
@@ -11775,8 +11434,8 @@ double fgain;
    }
    return;
 
-   gain = tbCCDGain->Position;
-   pnlCCDGain->Caption = gain;
+   gain = tbBaslerGain->Position;
+   pnlBaslerGain->Caption = gain;
    if(gain < 300) {
       gain = 300;
    }
@@ -11790,7 +11449,7 @@ double fgain;
    WriteSystemLog("Set Basler CCD Gain to " + IntToStr(gain));
    pnlSystemMessage->Caption = "Set Basler CCD Gain to " + IntToStr(gain);
    lbGiga->Items->Add("Basler CCD Gain: " + IntToStr(gain));
-   CCDGainAry[0] = gain;
+   scA1300GainAry[0] = gain;
    BaslerGain = gain;
 
 }
@@ -11867,32 +11526,32 @@ void __fastcall TMainForm::btnToZeroPositionClick(TObject *Sender)
    GetPosition(Z_AXIS, &fcmd);
    cmd = fcmd;
    pos = cmd - (1000.0 / Z_RESOLUTION);
-   pnlOperationMessage->Caption = "Z Up 1000um...";
-   pnlSystemMessage->Caption = "Z Up 1000um...";
+   pnlOperationMessage->Caption = "Z上升1000um...";
+   pnlSystemMessage->Caption = "Z上升1000um...";
    pnlOperationMessage->Visible = true;
 
    // 2021 9 11 - chc 加速: MOVE_WAIT
    //if(MoveToZ(pos) == false) {
    if(MoveToZ(pos,MOVE_WAIT) == false) {
 
-      pnlOperationMessage->Caption = "Z Up 1000um Fail!";
-      pnlSystemMessage->Caption = "Z Up 1000um Fail!";
+      pnlOperationMessage->Caption = "Z上升1000um Fail!";
+      pnlSystemMessage->Caption = "Z上升1000um Fail!";
       pnlAlarmMessage->Caption = pnlOperationMessage->Caption;
       goto err;
    }
 
    ToZeroPosition();
 
-   pnlOperationMessage->Caption = "Z Down 1000um...";
-   pnlSystemMessage->Caption = "Z Down 1000um...";
+   pnlOperationMessage->Caption = "Z下降1000um...";
+   pnlSystemMessage->Caption = "Z下降1000um...";
    pnlOperationMessage->Visible = true;
 
    // 2021 9 11 - chc 加速: MOVE_WAIT
    //if(MoveToZ(cmd) == false) {
    if(MoveToZ(cmd,MOVE_WAIT) == false) {
 
-      pnlOperationMessage->Caption = "Z Down 1000um Fail!";
-      pnlSystemMessage->Caption = "Z Down 1000um Fail!";
+      pnlOperationMessage->Caption = "Z下降1000um Fail!";
+      pnlSystemMessage->Caption = "Z下降1000um Fail!";
       pnlAlarmMessage->Caption = pnlOperationMessage->Caption;
       goto err;
    }
@@ -13896,7 +13555,7 @@ int cx,cy,X,Y;
 
       // 2023 2 7 - chc Run時不可以DoubleClick
       if(boolInMeasureRun == true) {
-         pnlSystemMessage->Caption = "During the measurement operation, Move cannot be executed!";
+         pnlSystemMessage->Caption = "量測作業中, 不可以執行Move!";
          return;
       }
    }
@@ -14761,23 +14420,12 @@ void __fastcall TMainForm::MakeDeviceSettings()
    // 2021 4 19 - chc Log
    WriteSystemLog("MakeDeviceSettings()...");
 
-   // 2023 8 21 - chc Set the color format to monochrome
-   ICImagingControl1->MemoryCurrentGrabberColorformat = ICY8;
-
-   // 2023 8 20a - chc 設為Color
-   //ICImagingControl1->MemoryCurrentGrabberColorformat = ICRGB24;
-   //ICImagingControl1->DeviceTrigger = true;
-   //ICImagingControl1->ShowDeviceSettingsDialog();
-   //ICImagingControl1->ShowPropertyDialog();
-   //ICImagingControl1->ImageWidth
+   // Set the color format to monochrome
+   //ICImagingControl1->MemoryCurrentGrabberColorformat = TIS.Imaging.ICImagingControlColorformats.ICY8;
 
    // Set the ring buffer size to 5. This ensures that the last 5
    // acquired images are in memory.
    ICImagingControl1->ImageRingBufferSize = 5;
-
-   // 2023 8 23 - chc 設定trigger, doublebuffer
-   ICImagingControl1->DeviceTrigger = false;
-   ICImagingControl1->DoubleBuffered = true;
 
    // LiveCaptureContinuous = True means that every frame is
    // copied to the ring buffer.
@@ -14798,8 +14446,7 @@ void __fastcall TMainForm::MakeDeviceSettings()
 
    // 2016 12 5 - chc Exposure time(default=100), Move時要調高至1000-8000
    ICImagingControl1->ExposureAuto = false;
-   // 2023 8 22 - chc 不設定
-   //ICImagingControl1->Exposure = 10000;
+   ICImagingControl1->Exposure = 10000;
 
    // 2016 12 8 - chc Gain(default = 0)
    ICImagingControl1->GainAuto = false;
@@ -14810,14 +14457,12 @@ void __fastcall TMainForm::MakeDeviceSettings()
    //ICImagingControl1->Contrast = 0;
    ICImagingControl1->Sharpness = 12;
 
-   // 2023 8 25a - chc 不用
-   //try {
-   //   ICImagingControl1->ZoomAuto = false;
-   //}
-   //catch(Exception& e) {
-   //   ;
-   //}
-
+   try {
+      ICImagingControl1->ZoomAuto = false;
+   }
+   catch(Exception& e) {
+      ;
+   }
    ICImagingControl1->ScrollbarsEnabled = false;
 
    // Set the size of ICImagingControl to the width and height
@@ -14830,93 +14475,6 @@ void __fastcall TMainForm::MakeDeviceSettings()
 
 }
 //---------------------------------------------------------------------------
-// 2023 8 21 - chc Init ImagingSource CCD
-void __fastcall TMainForm::MakeDeviceSettings_2()
-{
-
-   // 2023 8 23a - chc 依範例
-   // => 一樣會閃退
-   //ICImagingControl2->DeviceUniqueName = "DFK 33GX264e [YLS-004] 51224121";
-   //ICImagingControl2->LiveCaptureContinuous = true;
-   //ICImagingControl2->DeviceTrigger = false;
-   //ICImagingControl2->DoubleBuffered = true;
-   //ICImagingControl2->VideoFormat = "RGB24 (1600x1600)";
-   //ICImagingControl2->DeviceFrameRate = 20;
-   //return;
-
-   WriteSystemLog("MakeDeviceSettings_2()...");
-
-   // Set the color format to monochrome
-   ICImagingControl2->MemoryCurrentGrabberColorformat = ICRGB24;
-
-   // 2023 8 23 - chc 設定Image Size
-   ICImagingControl2->VideoFormat = "RGB24 (1600x1600)";
-
-   // Set the ring buffer size to 5. This ensures that the last 5
-   // acquired images are in memory.
-   ICImagingControl2->ImageRingBufferSize = 5;
-
-   // 2023 8 23 - chc 設定trigger, doublebuffer
-   ICImagingControl2->DeviceTrigger = false;
-   ICImagingControl2->DoubleBuffered = true;
-
-   // LiveCaptureContinuous = True means that every frame is
-   // copied to the ring buffer.
-   ICImagingControl2->LiveCaptureContinuous = true;
-
-   // Do not save the last image, if liveStop is called
-   ICImagingControl2->LiveCaptureLastImage = false;
-
-   // Disable the live display. This allows to display images
-   // from the ring buffer in ICImagingControl//s control window.
-   ICImagingControl2->LiveDisplay = false;
-   ICImagingControl2->LiveDisplayDefault = false;
-   ICImagingControl2->LiveShowLastBuffer = false;
-
-   // 降至15fps: max 20fps
-   ICImagingControl2->DeviceFrameRate = 15;
-
-   // Exposure time(default=100), Move時要調高至1000-8000
-   ICImagingControl2->ExposureAuto = false;
-   // 2023 8 22 - chc 不設定
-   //ICImagingControl2->Exposure = 10000;
-   if(ICImagingControl2->Exposure > 0)
-      ed45Shutter->Text = IntToStr(int(1000000 / ICImagingControl2->Exposure));
-   else {
-      ICImagingControl2->Exposure = 10000;
-      ed45Shutter->Text = "100";
-   }
-
-   // Gain(default = 0)
-   ICImagingControl2->GainAuto = false;
-   //ICImagingControl2->Gain = 0;
-   ed45Gain->Text = IntToStr(ICImagingControl2->Gain);
-   ed45TargetBrightness->Text = IntToStr(ICImagingControl2->Brightness);
-
-   // 設定Contrast值(Default = 0): -10 ~ 30(對比度)
-   // => 沒用!!
-   //ICImagingControl2->Contrast = 0;
-   ICImagingControl2->Sharpness = 12;
-
-   // 2023 8 25a - chc 不用
-   //try {
-   //   ICImagingControl2->ZoomAuto = false;
-   //}
-   //catch(Exception& e) {
-   //   ;
-   //}
-   
-   ICImagingControl2->ScrollbarsEnabled = false;
-
-   // Set the size of ICImagingControl to the width and height
-   // of the currently selected video format.
-   ICImagingControl2->Width = ICImagingControl2->ImageWidth;
-   ICImagingControl2->Height = ICImagingControl2->ImageHeight;
-
-   WriteSystemLog("MakeDeviceSettings_2().");
-
-}
-//---------------------------------------------------------------------------
 // 2016 11 28 - chc ImagingSource CCD Capture
 void __fastcall TMainForm::tmISCCDTimer(TObject *Sender)
 {
@@ -14926,7 +14484,6 @@ void __fastcall TMainForm::tmISCCDTimer(TObject *Sender)
    pnlISCCDCapture->Refresh();
 
    // Snap an image.
-   // Trigger要等到Timeout
    ICImagingControl1->MemorySnapImage();
    // Copy the last grabbed image to the PictureBox control
 
@@ -15015,27 +14572,22 @@ static bool first = false;
    //
    //height = 960;
    //WriteSystemLog("Show-1: " + IntToStr(width) + "," + IntToStr(height) + "," + IntToStr(CCDInfoAry[no].Type));
-   if(CCDInfoAry[no].Type == CCD_BW)
-      CCDImageAry[no].SetSize(width,height);
+   if(CCDInfoAry[no].Type == BASLER_CCD_BW)
+      scA1300ImageAry[no].SetSize(width,height);
    else
       usb_ImageAry[no].SetSize(width,height);
    //WriteSystemLog("Show-2");
 
-
-   // 2023 8 20a - chc 在Vieworks CCD就不做
-   if(rgCCDSource->ItemIndex == 1)
-      goto notdraw;
-
-   // BW : CCDImageAry
-   //CCDInfoAry[no].Type = CCD_BW;
-   if(CCDInfoAry[no].Type == CCD_BW) {
+   // BW : scA1300ImageAry
+   //CCDInfoAry[no].Type = BASLER_CCD_BW;
+   if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
 
 // 2019 11 27 - chc Log
 //WriteSystemLog("Show-Gray");
 
       i = 0;
       for(int row=height-1 ; row>=0 ; row--) {
-         pt = (unsigned char *)CCDImageAry[no].GetImagePtr(0,row);
+         pt = (unsigned char *)scA1300ImageAry[no].GetImagePtr(0,row);
          // 由buffer到pt
          memcpy(pt, &buffer[i],width);
 
@@ -15044,12 +14596,12 @@ static bool first = false;
          i += width;
 
       }
-      //CCDImageAry[no].SetPlacement(x,y,w,h);
-      //CCDImageAry[no].Draw(imCCD->Canvas->Handle);
+      //scA1300ImageAry[no].SetPlacement(x,y,w,h);
+      //scA1300ImageAry[no].Draw(imCCD->Canvas->Handle);
       //WriteSystemLog("Show-3");
-      CCDImageROIAry[no].Detach();
+      scA1300ImageROIAry[no].Detach();
       //WriteSystemLog("Show-4");
-      CCDImageROIAry[no].Attach(&CCDImageAry[no]);
+      scA1300ImageROIAry[no].Attach(&scA1300ImageAry[no]);
       //WriteSystemLog("Show-5");
 
       // 2021 4 27 - chc Full Image
@@ -15057,19 +14609,19 @@ static bool first = false;
       if(cbCCDFullImage->Checked == true) {
          imCCD->Picture->Bitmap->Width = width;
          imCCD->Picture->Bitmap->Height = height;
-         CCDImageROIAry[no].SetPlacement(0,0,width,height);
+         scA1300ImageROIAry[no].SetPlacement(0,0,width,height);
       }
       else {
          // 要設Size
          imCCD->Picture->Bitmap->Width = w;
          imCCD->Picture->Bitmap->Height = h;
 
-         CCDImageROIAry[no].SetPlacement(x,y,w,h);
+         scA1300ImageROIAry[no].SetPlacement(x,y,w,h);
       }
 
       //WriteSystemLog("Show-6");
       if(rgCCDSource->ItemIndex == 0)
-         CCDImageROIAry[no].Draw(imCCD->Canvas->Handle);
+         scA1300ImageROIAry[no].Draw(imCCD->Canvas->Handle);
 
       //WriteSystemLog("Show-7");
    }
@@ -15102,22 +14654,19 @@ static bool first = false;
    if(rgCCDSource->ItemIndex == 0)
       imCCD->Refresh();
 
-// 2023 8 20a - chc 在Vieworks CCD就不做
-notdraw:
-
    //WriteSystemLog("Show-9");
 
    // Basler Pylon GigE CCD
-   boolCCDImageLoadedAry[no] = true;
-   CCDCaptureNoAry[no]++;
+   boolBaslerImageLoadedAry[no] = true;
+   BaslerCaptureNoAry[no]++;
    if((count % 5) == 0) {
-      GetTimeTic(&CCDStopTimeAry[no],&CCDStopTickAry[no]);
-      CCDElapsedmsAry[no] = ((CCDStopTimeAry[no]*1000+CCDStopTickAry[no]) - (CCDStartTimeAry[no]*1000+CCDStartTickAry[no]));
+      GetTimeTic(&BaslerStopTimeAry[no],&BaslerStopTickAry[no]);
+      BaslerElapsedmsAry[no] = ((BaslerStopTimeAry[no]*1000+BaslerStopTickAry[no]) - (BaslerStartTimeAry[no]*1000+BaslerStartTickAry[no]));
       double ratio;
       AnsiString msg;
       // Devide by zero
-      if(CCDElapsedmsAry[no] != 0) {
-         ratio = ((double)CCDCaptureNoAry[no] * 1000.0) / CCDElapsedmsAry[no];
+      if(BaslerElapsedmsAry[no] != 0) {
+         ratio = ((double)BaslerCaptureNoAry[no] * 1000.0) / BaslerElapsedmsAry[no];
          msg.sprintf("%.1f",ratio);
          pnlCapturedNo->Caption = msg;
       }
@@ -15341,7 +14890,7 @@ AnsiString filename;
       // 改變副檔名
       filename = ChangeFileExt(spCCDImage->FileName,".txt");
       mmMeasure->Lines->SaveToFile(filename);
-      pnlSystemMessage->Caption = "message archived.";
+      pnlSystemMessage->Caption = "訊息已存檔.";
    }
 }
 //---------------------------------------------------------------------------
@@ -15592,7 +15141,7 @@ TIniFile *pSystemFile;
    rgSpeed->Items->Strings[2] = msg;
 
    // Write to .ini
-   pnlSystemMessage->Caption = "Update speed parameter...";
+   pnlSystemMessage->Caption = "更新速度參數...";
    // ini檔名與目錄
    pSystemFile = new TIniFile(MainForm->SpeedINIFilename);
 
@@ -15610,7 +15159,7 @@ TIniFile *pSystemFile;
    pSystemFile->WriteString(SPEED_INFORMATION_SECTION,"Z High"                 ,edSpeedZHigh->Text);
 
    delete pSystemFile;
-   pnlSystemMessage->Caption = "Update speed parameters complete.";
+   pnlSystemMessage->Caption = "更新速度參數完成.";
 }
 //---------------------------------------------------------------------------
 // 2016 12 30 - chc Load Speed Parameter
@@ -15621,7 +15170,7 @@ TIniFile *pSystemFile;
 AnsiString sgenerallow,sgeneralmiddle,sgeneralhigh,sturbolow,sturbomiddle,sturbohigh,szlow,szmiddle,szhigh;
 
    // Read .ini
-   pnlSystemMessage->Caption = "Load speed parameters...";
+   pnlSystemMessage->Caption = "載入速度參數...";
    // ini檔名與目錄
    pSystemFile = new TIniFile(MainForm->SpeedINIFilename);
 
@@ -15662,7 +15211,7 @@ AnsiString sgenerallow,sgeneralmiddle,sgeneralhigh,sturbolow,sturbomiddle,sturbo
    msg.sprintf("High(%s\%)",edSpeedGeneralHigh->Text.c_str());
    rgSpeed->Items->Strings[2] = msg;
 
-   pnlSystemMessage->Caption = "Load speed parameters complete.";
+   pnlSystemMessage->Caption = "載入速度參數完成.";
 }
 //---------------------------------------------------------------------------
 // 2016 12 30 - chc Auto Focus : Sobel
@@ -15693,7 +15242,7 @@ int d[25];
 bool boolrobert = true;
 EC24 *ptr1,*ptr2,*ptr3;
 
-// 2019 11 27 - chc 是Gray/Color? CCDImageAry
+// 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
 unsigned char *ptr1bw,*ptr2bw,*ptr3bw;
 
 static int sx[9] = {-1, 0, 1,
@@ -15764,10 +15313,10 @@ bool boolresult;
    MoveToZ(zpos-offset,speed,1);
    no = 0;
    // 中間800*800
-   // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-   if(CCDInfoAry[no].Type == CCD_BW) {
-      w = CCDImageAry[0].GetWidth();
-      h = CCDImageAry[0].GetHeight();
+   // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+   if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+      w = scA1300ImageAry[0].GetWidth();
+      h = scA1300ImageAry[0].GetHeight();
    }
    else {
 
@@ -15892,11 +15441,11 @@ bool boolresult;
          // 差距總和
          case 0:
 
-            // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-            if(CCDInfoAry[no].Type == CCD_BW) {
+            // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+            if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
                for(row=y1+1 ; row<y2 ; row+=1) {
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
-                  ptr2bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row+3);         // 取得Buffer位置
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
+                  ptr2bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row+3);         // 取得Buffer位置
                   for(col=0 ; col<width ; col+=1) {
                      // 白點數量
                      // 2021 4 24 - chc whitevalue
@@ -15951,11 +15500,11 @@ bool boolresult;
             for(row=y1+1 ; row<y2 ; row+=2) {
                //ptr  = ProcessImage.GetImagePtr(0,row);                                   // 取得Buffer位置
 
-               // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-               if(CCDInfoAry[no].Type == CCD_BW) {
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row-1);                            // 取得Buffer位置
-                  ptr2bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);                              // 取得Buffer位置
-                  ptr3bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row+1);                            // 取得Buffer位置
+               // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+               if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row-1);                            // 取得Buffer位置
+                  ptr2bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);                              // 取得Buffer位置
+                  ptr3bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row+1);                            // 取得Buffer位置
                }
                else {
 
@@ -15966,8 +15515,8 @@ bool boolresult;
                for(col=1 ; col<width ; col+=2) {
 
                   // 2019 11 26 - chc 白點數量
-                  // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-                  if(CCDInfoAry[no].Type == CCD_BW) {
+                  // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+                  if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
                      // 2021 4 24 - chc whitevalue
                      //if(ptr1bw[col] > 250)
                      if(ptr1bw[col] > whitevalue)
@@ -16043,11 +15592,11 @@ bool boolresult;
                for(row=y1+1 ; row<y2 ; row++) {
 
                   // 2019 11 26 - chc 白點數量
-                  // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-                  if(CCDInfoAry[no].Type == CCD_BW) {
-                     ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row-1);                            // 取得Buffer位置
-                     ptr2bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);                              // 取得Buffer位置
-                     ptr3bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row+1);                            // 取得Buffer位置
+                  // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+                  if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+                     ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row-1);                            // 取得Buffer位置
+                     ptr2bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);                              // 取得Buffer位置
+                     ptr3bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row+1);                            // 取得Buffer位置
                      // 2021 4 24 - chc whitevalue
                      //if(ptr1bw[col] > 250)
                      if(ptr1bw[col] > whitevalue)
@@ -16104,17 +15653,17 @@ bool boolresult;
             sum = 0;
             for(row=y1+1 ; row<y2 ; row+=1) {
 
-               // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-               if(CCDInfoAry[no].Type == CCD_BW)
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
+               // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+               if(CCDInfoAry[no].Type == BASLER_CCD_BW)
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
                else
 
                   ptr1 = (EC24 *)usb_ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
                for(col=0 ; col<width ; col+=1) {
 
                   // 2019 11 26 - chc 白點數量
-                  // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-                  if(CCDInfoAry[no].Type == CCD_BW) {
+                  // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+                  if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
                      // 2021 4 24 - chc whitevalue
                      //if(ptr1bw[col] > 250)
                      if(ptr1bw[col] > whitevalue)
@@ -16172,9 +15721,9 @@ bool boolresult;
                meanhigh = meanhigh / dcnthigh;
             for(row=y1+1 ; row<y2 ; row+=1) {
 
-               // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-               if(CCDInfoAry[no].Type == CCD_BW) {
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
+               // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+               if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
                   for(col=0 ; col<width ; col+=1) {
                      // 全計
                      if(ptr1bw[col] <= 255) {
@@ -16208,9 +15757,9 @@ bool boolresult;
          case 4:
             for(row=y1+1 ; row<y2 ; row+=1) {
 
-               // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-               if(CCDInfoAry[no].Type == CCD_BW)
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
+               // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+               if(CCDInfoAry[no].Type == BASLER_CCD_BW)
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
                else
 
                   ptr1 = (EC24 *)usb_ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
@@ -16220,8 +15769,8 @@ bool boolresult;
                for(col=0 ; col<width ; col+=1) {
 
                   // 2019 11 26 - chc 白點數量
-                  // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-                  if(CCDInfoAry[no].Type == CCD_BW) {
+                  // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+                  if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
                      // 2021 4 24 - chc whitevalue
                      //if(ptr1bw[col] > 250)
                      if(ptr1bw[col] > whitevalue)
@@ -16438,11 +15987,11 @@ bool boolresult;
          case 0:
             for(row=y1+1 ; row<y2 ; row+=1) {
 
-               // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-               if(CCDInfoAry[no].Type == CCD_BW) {
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
+               // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+               if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
                   // 小差異不記錄
-                  ptr2bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row+3);         // 取得Buffer位置
+                  ptr2bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row+3);         // 取得Buffer位置
                   for(col=0 ; col<width ; col+=1) {
                      // 白點數量
                      // 2021 4 24 - chc whitevalue
@@ -16497,11 +16046,11 @@ bool boolresult;
             for(row=y1+1 ; row<y2 ; row+=2) {
                //ptr  = ProcessImage.GetImagePtr(0,row);                                   // 取得Buffer位置
 
-               // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-               if(CCDInfoAry[no].Type == CCD_BW) {
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row-1);                            // 取得Buffer位置
-                  ptr2bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);                              // 取得Buffer位置
-                  ptr3bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row+1);                            // 取得Buffer位置
+               // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+               if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row-1);                            // 取得Buffer位置
+                  ptr2bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);                              // 取得Buffer位置
+                  ptr3bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row+1);                            // 取得Buffer位置
                   for(col=1 ; col<width ; col+=2) {
                      // 白點數量
                      // 2021 4 24 - chc whitevalue
@@ -16587,11 +16136,11 @@ bool boolresult;
             for(col=1 ; col<width ; col++) {
                for(row=y1+1 ; row<y2 ; row++) {
 
-                  // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-                  if(CCDInfoAry[no].Type == CCD_BW) {
-                     ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row-1);                            // 取得Buffer位置
-                     ptr2bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);                              // 取得Buffer位置
-                     ptr3bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row+1);                            // 取得Buffer位置
+                  // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+                  if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+                     ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row-1);                            // 取得Buffer位置
+                     ptr2bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);                              // 取得Buffer位置
+                     ptr3bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row+1);                            // 取得Buffer位置
                      // 2019 11 26 - chc 白點數量
                      // 2021 4 24 - chc whitevalue
                      //if(ptr1bw[col] > 250)
@@ -16650,9 +16199,9 @@ bool boolresult;
             sum = 0;
             for(row=y1+1 ; row<y2 ; row+=1) {
 
-               // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-               if(CCDInfoAry[no].Type == CCD_BW) {
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
+               // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+               if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
                   for(col=0 ; col<width ; col+=1) {
                      // 白點數量
                      // 2021 4 24 - chc whitevalue
@@ -16716,9 +16265,9 @@ bool boolresult;
                meanhigh = meanhigh / dcnthigh;
             for(row=y1+1 ; row<y2 ; row+=1) {
 
-               // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-               if(CCDInfoAry[no].Type == CCD_BW) {
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
+               // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+               if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
                   for(col=0 ; col<width ; col+=1) {
                      // 全計
                      if(ptr1bw[col] <= 255) {
@@ -16755,9 +16304,9 @@ bool boolresult;
                min = 300;
                dcnt = 0;
 
-               // 2019 11 27 - chc 是Gray/Color? CCDImageAry
-               if(CCDInfoAry[no].Type == CCD_BW) {
-                  ptr1bw = (unsigned char *)CCDImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
+               // 2019 11 27 - chc 是Gray/Color? scA1300ImageAry
+               if(CCDInfoAry[no].Type == BASLER_CCD_BW) {
+                  ptr1bw = (unsigned char *)scA1300ImageAry[no].GetImagePtr(x1,row);           // 取得Buffer位置
                   for(col=0 ; col<width ; col+=1) {
                      // 白點數量
                      // 2021 4 24 - chc whitevalue
@@ -17001,7 +16550,7 @@ AnsiString msg;
 TIniFile *pSystemFile;
 
    // Write to .ini
-   pnlSystemMessage->Caption = "Update focus parameters...";
+   pnlSystemMessage->Caption = "更新對焦參數...";
    // ini檔名與目錄
    pSystemFile = new TIniFile(MainForm->FocusINIFilename);
 
@@ -17020,7 +16569,7 @@ TIniFile *pSystemFile;
    pSystemFile->WriteString(FOCUS_INFORMATION_SECTION,"Difference Ratio"        ,edDifferenceRatio->Text);
 
    delete pSystemFile;
-   pnlSystemMessage->Caption = "Update focus parameters complete.";
+   pnlSystemMessage->Caption = "更新對焦參數完成.";
 }
 //---------------------------------------------------------------------------
 // 2017 1 3 - chc Load Focus Parameter
@@ -17031,7 +16580,7 @@ TIniFile *pSystemFile;
 AnsiString szfocus,szfocusoffset,szfocusspeed;
 
    // Read .ini
-   pnlSystemMessage->Caption = "Load focus parameters...";
+   pnlSystemMessage->Caption = "載入對焦參數...";
 
    // ini檔名與目錄
    pSystemFile = new TIniFile(MainForm->FocusINIFilename);
@@ -17066,7 +16615,7 @@ AnsiString szfocus,szfocusoffset,szfocusspeed;
    edAutoFocus->Text = szfocus;
    edAutoFocusOffset->Text = szfocusoffset;
    edAutoFocusSpeed->Text = szfocusspeed;
-   pnlSystemMessage->Caption = "Loading focus parameters is complete.";
+   pnlSystemMessage->Caption = "載入對焦參數完成.";
 }
 //---------------------------------------------------------------------------
 // 2017 1 3 - chc Delete recipe
@@ -17090,7 +16639,7 @@ int len;
       rno = combRecipe->ItemIndex;
       rname = combRecipe->Text;
       fname = RecipeDirectory + "\\" + rname + ".ini";
-      pnlSystemMessage->Caption = "Delete: " + fname;
+      pnlSystemMessage->Caption = "刪除: " + fname;
       // 刪除
       if(FileExists(fname)) {
          DeleteFile(fname.c_str());
@@ -17252,7 +16801,7 @@ void __fastcall TMainForm::btnLampControl2Click(TObject *Sender)
    catch(Exception &e) {
       ShowMessage("ybLampControl: " + e.Message);
       LampControlStatus2 = false;
-      MainForm->pnlSystemMessage->Caption = "COM Port(Lamp) Startup failed!";
+      MainForm->pnlSystemMessage->Caption = "COM Port(Lamp) 啟動失敗!";
       MainForm->WriteSystemLog(MainForm->pnlSystemMessage->Caption);
    }
    UpdateLampStatus2();
@@ -17486,6 +17035,7 @@ AnsiString msg,fname;
    delete pSystemFile;
 }
 //---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // 2019 7 9 - chc Close all Timer
 void __fastcall TMainForm::CloseAllTimer()
 {
@@ -17497,10 +17047,7 @@ void __fastcall TMainForm::CloseAllTimer()
    tmBeep->Enabled = false;
    // CCD
    tmISCCD->Enabled = false;
-   WriteSystemLog("LiveStop(1)...");
    ICImagingControl1->LiveStop();
-   WriteSystemLog("LiveStop(2)...");
-   ICImagingControl2->LiveStop();
    pnlISCCDStaus->Color = clSilver;
    Sleep(100);
    //
@@ -17573,9 +17120,6 @@ void __fastcall TMainForm::mnToLensClick(TObject *Sender)
    ToLensToCCDMode_Old = ToLensToCCDMode;
 
    ToLensToCCDMode = TOLENS_MODE;
-   mnToCCD->Checked = false;
-   mnToLens->Checked = true;
-   mnToLensTilt->Checked = false;
 
    // 2019 11 14 - chc 是指目前的十字中心: DoubleClickX為imCCD的有效座標, 但shVertical->Left是pnlLeftWindow的座標!
    DoubleClickX = shVertical->Left - imCCD->Left;
@@ -17593,7 +17137,6 @@ void __fastcall TMainForm::mnToLensClick(TObject *Sender)
 // ToLens: 3,0
 // ToCCD: 3,1
 // ToLens45: 3,2
-// mode: 0-0度, 1-CCD, 2-45度
 void __fastcall TMainForm::CCDToLens(int lensno, int mode)
 {
 int level;
@@ -17631,9 +17174,7 @@ int cx,cy,X,Y;
    //WriteSystemLog(msg);
 
    // ToCCD
-   // 2023 8 15 - chc 全部都指到中心點
-   //if(mode == 1)
-
+   if(mode == 1)
       fdy = 0;
 
    // 兩個Lens之間的間距: edLens3X(50x) / CCD
@@ -17676,42 +17217,30 @@ int cx,cy,X,Y;
       oz = edCCDZ->Text.ToInt();
       oname = "CCD";
    }
-   else if(ToLensToCCDMode_Old == TOLENS_TILT_MODE) {
+   else {
       ox = edTiltX->Text.ToInt();
       oy = edTiltY->Text.ToInt();
       oz = edTiltZ->Text.ToInt();
       oname = "Lens45";
-   }
-   else {
-      ox = edCCDX->Text.ToInt();
-      oy = edCCDY->Text.ToInt();
-      oz = edCCDZ->Text.ToInt();
-      oname = "CCD";
    }
    // new
    if(ToLensToCCDMode == TOLENS_MODE) {
       nx = edZeroX->Text.ToInt();
       ny = edZeroY->Text.ToInt();
       nz = edZeroZ->Text.ToInt();
-      nname = "Lens0";
+      oname = "Lens0";
    }
    else if(ToLensToCCDMode == TOCCD_MODE) {
       nx = edCCDX->Text.ToInt();
       ny = edCCDY->Text.ToInt();
       nz = edCCDZ->Text.ToInt();
-      nname = "CCD";
+      oname = "CCD";
    }
-   else if(ToLensToCCDMode == TOLENS_TILT_MODE) {
+   else {
       nx = edTiltX->Text.ToInt();
       ny = edTiltY->Text.ToInt();
       nz = edTiltZ->Text.ToInt();
-      nname = "Lens45";
-   }
-   else {
-      nx = edCCDX->Text.ToInt();
-      ny = edCCDY->Text.ToInt();
-      nz = edCCDZ->Text.ToInt();
-      nname = "CCD";
+      oname = "Lens45";
    }
    dx = (nx - ox) * X_RESOLUTION;
    dy = (ny - oy) * Y_RESOLUTION;
@@ -17720,9 +17249,6 @@ int cx,cy,X,Y;
    dx = 0 - dx;
 
    fdy += dy;
-
-   pnlSystemMessage->Caption = oname + " To " + nname;
-   WriteSystemLog(pnlSystemMessage->Caption);
 
    // 2023 8 6 - chc 0/45/CCD互換
    //WriteSystemLog("取得Lens-CCD位移量.");
@@ -17774,9 +17300,7 @@ int cx,cy,X,Y;
    //WriteSystemLog(msg);
 
    // ToCCD
-   // 2023 8 15 - chc 全部都指到中心點
-   //if(mode == 1)
-
+   if(mode == 1)
       fdx = 0;
 
    // 兩個Lens之間的間距: edLens1X
@@ -17859,10 +17383,7 @@ int cx,cy,X,Y;
       DoRelativeMove(Z_AXIS,dz);
    }
    */
-   // 2023 8 20 - chc 改成true才對
-   //if(cbToLensZCompensation->Checked == false) {
-   if(cbToLensZCompensation->Checked == true) {
-
+   if(cbToLensZCompensation->Checked == false) {
       dz = nz - oz;
       msg.sprintf("取得Z: %s(%d)與%s(%d)位移量=%dpulse",oname.c_str(),oz,nname.c_str(),nz,dz);
       WriteSystemLog(msg);
@@ -17963,9 +17484,6 @@ void __fastcall TMainForm::mnToCCDClick(TObject *Sender)
    ToLensToCCDMode_Old = ToLensToCCDMode;
 
    ToLensToCCDMode = TOCCD_MODE;
-   mnToCCD->Checked = true;
-   mnToLens->Checked = false;
-   mnToLensTilt->Checked = false;
 
    CCDToLens(LensNo,1);
 }
@@ -17994,9 +17512,6 @@ void __fastcall TMainForm::AreaPointTitle()
    sgDot->Cells[6][0]        = "Row";
    sgDot->Cells[7][0]        = "Col";
 
-   // 2023 8 16 - chc 加入Macro
-   sgDot->Cells[8][0]        = "Macro";
-
    sgDot->ColWidths[0]       = 40;
    sgDot->ColWidths[1]       = 80;
    sgDot->ColWidths[2]       = 80;
@@ -18005,9 +17520,6 @@ void __fastcall TMainForm::AreaPointTitle()
    sgDot->ColWidths[5]       = 180;
    sgDot->ColWidths[6]       = 40;
    sgDot->ColWidths[7]       = 40;
-
-   // 2023 8 16 - chc 加入Macro
-   sgDot->ColWidths[8]       = 180;
 
    //sgDot->EditorMode = true;
 
@@ -18102,10 +17614,6 @@ int no;
       sgDot->Cells[5][no] = comboOlympusVisionName1->Text;
       sgDot->Cells[6][no] = pnlColumSet->Caption;
       sgDot->Cells[7][no] = pnlRowSet->Caption;
-
-      // 2023 8 16 - chc 加入Macro
-      sgDot->Cells[8][no] = comboOlympusMacroName->Text;
-
    }
 }
 //---------------------------------------------------------------------------
@@ -18153,7 +17661,7 @@ bool boolret;
    // 2019 12 3 - chc 先設定位置
    int recno;
    if(sgArea->RowCount < 2) {
-      pnlSystemMessage->Caption = "Area: No Data Matched!";
+      pnlSystemMessage->Caption = "區域: No Data Matched!";
       return;
    }
    recno = edAreaNo->Text.ToInt();
@@ -18236,7 +17744,7 @@ int recno;
       ChangePriorityCount = edPasswordSwitchSecond->Text.ToInt();
 
    if(sgArea->RowCount < 2) {
-      pnlSystemMessage->Caption = "Area: No Data Matched!";
+      pnlSystemMessage->Caption = "區域: No Data Matched!";
       return;
    }
    recno = sgArea->Row;
@@ -18259,7 +17767,7 @@ int recno;
       ChangePriorityCount = edPasswordSwitchSecond->Text.ToInt();
 
    if(sgDot->RowCount < 2) {
-      pnlSystemMessage->Caption = "Point: No Data Matched!";
+      pnlSystemMessage->Caption = "點位: No Data Matched!";
       return;
    }
    recno = sgDot->Row;
@@ -18272,17 +17780,9 @@ int recno;
       comboOlympusVisionName1->Text = sgDot->Cells[5][recno];
       pnlDotRow->Caption = sgDot->Cells[6][recno];
       pnlDotCol->Caption = sgDot->Cells[7][recno];
-
-      // 2023 8 16 - chc 加入Macro
-      comboOlympusMacroName->Text = sgDot->Cells[8][recno];
-
    }
 }
 //---------------------------------------------------------------------------
-// 2023 8 24 - chc Send Data
-// 0-Init, 1-Start, 2-Done, 3-Error: Manual45Measure
-int Manual45Measure = 0;
-
 bool boolTestFocusDone = false;
 int TestFocusZ;
 
@@ -18330,9 +17830,6 @@ struct BASE_STRU side0pos[MAX_DOT_NO];
 int waferno;
    waferno = 25 - rgWaferNo->ItemIndex;
 
-// 2023 8 18 - chc Macro
-AnsiString smacro;
-
    // 2021 8 24 - chc 記錄取片中
    if(boolInLoad == true) {
       pnlSystemRun->Caption = "取片中, 不可以執行!";
@@ -18357,7 +17854,7 @@ AnsiString smacro;
    int portno;
    portno = rgLoadPortSelect->ItemIndex;
    if(portno < 0) {
-      pnlSystemRun->Caption = "No port selected, cannot execute!";
+      pnlSystemRun->Caption = "port not selected, not executable!";
       return;
    }
 
@@ -18370,7 +17867,7 @@ AnsiString smacro;
       if(WaferBuffer[portno][waferno-1].RecipeName != "") {
          cbRecipe->Text = WaferBuffer[portno][waferno-1].RecipeName;
 
-         pnlOperationMessage->Caption = "[Run]SECS Recipe: " + cbRecipe->Text + ", no= " + IntToStr(waferno);
+         pnlOperationMessage->Caption = "[Run]使用SECS Recipe: " + cbRecipe->Text + ", no= " + IntToStr(waferno);
          WriteSystemLog(pnlOperationMessage->Caption);
 
          // 2021 10 27a - chc 要更新ItemIndex
@@ -18389,10 +17886,10 @@ AnsiString smacro;
    if(cbOffLine->Checked == true) {
 
       // 詢問
-      msg.sprintf("Ready to Start[%s]Measurement?    ",cbRecipe->Text);
-      pnlSystemRun->Caption = "Ready to Start?";
+      msg.sprintf("確認開始[%s]的量測作業?    ",cbRecipe->Text);
+      pnlSystemRun->Caption = "確認開始?";
       if(Application->MessageBox(msg.c_str(), "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
-         pnlSystemRun->Caption = "Abort execution.";
+         pnlSystemRun->Caption = "放棄執行.";
 
          // 2022 12 8 - chc Disable
          btnSystemRun->Enabled = true;
@@ -18402,93 +17899,73 @@ AnsiString smacro;
    }
 
    WriteSystemLog("Recipe Run: 開始...");
-   pnlSystemRun->Caption = "Recipe Run: Start";
+   pnlSystemRun->Caption = "Recipe Run: 開始";
 
-   // 2023 8 24 - chc 加入Start
-   WriteSystemLog("Recipe Run: 設定Start= " + edRecipeStart->Text);
-   edTriggerStart->Text = edRecipeStart->Text;
+   // Chuck With Wafer?
+   if(IsChuckWithWafer() == false) {
+      WriteSystemLog("Recipe Run: Satge上無Wafer!");
+      pnlAlarmMessage->Caption = "Satge上無Wafer!";
+      pnlSystemRun->Caption = "Satge上無Wafer!";
 
-   // 2023 8 18 - chc for test
-   if(boolForTest == false) {
+      // 2022 12 8 - chc Disable
+      btnSystemRun->Enabled = true;
 
-      // Chuck With Wafer?
-      if(IsChuckWithWafer() == false) {
-         WriteSystemLog("Recipe Run: No Wafer on Stage!");
-         pnlAlarmMessage->Caption = "No Wafer on Stage!";
-         pnlSystemRun->Caption = "No Wafer on Stage!";
+      return;
+   }
+
+   // 2021 5 9 - chc Yuanli 是否連線?
+   pnlSystemMessage->Caption = "Recipe Run: YuanLi 連線測試...";
+   pnlSystemRun->Caption = "YuanLi 連線測試...";
+   if(YuanLiConnect() == false) {
+      pnlSystemRun->Caption = "YuanLi 連線測試失敗!";
+      pnlAlarmMessage->Caption = "YuanLi無法連線(Timeout), 停止執行.";
+      pnlSystemMessage->Caption = "";
+
+      // 2022 12 8 - chc Log
+      WriteSystemLog("YuanLiConnect() YuanLi 連線測試失敗! 停止Start");
+      btnSystemRun->Enabled = true;
+
+      return;
+   }
+   pnlSystemRun->Caption = "YuanLi 連線測試OK.";
+
+   // 2022 12 8 - chc Delay
+   WaitTime(500);
+
+   // Init
+   boolTestFocusDone = false;
+   WriteSystemLog("Recipe Run: YuanLi Init");
+   pnlSystemRun->Caption = "YuanLi Init...";
+   pnlSystemMessage->Caption = "Recipe Run: YuanLi Init...";
+   if(WaitYuanliCmd(CMD_INIT) != CMD_ACK_E) {
+      pnlSystemRun->Caption = "YuanLi Init失敗!";
+      pnlAlarmMessage->Caption = "YuanLi Init異常, 停止執行.";
+      pnlSystemMessage->Caption = "";
+
+      // 2022 12 8 - chc Log
+      WriteSystemLog("YuanLi Init失敗! 停止Start");
+      btnSystemRun->Enabled = true;
+
+      return;
+   }
+
+   // 2022 12 8 - chc Log
+   WriteSystemLog("YuanLi Init OK. 續Start");
+
+   pnlSystemRun->Caption = "YuanLi Init OK.";
+   if(cbTestStep->Checked == true) {
+      if(Application->MessageBox("Yuanli Socket測試: Init ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
 
          // 2022 12 8 - chc Disable
          btnSystemRun->Enabled = true;
 
-         return;
-      }
+         // 2021 7 19 - chc 改用runabort
+         //goto stop;
+         goto runabort;
 
-      // 45度角不需要用到0度Motion CCD的位置記憶
-      // 0/45都是MotionCCD對位後移動過去, 若0+45則可記憶位置給45度用
-      // 2023 8 16 - chc 切換45度設定: Gain/Brightness/LightMode
-      SetTiltConfig();
-      // OLS5000 Remote Mode
-      WriteSystemLog("Recipe Run: Set OLS5000 Remote...");
-      SetOLS5000Mode(true);
-
-      // 2021 5 9 - chc Yuanli 是否連線?
-      pnlSystemMessage->Caption = "Recipe Run: YuanLi Connection test...";
-      pnlSystemRun->Caption = "YuanLi Connection test...";
-      WriteSystemLog(pnlSystemMessage->Caption);
-      if(YuanLiConnect() == false) {
-         pnlSystemRun->Caption = "YuanLi Connection test failed!";
-         pnlAlarmMessage->Caption = "YuanLi unable to connect(Timeout), Stop.";
-         pnlSystemMessage->Caption = "YuanLi unable to connect";
-
-         // 2022 12 8 - chc Log
-         WriteSystemLog("YuanLiConnect() YuanLi 連線測試失敗! Stop");
-         btnSystemRun->Enabled = true;
-
-         return;
-      }
-      pnlSystemRun->Caption = "YuanLi Connection test OK.";
-
-      // 2022 12 8 - chc Delay
-      WaitTime(500);
-
-      // Init
-      boolTestFocusDone = false;
-      WriteSystemLog("Recipe Run: YuanLi Init");
-      pnlSystemRun->Caption = "YuanLi Init...";
-      pnlSystemMessage->Caption = "Recipe Run: YuanLi Init...";
-      if(WaitYuanliCmd(CMD_INIT,30000) != CMD_ACK_E) {
-         pnlSystemRun->Caption = "YuanLi Init失敗!";
-         pnlAlarmMessage->Caption = "YuanLi Init failed, Stop.";
-         pnlSystemMessage->Caption = "";
-
-         // 2022 12 8 - chc Log
-         WriteSystemLog("YuanLi Init失敗! 停止Start");
-         btnSystemRun->Enabled = true;
-
-         return;
-      }
-
-      // 2023 8 25 - chc 鎖上
-      cbPO->Enabled = false;
-      btnOLSToLocal->Enabled = false;
-
-      // 2022 12 8 - chc Log
-      WriteSystemLog("YuanLi Init OK. 續Start");
-
-      pnlSystemRun->Caption = "YuanLi Init OK.";
-      if(cbTestStep->Checked == true) {
-         if(Application->MessageBox("Recipe Run: Init ok, Continue?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
-
-            // 2022 12 8 - chc Disable
-            btnSystemRun->Enabled = true;
-
-            // 2021 7 19 - chc 改用runabort
-            //goto stop;
-            goto runabort;
-
-         }
       }
    }
+
    // 2021 9 25 - chc 量測中
    boolInMeasureRun = true;
 
@@ -18496,6 +17973,44 @@ AnsiString smacro;
    bool boolloadbutton;
    boolloadbutton = btnCassetteLoad->Enabled;
    btnCassetteLoad->Enabled = false;
+
+   // 0 度
+   WriteSystemLog("Recipe Run: 0度");
+   pnlSystemRun->Caption = "T移到0度...";
+   pnlSystemMessage->Caption = "Recipe Run: T移到0度...";
+   btnToZeroPositionClick(this);
+   if(pnlToZeroPosition->Color != clLime) {
+      pnlSystemRun->Caption = "T移到0度失敗!";
+      pnlAlarmMessage->Caption = "T移到0度異常, 停止執行.";
+      pnlSystemMessage->Caption = "";
+
+      // 2021 9 25 - chc 量測中
+      boolInMeasureRun = false;
+
+      // 2021 11 12 - chc 記錄Load button狀態
+      btnCassetteLoad->Enabled = boolloadbutton;
+
+      // 2021 9 25 - chc 取消顯示
+      pnlMoving->Visible = false;
+
+      // 2022 12 8 - chc Disable
+      btnSystemRun->Enabled = true;
+
+      return;
+   }
+   pnlSystemRun->Caption = "T移到0度OK";
+   if(cbTestStep->Checked == true) {
+      if(Application->MessageBox("Yuanli Socket測試: 0度 ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+
+         // 2022 12 8 - chc Disable
+         btnSystemRun->Enabled = true;
+
+         // 2021 7 19 - chc 改用runabort
+         //goto stop;
+         goto runabort;
+
+      }
+   }
 
    // 2021 10 21 - chc 不啟動T & Z
    pnlMoveTCounterclockwise->Enabled = false;
@@ -18517,7 +18032,7 @@ AnsiString smacro;
    // 2019 7 19 - chc 量測結果
    gbMatchData->Left = 1117;
    gbMatchData->Top = 508;
-   gbMatchData->Caption = "Measurement result";
+   gbMatchData->Caption = "量測結果";
    gbMatchData->Visible = true;
    ResultTitle();
    recordno = 0;
@@ -18554,9 +18069,6 @@ AnsiString smacro;
    // 2021 5 9 - chc 固定為1區
    edAreaTNo->Text = "1";
 
-   // 2023 8 19 - chc 切到Motion CCD
-   DoMotionCCD();
-
 while(1) {
    boolcsv = false;
    pnlRunRecipe->Caption = cbRecipe->Text;
@@ -18577,21 +18089,21 @@ while(1) {
    // ==========================================================================
    // YuanLi初始
    // to 50x, Wait Focus done
-   pnlSystemMessage->Caption = "Press Run to start the measurement";
+   pnlSystemMessage->Caption = "按下Run開始量測作業";
    pnlSystemRun->Caption = pnlSystemMessage->Caption;
    btnFocusDone->Caption = " Run";
-   btnFocusDone->Hint = "Press Run to start the measurement";
+   btnFocusDone->Hint = "按下後開始執行量測作業";
    btnFocusDone->Visible = true;
 
    // 2021 9 23b - chc 顯示
    pnlDotNoRun1->Visible = true;
-   pnlSideNo->Caption = "0Deg.";
+   pnlSideNo->Caption = "0度";
    // 21 9 25 - chc 不需要顯示角度
    //pnlSideNo->Visible = true;
    pnlSideNo->Visible = false;
 
    // 2021 8 13 - chc 操作指示
-   pnlFocusDone->Caption = "按下Run開始量測作業";
+   pnlFocusDone->Caption = pnlSystemMessage->Caption;
    pnlFocusDone->Visible = true;
    btnFocusDone->Font->Color = (TColor)0x00951106;
 
@@ -18626,14 +18138,12 @@ while(1) {
    pnlFocusDoneE->Visible = false;
 
    // Set Recipe
-   // 2023 8 18 - chc 不是Motion Recipe
-   /*
    edRecipeName->Text = cbRecipe->Text;
    WriteSystemLog("Recipe Run: YuanLi SetRecipe");
    pnlSystemRun->Caption = "YuanLi SetRecipe...";
    // SetRecipe
    pnlSystemMessage->Caption = "Recipe Run: YuanLi SetRecipe...";
-   if(WaitYuanliCmd(CMD_SET_RECIPE,30000) != CMD_ACK_E) {
+   if(WaitYuanliCmd(CMD_SET_RECIPE) != CMD_ACK_E) {
       pnlSystemRun->Caption = "YuanLi SetRecipe失敗!";
       pnlAlarmMessage->Caption = "YuanLi SetRecipe異常, 停止執行.";
       pnlSystemMessage->Caption = "";
@@ -18644,8 +18154,6 @@ while(1) {
       goto runabort;
    }
    pnlSystemRun->Caption = "YuanLi SetRecipe OK";
-   */
-
    WriteSystemLog("Recipe Run: YuanLi Start");
    pnlSystemRun->Caption = "YuanLi Start...";
    // Start,N,WaferID
@@ -18659,9 +18167,9 @@ while(1) {
    edTotalPoint->Text = IntToStr(dottno);
 
    pnlSystemMessage->Caption = "Recipe Run: YuanLi Start...";
-   if(WaitYuanliCmd(CMD_START,30000) != CMD_ACK_E) {
-      pnlSystemRun->Caption = "YuanLi Start failed!";
-      pnlAlarmMessage->Caption = "YuanLi Start failed! Stop.";
+   if(WaitYuanliCmd(CMD_START) != CMD_ACK_E) {
+      pnlSystemRun->Caption = "YuanLi Start失敗!";
+      pnlAlarmMessage->Caption = "YuanLi Start異常, 停止執行.";
       pnlSystemMessage->Caption = "";
 
       // 2021 9 20a - chc Alarm
@@ -18670,37 +18178,31 @@ while(1) {
       goto runabort;
    }
    pnlSystemRun->Caption = "YuanLi Start OK";
+   WriteSystemLog("Recipe Run: Yuanli Mode");
+   // Mode = Top
+   rgMode->ItemIndex = 0;
+   pnlSystemRun->Caption = "YuanLi Mode.Top...";
+   pnlSystemMessage->Caption = "Recipe Run: YuanLi Mode.Top...";
+   if(WaitYuanliCmd(CMD_MODE) != CMD_ACK_E) {
+      pnlSystemRun->Caption = "YuanLi Mode.Top失敗!";
+      pnlAlarmMessage->Caption = "YuanLi Mode.Top異常, 停止執行.";
+      pnlSystemMessage->Caption = "";
 
-   // 2023 8 19 - chc 0/45
-   if(rgOperationMode->ItemIndex == OPERATION_0_AND_45 || rgOperationMode->ItemIndex == OPERATION_0) {
+      // 2021 9 20a - chc Alarm
+      boolrunabort = true;
 
-      WriteSystemLog("Recipe Run: Yuanli Mode");
-      // Mode = Top
-      rgMode->ItemIndex = 0;
-      pnlSystemRun->Caption = "YuanLi Mode.Top...";
-      pnlSystemMessage->Caption = "Recipe Run: YuanLi Mode.Top...";
-      if(WaitYuanliCmd(CMD_MODE,30000) != CMD_ACK_E) {
-         pnlSystemRun->Caption = "YuanLi Mode.Top failed!";
-         pnlAlarmMessage->Caption = "YuanLi Mode.Top failed, Stop.";
-         pnlSystemMessage->Caption = "";
+      goto runabort;
+   }
+   pnlSystemRun->Caption = "YuanLi Mode.Top OK";
+   if(cbTestStep->Checked == true) {
+      if(Application->MessageBox("Yuanli Socket測試: SetRecipe-Mode-Start ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
 
-         // 2021 9 20a - chc Alarm
-         boolrunabort = true;
-
+         // 2021 7 19 - chc 改用runabort
+         //goto stop;
          goto runabort;
-      }
-      pnlSystemRun->Caption = "YuanLi Mode.Top OK";
-      if(cbTestStep->Checked == true) {
-         if(Application->MessageBox("Recipe Run: SetRecipe-Mode-Start ok, Continue?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
 
-            // 2021 7 19 - chc 改用runabort
-            //goto stop;
-            goto runabort;
-
-         }
       }
    }
-
    // 是否中斷量測作業?
    boolDoMeasure = true;
    btnMeasureStop->Visible = true;
@@ -18710,6 +18212,86 @@ while(1) {
 
    for(int i=0 ; i<areatno ; i++) {
       pnlAreaNoRun->Caption = IntToStr(i+1);
+
+      // 2019 12 3 - chc 到區域點
+      // 2021 5 9 - chc 不做區域點校正
+      // 2021 6 11 - chc 恢復區域定位
+      /* => 中心無Pattern可用
+      // 2021 6 11 - chc 要先檢查Pattern是否存在?
+      recipename = combRecipe->Text;
+      mfname = RecipeDirectory + "\\" + recipename + "\\" + recipename + "-A" + IntToStr(i+1) + ".bmp";
+      if(FileExists(mfname)) {
+
+         rgMatchSource->ItemIndex = 0;
+         edAreaNo->Text = IntToStr(i+1);
+         pnlSystemRun->Caption = "區域" + IntToStr(i+1) + "移動...";
+         btnAreaToClick(this);
+         if(pnlToAreaPosition->Color != clLime) {
+            pnlSystemMessage->Caption = "區域" + IntToStr(i+1) + "移動失敗!";
+            //return false;
+         }
+
+         // AutoFocus Base1
+         // 2021 6 11 - chc 不做autoFocus
+         //if(cbAutoFocus->Checked == true) {
+         //   DelayTime(500);
+         //   pnlSystemRun->Caption = "區域" + IntToStr(i+1) + "Focus...";
+         //   btnAutoFocusClick(this);
+         //}
+         //DelayTime(500);
+
+         // 2019 12 23 記錄Area1的對焦高度與每次對焦高度
+         GetPosition(Z_AXIS, &fareaz);
+         if(i == 0)
+            area1z = fareaz;
+         areaz = fareaz;
+
+         // Match
+match0:
+         pnlSystemRun->Caption = "區域" + IntToStr(i+1) + "定位...";
+         btnAutoMatchClick(this);
+         shMarkMatch->Visible = true;
+         shMarkMatch->Refresh();
+
+         // 2019 12 18 - chc 對位失敗!
+         if(pnlNCC->Color != clLime) {
+            pnlSystemRun->Caption = "區域" + IntToStr(i+1) + "對位異常!";
+            pnlMatchError->Visible = true;
+            pnlMatchErrorMsg->Caption = "區域" + IntToStr(i+1) + "對位異常! 重指定位置?";
+            MatchProcess = 0;
+            pcSystem->Enabled = false;
+            while(1) {
+               if(MatchProcess == 1) {
+                  pcSystem->Enabled = true;
+                  break;
+               }
+               if(MatchProcess == 2) {
+                  pcSystem->Enabled = true;
+                  goto match0;
+               }
+               Sleep(10);
+               Application->ProcessMessages();
+            }
+         }
+
+         // 2021 6 11 - chc 修正中心點
+         else {
+            double fcmd;
+            int pos;
+            GetPosition(X_AXIS, &fcmd);
+            pos = fcmd;
+            pnlCenterXFind->Caption = IntToStr(pos);
+            GetPosition(Y_AXIS, &fcmd);
+            pos = fcmd;
+            pnlCenterYFind->Caption = IntToStr(pos);
+         }
+
+         // Delay
+         DelayTime(2000);
+         pnlPattern->Visible = false;
+         shMarkMatch->Visible = false;
+      }
+      */
 
       // 2019 12 3 - chc 在Run中: OffsetXArea
       if(boolInRun == true) {
@@ -18739,19 +18321,8 @@ while(1) {
 
       // 2021 5 9 - chc 要做兩次: 0/45度
       for(int side=0 ; side<2 ; side++) {
-
-         // 2023 8 19 - chc 0/45
-         // 只做45度
-         if(side == 0 && rgOperationMode->ItemIndex == OPERATION_45) {
-            continue;
-         }
-         // 只做0度
-         if(side == 1 && rgOperationMode->ItemIndex == OPERATION_0) {
-            continue;
-         }
-
          if(side == 0) {
-            pnlSideNo->Caption = "0Deg.";
+            pnlSideNo->Caption = "0度";
 
             // 2022 1 3 - chc 定義pnlFocusDoneE
             pnlFocusDone->Color = (TColor)0x00951106;
@@ -18759,7 +18330,7 @@ while(1) {
 
          }
          else {
-            pnlSideNo->Caption = "45Deg.";
+            pnlSideNo->Caption = "45度";
 
             // 2022 1 3 - chc 定義pnlFocusDoneE
             pnlFocusDone->Color = clTeal;
@@ -18774,43 +18345,6 @@ while(1) {
                side0pos[j].Y = 0;
                side0pos[j].Z = 0;
             }
-
-            // 2023 8 20 - chc  先下Mode.Side
-            if(side == 1 && j == 0) {
-               // Mode: Side, 於轉45度前先送給YuanLi
-               WriteSystemLog("Recipe Run: Yuanli Mode.Side");
-               rgMode->ItemIndex = 1;
-               pnlSystemMessage->Caption = "Recipe Run: Yuanli Mode.Side...";
-               pnlSystemRun->Caption = pnlSystemMessage->Caption;
-               if(WaitYuanliCmd(CMD_MODE,30000) != CMD_ACK_E) {
-                  pnlSystemRun->Caption = "YuanLi Mode.Side failed!";
-                  pnlAlarmMessage->Caption = "YuanLi Mode.Side failed, Stop.";
-                  pnlSystemMessage->Caption = "";
-                  // Alarm
-                  boolrunabort = true;
-                  goto runabort;
-               }
-               if(cbTestStep->Checked == true) {
-                  if(Application->MessageBox("Recipe Run: Mode.Side ok, Continue?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
-                     goto runabort;
-                  }
-               }
-            }
-
-            // 2023 8 18 - chc 不是Motion Recipe是點位Recipe
-            edRecipeName->Text = sgDot->Cells[5][i+1];
-            WriteSystemLog("Recipe Run: YuanLi SetRecipe " + edRecipeName->Text);
-            pnlSystemRun->Caption = "YuanLi SetRecipe...";
-            // SetRecipe
-            pnlSystemMessage->Caption = "Recipe Run: YuanLi SetRecipe...";
-            if(WaitYuanliCmd(CMD_SET_RECIPE,30000) != CMD_ACK_E) {
-               pnlSystemRun->Caption = "YuanLi SetRecipe failed!";
-               pnlAlarmMessage->Caption = "YuanLi SetRecipe failed, Stop.";
-               pnlSystemMessage->Caption = "";
-               boolrunabort = true;
-               goto runabort;
-            }
-            pnlSystemRun->Caption = "YuanLi SetRecipe OK";
 
             // 設定量測點位
             edDotNo->Text = IntToStr(j+1);
@@ -18846,11 +18380,10 @@ while(1) {
             WriteSystemLog(msg);
 
             // 需要到MotionCCD
-            if((rgOperationMode->ItemIndex == OPERATION_45 || rgOperationMode->ItemIndex == OPERATION_0 || (rgOperationMode->ItemIndex == OPERATION_0_AND_45 && side == 0)) &&
-               cbAutoFocus->Checked == true) {
+            if(side == 0 && cbAutoFocus->Checked == true) {
                msg.sprintf("[Run]XY Move(Motion座標): %d-%d, %d-%d",i+1,j+1,x,y);
                WriteSystemLog(msg);
-               pnlSystemRun->Caption = "Move to Point(XY): " + IntToStr(j+1);
+               pnlSystemRun->Caption = "移動到量測點: " + IntToStr(j+1);
                MotionStatus(false);
 
                // 2021 9 11 - chc 加速: MOVE_WAIT
@@ -18859,15 +18392,12 @@ while(1) {
 
                WaitTime(500);
 
-               // 2023 8 18 - chc Z設定為可移動
-               iAxisMove[Z_AXIS] = NO_MOVE;
-
                // 2021 9 11 - chc 加速: MOVE_WAIT
                //if(MoveToZ(z) == false) {
                if(MoveToZ(z,MOVE_WAIT) == false) {
 
                   WriteSystemLog("移到到Z異常!");
-                  pnlSystemRun->Caption = "Move to Point(Z) failed! " + IntToStr(j+1);
+                  pnlSystemRun->Caption = "移到到Z異常!";
                   MotionStatus(true);
                   pnlStartMessage->Visible = false;
 
@@ -18896,21 +18426,17 @@ while(1) {
                   //DelayTime(500);
 
                   // Match
-                  pnlSystemRun->Caption = "Point" + IntToStr(i+1) + "Locate...";
+                  pnlSystemRun->Caption = "點位" + IntToStr(i+1) + "定位...";
                   btnAutoMatchClick(this);
 
                   // 2023 2 21 - chc Double times
-                  // 2023 8 18 - chc 只做一次
-                  //Sleep(200);
-                  //btnAutoMatchClick(this);
+                  Sleep(200);
+                  btnAutoMatchClick(this);
 
                   shMarkMatch->Visible = true;
                   shMarkMatch->Refresh();
                   // Delay
-                  // 2023 8 18 - chc 縮短
-                  //DelayTime(2000);
-                  DelayTime(1500);
-
+                  DelayTime(2000);
                   pnlPattern->Visible = false;
                   shMarkMatch->Visible = false;
                   // Match ok
@@ -18941,29 +18467,16 @@ while(1) {
 
                }
                // ToLens
-               // to 45
-               if(rgOperationMode->ItemIndex == OPERATION_45) {
-                  mnToLensTiltClick(this);
-                  // unlock
-                  ToLensToCCDMode = -1;
-                  // 加入45度
-                  ToLensToCCDMode_Old = -1;
-               }
-               // to 0
-               else {
+               mnToLensClick(this);
 
-                  mnToLensClick(this);
+               // 2021 7 22 - chc unlock
+               ToLensToCCDMode = -1;
 
-                  // 2021 7 22 - chc unlock
-                  ToLensToCCDMode = -1;
-
-                  // 2023 8 6 - chc 加入45度
-                  ToLensToCCDMode_Old = -1;
-               }
+               // 2023 8 6 - chc 加入45度
+               ToLensToCCDMode_Old = -1;
 
                // 2021 6 11 - chc 0度點位存檔
-               // 0 & 45
-               if(rgOperationMode->ItemIndex == OPERATION_0_AND_45 && side == 0) {
+               {
                   double fcmd;
                   int pos;
                   GetPosition(X_AXIS, &fcmd);
@@ -18980,88 +18493,65 @@ while(1) {
                }
 
             }
-            // 直接到ToLens位置: 不做Match定位 or 0度_and_45度的45度(side=1)&0度有做Match定位
+            // 直接到ToLens位置
             else {
 
-               // 0 度
-               if(side == 0) {
-                  msg.sprintf("[Run]進入0度量測: %d,%d",side+1,j+1);
-                  WriteSystemLog(msg);
-                  int dx,dy,dz;
-                  // Offset: CCD 與0 度
-                  dx = edZeroX->Text.ToInt() - edCCDX->Text.ToInt();
-                  dy = edZeroY->Text.ToInt() - edCCDY->Text.ToInt();
-                  dz = edZeroZ->Text.ToInt() - edCCDZ->Text.ToInt();
+               // 2021 6 11 - chc Log
+               msg.sprintf("[Run]進入45度量測: %d,%d",side+1,j+1);
+               WriteSystemLog(msg);
+
+               int dx,dy,dz;
+               // Offset
+               dx = edLens3X->Text.ToInt() - edCCDX->Text.ToInt();
+               dy = edLens3Y->Text.ToInt() - edCCDY->Text.ToInt();
+               dz = edLens3Z->Text.ToInt() - edCCDZ->Text.ToInt();
+               dx = 0 - dx;
+               if(cbCCDXDirection->Checked == true)
                   dx = 0 - dx;
-                  if(cbCCDXDirection->Checked == true)
-                     dx = 0 - dx;
-                  if(cbCCDYDirection->Checked == false)
-                     dy = 0 - dy;
-                  // Move value
-                  x = x + dx;
-                  y = y + dy;
-                  z = z + dz;
-               }
-               // side = 1
-               else {
-                  // 只做45度
-                  if(rgOperationMode->ItemIndex == OPERATION_45 || cbAutoFocus->Checked == false) {
-                     msg.sprintf("[Run]進入45度量測: %d,%d",side+1,j+1);
-                     WriteSystemLog(msg);
-                     int dx,dy,dz;
-                     // Offset: CCD 與0 度
-                     dx = edTiltX->Text.ToInt() - edCCDX->Text.ToInt();
-                     dy = edTiltY->Text.ToInt() - edCCDY->Text.ToInt();
-                     dz = edTiltZ->Text.ToInt() - edCCDZ->Text.ToInt();
-                     dx = 0 - dx;
-                     if(cbCCDXDirection->Checked == true)
-                        dx = 0 - dx;
-                     if(cbCCDYDirection->Checked == false)
-                        dy = 0 - dy;
-                     // Move value
-                     x = x + dx;
-                     y = y + dy;
-                     z = z + dz;
-                  }
-                  // 做0, 45 度: 45 度用0 度記錄
-                  else {
-                     msg.sprintf("[Run]進入45度量測: %d,%d",side+1,j+1);
-                     WriteSystemLog(msg);
-                     msg.sprintf("[Run]目標XYZ=%d,%d,%d",x,y,z);
-                     WriteSystemLog(msg);
-                     int dx,dy,dz;
+               if(cbCCDYDirection->Checked == false)
+                  dy = 0 - dy;
+               // Move value
+               x = x + dx;
+               y = y + dy;
+               z = z + dz;
+
+               // 2021 6 11 - chc 0度點位存檔
+               if(side == 1) {
+                  msg.sprintf("[Run]目標XYZ=%d,%d,%d",x,y,z);
+                  WriteSystemLog(msg);
+                  if(side == 1 && cbAutoFocus->Checked == true) {
                      if(side0pos[j].X != 0 && side0pos[j].Y != 0 && side0pos[j].Z != 0) {
                         x = side0pos[j].X;
                         y = side0pos[j].Y;
                         z = side0pos[j].Z;
                         msg.sprintf("[Run]使用0度XYZ=%d-%d,%d,%d",j+1,x,y,z);
                         WriteSystemLog(msg);
-                        // 校正0/45偏移量
-                        dx = edTiltX->Text.ToInt() - edZeroX->Text.ToInt();
-                        dy = edTiltY->Text.ToInt() - edZeroY->Text.ToInt();
-                        dz = edTiltZ->Text.ToInt() - edZeroZ->Text.ToInt();
                      }
-                     // 校正Motion/45偏移量
-                     else {
-                        dx = edTiltX->Text.ToInt() - edCCDX->Text.ToInt();
-                        dy = edTiltY->Text.ToInt() - edCCDY->Text.ToInt();
-                        dz = edTiltZ->Text.ToInt() - edCCDZ->Text.ToInt();
-                     }
-                     dx = 0 - dx;
-                     if(cbCCDXDirection->Checked == true)
-                        dx = 0 - dx;
-                     if(cbCCDYDirection->Checked == false)
-                        dy = 0 - dy;
+                  }
+                  // 第1點會做轉45度動作, 那時會校正0/45偏移量
+                  if(j != 0) {
+                     dx = edTiltX->Text.ToInt() - edZeroX->Text.ToInt();
+                     dy = edTiltY->Text.ToInt() - edZeroY->Text.ToInt();
+                     dz = edTiltZ->Text.ToInt() - edZeroZ->Text.ToInt();
                      x += dx;
                      y += dy;
                      z += dz;
+
+                     // 2023 1 28 - chc edY45Offset
+                     double foffset;
+                     int ioffset;
+                     foffset = MainForm->edY45Offset->Text.ToDouble();
+                     if(foffset != 0) {
+                        ioffset = (int)(foffset / Y_RESOLUTION);
+                        msg.sprintf("[Run]45度Y,YOffset=%d-%d,%d",j+1,y,ioffset);
+                        WriteSystemLog(msg);
+                        y -= ioffset;
+                     }
+
                      msg.sprintf("[Run]45度XYZ=%d-%d,%d,%d",j+1,x,y,z);
                      WriteSystemLog(msg);
                   }
                }
-               // 2023 8 18 - chc MoveToXYZT不用改變Z/Z1
-               // 2023 8 24 - chc 要做
-               //MainForm->boolMoveToXYZT_DoZ = false;
 
                // 量測中MoveToXYZT()不檢查T(量測點用8 - 不動T)
                boolInMeasure = true;
@@ -19069,13 +18559,9 @@ while(1) {
                MoveToXYZT(x,y,z,t,8);
                MotionStatus(true);
                boolInMeasure = false;
-
-               // 2023 8 18 - chc MoveToXYZT要改變Z/Z1
-               MainForm->boolMoveToXYZT_DoZ = true;
-
             }
             if(cbTestStep->Checked == true) {
-               if(Application->MessageBox("Recipe Run: Point move ok, Continue?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+               if(Application->MessageBox("Yuanli Socket測試: 點移動 ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
                   pnlStartMessage->Visible = false;
 
                   // 2021 7 19 - chc 改用runabort
@@ -19092,12 +18578,35 @@ while(1) {
                // 要做處理: Z Up, 0degree, 入料點
                goto runabort;
             }
+            // 45度第1點
+            if(side > 0 && j == 0) {
+               // Init
+               WriteSystemLog("Recipe Run: Yuanli Init");
+               pnlSystemMessage->Caption = "Recipe Run: Yuanli Init...";
+               pnlSystemRun->Caption = "YuanLi Init...";
+               if(WaitYuanliCmd(CMD_INIT) != CMD_ACK_E) {
+                  pnlSystemRun->Caption = "YuanLi Init失敗!";
+                  pnlAlarmMessage->Caption = "YuanLi Init異常, 停止執行.";
+                  pnlSystemMessage->Caption = "";
 
-            // 2023 8 19 - chc 沒有對焦點的設定值: 用於手動系統
-            /*
+                  // 2021 9 20a - chc Alarm
+                  boolrunabort = true;
+
+                  goto runabort;
+               }
+               if(cbTestStep->Checked == true) {
+                  if(Application->MessageBox("Yuanli Socket測試: Init ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+
+                     // 2021 7 19 - chc 改用runabort
+                     //goto stop;
+                     goto runabort;
+
+                  }
+               }
+            }
             // Z
             if(j > 0) {
-               pnlSystemMessage->Caption = "Recipe Run: Move Z to= " + IntToStr(TestFocusZ) + "...";
+               pnlSystemMessage->Caption = "Recipe Run: 到Z對焦點= " + IntToStr(TestFocusZ) + "...";
                pnlSystemRun->Caption = pnlSystemMessage->Caption;
 
                // 2021 9 11 - chc 加速: MOVE_WAIT
@@ -19114,7 +18623,7 @@ while(1) {
                   goto runabort;
                }
                if(cbTestStep->Checked == true) {
-                  if(Application->MessageBox("Recipe Run: 到Z對焦點 ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+                  if(Application->MessageBox("Yuanli Socket測試: 到Z對焦點 ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
 
                      // 2021 7 19 - chc 改用runabort
                      //goto stop;
@@ -19123,43 +18632,307 @@ while(1) {
                   }
                }
             }
-            */
-
             // Focus: 第1點
-            // 2023 8 20 - chc  前面要先下Mode.Side
-            /*
             if(j == 0) {
-               if(side == 1) {
-                  // Mode: Side, 於轉45度前先送給YuanLi
+               // to 50x, Wait Focus done
+               if(side == 0) {
+
+                  // 2022 1 3 - chc 改Message
+                  //pnlSystemMessage->Caption = "請開始對焦(物鏡切換至50x)，對焦完畢後請按[對焦完成]";
+                  //pnlSystemRun->Caption = pnlSystemMessage->Caption;
+                  pnlSystemMessage->Caption = "物鏡依序由5x切換至50x並完成對焦，完成後請按[對焦完成]";
+                  pnlSystemRun->Caption = "0度 量測前置作業";
+                  btnFocusDone->Caption = "對焦完成  Done Focus";
+
+               }
+               else {
+
+                  // Mode: Side
+                  // 2021 9 30 - chc 於轉45度前先送給YuanLi
                   WriteSystemLog("Recipe Run: Yuanli Mode.Side");
                   rgMode->ItemIndex = 1;
                   pnlSystemMessage->Caption = "Recipe Run: Yuanli Mode.Side...";
                   pnlSystemRun->Caption = pnlSystemMessage->Caption;
-                  if(WaitYuanliCmd(CMD_MODE,30000) != CMD_ACK_E) {
-                     pnlSystemRun->Caption = "YuanLi Mode.Side failed!";
-                     pnlAlarmMessage->Caption = "YuanLi Mode.Side failed, Stop.";
+                  if(WaitYuanliCmd(CMD_MODE) != CMD_ACK_E) {
+                     pnlSystemRun->Caption = "YuanLi Mode.Side失敗!";
+                     pnlAlarmMessage->Caption = "YuanLi Mode.Side異常, 停止執行.";
                      pnlSystemMessage->Caption = "";
                      // Alarm
                      boolrunabort = true;
                      goto runabort;
                   }
                   if(cbTestStep->Checked == true) {
-                     if(Application->MessageBox("Recipe Run: Mode.Side ok, Continue?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+                     if(Application->MessageBox("Yuanli Socket測試: Mode.Side ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
                         goto runabort;
                      }
                   }
+
+                  // Z Up
+                  // 上升1000um
+                  WriteSystemLog("Recipe Run: Z上升1000um");
+                  pnlSystemMessage->Caption = "Recipe Run: Z上升1000um...";
+                  pnlSystemRun->Caption = pnlSystemMessage->Caption;
+                  gap = (1000.0 / Z_RESOLUTION);
+                  if(MoveToAxisGap(Z_AXIS, 0-gap) == false) {
+                     WriteSystemLog("Recipe Run: Z上升1000um失敗!");
+                     pnlSystemRun->Caption = "Z上升1000um失敗!";
+                     pnlAlarmMessage->Caption = "Z上升1000um失敗異常, 停止執行.";
+                     pnlSystemMessage->Caption = "";
+
+                     // 2021 9 20a - chc Alarm
+                     boolrunabort = true;
+
+                     goto runabort;
+                  }
+                  if(cbTestStep->Checked == true) {
+                     if(Application->MessageBox("Yuanli Socket測試: Z上升1000um ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+
+                        // 2021 7 19 - chc 改用runabort
+                        //goto stop;
+                        goto runabort;
+
+                     }
+                  }
+                  // 45
+                  WriteSystemLog("Recipe Run: 45度");
+                  pnlSystemMessage->Caption = "Recipe Run: Yuanli 45度...";
+                  pnlSystemRun->Caption = pnlSystemMessage->Caption;
+
+                  // 2021 9 30 - chc 顯示警示訊息
+                  pnlMoving->Caption = "Turn 45 degrees: don't move";
+
+                  btnToTiltPositionClick(this);
+                  if(pnlToTiltPosition->Color != clLime) {
+                     WriteSystemLog("Recipe Run: T45度異失敗!");
+                     pnlSystemRun->Caption = "T45度異失敗!";
+                     pnlAlarmMessage->Caption = "T45度異失敗異常, 停止執行.";
+                     pnlSystemMessage->Caption = "";
+
+                     // 2021 9 20a - chc Alarm
+                     boolrunabort = true;
+
+                     // 2021 9 30 - chc 顯示警示訊息
+                     pnlMoving->Caption = "Working...";
+
+                     goto runabort;
+                  }
+
+                  // 2023 2 21 - chc yoffset
+                  double foffset;
+                  int ioffset;
+                  foffset = MainForm->edY45Offset->Text.ToDouble();
+                  if(foffset != 0) {
+                     AnsiString msg;
+                     ioffset = (int)(foffset / Y_RESOLUTION);
+                     msg.sprintf("[Run-Pt1]45度Y,YOffset=%d",ioffset);
+                     MainForm->WriteSystemLog(msg);
+                     DoRelativeMove(Y_AXIS, 0-ioffset);
+                  }
+
+                  // 2021 9 30 - chc 顯示警示訊息
+                  pnlMoving->Caption = "Working...";
+
+                  if(cbTestStep->Checked == true) {
+                     if(Application->MessageBox("Yuanli Socket測試: T45度 ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+
+                        // 2021 7 19 - chc 改用runabort
+                        //goto stop;
+                        goto runabort;
+
+                     }
+                  }
+                  // 下降1000um
+                  WriteSystemLog("Recipe Run: Z下降1000um");
+                  pnlSystemMessage->Caption = "Recipe Run: Z下降1000um...";
+                  pnlSystemRun->Caption = pnlSystemMessage->Caption;
+                  gap = (1000.0 / Z_RESOLUTION);
+                  if(MoveToAxisGap(Z_AXIS, gap) == false) {
+                     WriteSystemLog("Recipe Run: Z下降1000um失敗!");
+                     pnlSystemRun->Caption = "Z下降1000um失敗!";
+                     pnlAlarmMessage->Caption = "Z下降1000um失敗異常, 停止執行.";
+                     pnlSystemMessage->Caption = "";
+
+                     // 2021 9 20a - chc Alarm
+                     boolrunabort = true;
+
+                     goto runabort;
+                  }
+                  if(cbTestStep->Checked == true) {
+                     if(Application->MessageBox("Yuanli Socket測試: Z下降1000um ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+
+                        // 2021 7 19 - chc 改用runabort
+                        //goto stop;
+                        goto runabort;
+
+                     }
+                  }
+
+                  // Mode: Side
+                  // 2021 9 30 - chc 於轉45度前先送給YuanLi
+                  /*
+                  WriteSystemLog("Recipe Run: Yuanli Mode.Side");
+                  rgMode->ItemIndex = 1;
+                  pnlSystemMessage->Caption = "Recipe Run: Yuanli Mode.Side...";
+                  pnlSystemRun->Caption = pnlSystemMessage->Caption;
+                  if(WaitYuanliCmd(CMD_MODE) != CMD_ACK_E) {
+                     pnlSystemRun->Caption = "YuanLi Mode.Side失敗!";
+                     pnlAlarmMessage->Caption = "YuanLi Mode.Side異常, 停止執行.";
+                     pnlSystemMessage->Caption = "";
+
+                     // 2021 9 20a - chc Alarm
+                     boolrunabort = true;
+
+                     goto runabort;
+                  }
+                  if(cbTestStep->Checked == true) {
+                     if(Application->MessageBox("Yuanli Socket測試: Mode.Side ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+
+                        // 2021 7 19 - chc 改用runabort
+                        //goto stop;
+                        goto runabort;
+
+                     }
+                  }
+                  */
+
+                  // LM 50x
+                  // 2022 1 3 - chc 改Message
+                  //pnlSystemMessage->Caption = "請將物鏡切換至LM 50x, 切換完畢後請按[LM 50x]";
+                  //btnFocusDone->Caption = "LM 50x";
+                  //pnlSystemRun->Caption = pnlSystemMessage->Caption;
+                  pnlSystemMessage->Caption = "物鏡依序由5x切換至LM 50x, 完成請按[完成切換LM50x]";
+                  btnFocusDone->Caption = "完成切換LM50x Done LM50x";
+                  pnlSystemRun->Caption = "45 量測前置作業";
+
+                  btnFocusDone->Hint = pnlSystemMessage->Caption;
+                  btnFocusDone->Visible = true;
+                  pcSystem->Enabled = false;
+
+                  // 2021 9 23b - chc 顯示
+                  // 21 9 25 - chc 不需要顯示角度
+                  //pnlDotNoRun1->Visible = true;
+                  //pnlSideNo->Visible = true;
+                  pnlDotNoRun1->Visible = false;
+                  pnlSideNo->Visible = false;
+
+                  // 2021 8 13 - chc 操作指示
+                  pnlFocusDone->Caption = pnlSystemMessage->Caption;
+                  pnlFocusDone->Visible = true;
+
+                  // 2022 1 3 - chc 定義pnlFocusDoneE
+                  pnlFocusDoneE->Caption = "Switch to LM 50x, Then press [Done LM50x]";
+                  pnlFocusDoneE->Visible = true;
+
+                  // 2021 9 23b - chc SetButtonDelay
+                  SetButtonDelay(1);
+
+                  // 2021 7 19 - chc 改用runabort
+                  WriteSystemLog("關閉作業頁面3. [LM 50x]");
+
+                  boolTestFocusDone = false;
+                  while(1) {
+                     WaitTime(500);
+                     if(boolTestFocusDone == true)
+                        break;
+                  }
+                  btnFocusDone->Visible = false;
+                  pcSystem->Enabled = true;
+                  //pnlSystemMessage->Caption = "請開始對焦(維持LM 50X物鏡)，對焦完畢後並縮放1.5x請按[對焦完成]";
+                  // 2022 1 3 - chc 更新訊息
+                  //pnlSystemMessage->Caption = "請對焦(維持LM 50X)對焦完畢並縮放1.5x後請按[對焦完成]";
+                  pnlSystemMessage->Caption = "設定縮放1.5x並完成對焦, 完成後請按[對焦完成]";
+                  btnFocusDone->Caption = "對焦完成  Done Focus";
+                  pnlSystemRun->Caption = "45 量測前置作業";
+
+                  // 2021 9 23b - chc 顯示
+                  pnlSideNo->Visible = false;
+                  pnlDotNoRun1->Visible = false;
+
+                  // 2021 8 13 - chc 操作指示
+                  pnlFocusDone->Visible = false;
+
+                  // 2022 1 3 - chc 定義pnlFocusDoneE
+                  pnlFocusDoneE->Visible = false;
+
+               }
+
+               // 2022 1 3 - chc 更新訊息
+               //pnlSystemRun->Caption = pnlSystemMessage->Caption;
+
+               btnFocusDone->Hint = pnlSystemMessage->Caption;
+               btnFocusDone->Visible = true;
+               pcSystem->Enabled = false;
+
+               // 2021 9 23b - chc 顯示
+               // 21 9 25 - chc 不需要顯示角度
+               //pnlSideNo->Visible = true;
+               //pnlDotNoRun1->Visible = true;
+               pnlSideNo->Visible = false;
+               pnlDotNoRun1->Visible = false;
+
+               // 2021 8 13 - chc 操作指示
+               pnlFocusDone->Caption = pnlSystemMessage->Caption;
+               pnlFocusDone->Visible = true;
+
+               // 2022 1 3 - chc 定義pnlFocusDoneE
+               if(side == 0)
+                  pnlFocusDoneE->Caption = "Fr 5x to 50x and focusing, Then press [Done Focus]";
+               else
+                  pnlFocusDoneE->Caption = "Set zoom to 1.5x and focusing, Then press[Done Focus]";
+               pnlFocusDoneE->Visible = true;
+
+               // 2021 9 23b - chc SetButtonDelay
+               SetButtonDelay(2);
+
+               // 2021 7 19 - chc 改用runabort
+               WriteSystemLog("關閉作業頁面4. [對焦完成]");
+
+               boolTestFocusDone = false;
+               while(1) {
+                  WaitTime(500);
+                  if(boolTestFocusDone == true)
+                     break;
+               }
+               pcSystem->Enabled = true;
+               btnFocusDone->Visible = false;
+
+               // 2021 9 23b - chc 顯示
+               pnlSideNo->Visible = false;
+               pnlDotNoRun1->Visible = false;
+
+               // 2021 8 13 - chc 操作指示
+               pnlFocusDone->Visible = false;
+
+               // 2022 1 3 - chc 定義pnlFocusDoneE
+               pnlFocusDoneE->Visible = false;
+
+               TestFocusZ = edCounterZ->Text.ToInt();
+               pnlSystemMessage->Caption = "Recipe Run: 設定Z對焦點= " + IntToStr(TestFocusZ);
+               pnlSystemRun->Caption = pnlSystemMessage->Caption;
+               if(StopMeasure() == true) {
+                  msg.sprintf("Abort: %d-%d",i+1,j+1);
+                  pnlSystemRun->Caption = msg;
+                  // 要做處理: Z Up, 0degree, 入料點
+                  goto runabort;
+               }
+               if(cbTestStep->Checked == true) {
+                  if(Application->MessageBox("Yuanli Socket測試: 設定Z對焦點 ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+
+                     // 2021 7 19 - chc 改用runabort
+                     //goto stop;
+                     goto runabort;
+
+                  }
                }
             }
-            */
-            
             // InPos
             WriteSystemLog("Recipe Run: Yuanli InPos");
             rgYuanliPoint->ItemIndex = j;
             pnlSystemMessage->Caption = "Recipe Run: Yuanli InPos...";
             pnlSystemRun->Caption = pnlSystemMessage->Caption;
-            if(WaitYuanliCmd(CMD_INPOS,30000) != CMD_ACK_E) {
-               pnlSystemRun->Caption = "YuanLi InPos failed!";
-               pnlAlarmMessage->Caption = "YuanLi InPos failed, Stop.";
+            if(WaitYuanliCmd(CMD_INPOS) != CMD_ACK_E) {
+               pnlSystemRun->Caption = "YuanLi InPos失敗!";
+               pnlAlarmMessage->Caption = "YuanLi InPos異常, 停止執行.";
                pnlSystemMessage->Caption = "";
 
                // 2021 9 20a - chc Alarm
@@ -19175,179 +18948,78 @@ while(1) {
             }
             // Wait Next
             boolTestFocusDone = false;
-            // 0 度: macro
-            if(side == 0) {
-               pnlSystemMessage->Caption = "Perform 0-degree measurement";
-               WriteSystemLog("進行0度對焦與量測...");
-               smacro = sgDot->Cells[8][j+1];
-               WriteSystemLog("Set Macro: " + smacro);
-               if(SetMacroName(smacro) == true) {
+            if(j == dottno-1 && side == 0) {
 
-                  // 2023 8 20 - chc Error也視為完成
-                  if(pnlOLS5000RDWIZ->Color != clLime) {
-                     pnlSystemRun->Caption = "RDWIZ failed!";
-                     pnlAlarmMessage->Caption = "RDWIZ failed, Stop.";
-                     pnlSystemMessage->Caption = "";
-                     WriteSystemLog(pnlAlarmMessage->Caption);
-                     boolrunabort = true;
-                     goto runabort;
-                  }
+               // 2022 1 3 - chc English
+               //btnFocusDone->Caption = "45度量測";
+               //pnlSystemMessage->Caption = "請開始量測，量測完畢後請按[45度量測]";
+               btnFocusDone->Caption = "到45度量測 45Measure";
+               pnlSystemMessage->Caption = "目前在點位" + IntToStr(j+1) + ", 量測完請按[到45度量測]";
+               pnlSystemRun->Caption = "0 量測[點位" + IntToStr(j+1) + "]";
+               pnlFocusDoneE->Caption = "Start measuring point " + IntToStr(j+1) + ", Then press [45Measure]";
 
-                  WriteSystemLog("Exec Macro: " + smacro);
-                  if(ExecuteMacro() == true) {
+            }
+            else if(j == dottno-1 && side == 1) {
 
-                     // 2023 8 20 - chc Error也視為完成
-                     if(pnlOLS5000WIZEXE->Color != clLime) {
-                        pnlSystemRun->Caption = "WIZEXE failed!";
-                        pnlAlarmMessage->Caption = "WIZEXE failed, Stop.";
-                        pnlSystemMessage->Caption = "";
-                        WriteSystemLog(pnlAlarmMessage->Caption);
-
-                        // 2023 8 24 - chc 可以手動重量
-                        //boolrunabort = true;
-                        //goto runabort;
-m45again:
-                        pnlSystemMessage->Caption = "Macro failed, enter manual measurement.";
-                        WriteSystemLog("Macro執行失敗, 進入手動量測.");
-                        pnlFocusDone->Caption = "Macro執行失敗, 進入手動量測";
-                        pnlFocusDoneE->Caption = "Macro failed, enter manual measurement.";
-                        btnFocusDone->Caption = "手動量測 Measurement";
-                        btnFocusDone->Visible = true;
-                        pnlFocusDone->Visible = true;
-                        pnlFocusDoneE->Visible = true;
-                        btnOLS5000LocalClick(this);
-                        // 等手動量測完成
-                        boolTestFocusDone = false;
-                        while(1) {
-                           WaitTime(500);
-                           if(boolTestFocusDone == true)
-                              break;
-                        }
-                        btnOLS5000RemoteClick(this);
-                        btnFocusDone->Visible = false;
-                        pnlFocusDone->Visible = false;
-                        pnlFocusDoneE->Visible = false;
-                     }
-
-                     // Send done
-                     int ret = WaitYuanliCmd(CMD_DONE,30000);
-                     if(ret != CMD_ACK_E) {
-                        pnlSystemRun->Caption = "YuanLi Done(0) failed!";
-                        pnlAlarmMessage->Caption = "YuanLi Done(0) failed, Stop.";
-                        pnlSystemMessage->Caption = "";
-                        WriteSystemLog(pnlAlarmMessage->Caption);
-
-                        // 2023 8 24 - chc 處理x
-                        if(ret = CMD_ACK_X) {
-                           goto m45again;
-                        }
-                        pnlAlarmMessage->Caption = "YuanLi timeout failed, Stop.";
-
-                        // Alarm
-                        boolrunabort = true;
-                        goto runabort;
-                     }
-                  }
-               }
-
-               // 2023 8 20 - chc 移到前面
-               if(side == 0) {
-                  double fcmd;
-                  int pos;
-                  GetPosition(X_AXIS, &fcmd);
-                  pos = fcmd;
-                  side0pos[j].X = pos;
-                  GetPosition(Y_AXIS, &fcmd);
-                  pos = fcmd;
-                  side0pos[j].Y = pos;
-                  GetPosition(Z_AXIS, &fcmd);
-                  pos = fcmd;
-                  side0pos[j].Z = pos;
-                  msg.sprintf("[Run]量測後0度點位存檔XYZ(定位後): %d-%d,%d,%d",j+1,x,y,z);
-                  WriteSystemLog(msg);
-               }
-
-               // 2023 8 20 - chc Z上升
-               // 結束: 上升10mm
-               if(side == 0) {
-                  WriteSystemLog("Recipe Run: Z上升1000um");
-                  pnlSystemMessage->Caption = "Recipe Run: Z up 1000um...";
-                  pnlSystemRun->Caption = pnlSystemMessage->Caption;
-                  gap = (1000.0 / Z_RESOLUTION);
-                  if(MoveToAxisGap(Z_AXIS, 0-gap) == false) {
-                     WriteSystemLog("Recipe Run: Z上升1000um失敗!");
-                     pnlAlarmMessage->Caption = "Recipe Run: Z up 1000um failed!";
-                     pnlSystemRun->Caption = pnlAlarmMessage->Caption;
-                     pnlSystemMessage->Caption = "";
-                     // Alarm
-                     boolrunabort = true;
-                     goto runabort;
-                  }
-               }
+               // 2022 1 3 - chc English
+               //btnFocusDone->Caption = "結束量測";
+               //pnlSystemMessage->Caption = "請開始量測，量測完畢後請按[結束量測]";
+               btnFocusDone->Caption = "結束量測 EndMeasure";
+               pnlSystemMessage->Caption = "目前在點位" + IntToStr(j+1) + ", 量測完請按[結束量測]";
+               pnlSystemRun->Caption = "45 量測[點位" + IntToStr(j+1) + "]";
+               pnlFocusDoneE->Caption = "Start measuring point " + IntToStr(j+1) + ", Then press [EndMeasure]";
 
             }
             else {
-               pnlSystemMessage->Caption = "Perform 45-degree capture";
-               WriteSystemLog("進行45度取像...");
 
-               // 2023 8 20 - chc 做Reset
-               if(cbResetFirst->Checked == true) {
-                  pnlSystemRun->Caption = "Reset Tilt CCD...";
-                  btn45ResetClick(this);
-                  pnlSystemRun->Caption = "Reset Tilt done.";
-               }
-               pnlSystemRun->Caption = "Tilt CCD Start to capture.";
-
-               if(DoTiltCapture() == true) {
-                  // Send done
-                  int ret = WaitYuanliCmd(CMD_DONE,60000);
-                  if(ret != CMD_ACK_E) {
-                     pnlSystemRun->Caption = "YuanLi Done(45) failed!";
-                     pnlAlarmMessage->Caption = "YuanLi Done(45) failed, Stop.";
-                     pnlSystemMessage->Caption = "";
-                     WriteSystemLog(pnlAlarmMessage->Caption);
-                     if(ret = CMD_ACK_X) {
-                        pnlSystemMessage->Caption = "AI failed, enter manual measurement.";
-                        WriteSystemLog("AI判讀失敗, 進入手動45度量測.");
-                        // 0-Init, 1-Start, 2-Done, 3-Error: Manual45Measure
-                        // Clear Data
-                        mn45ClearClick(this);
-                        Manual45Measure = 1;
-                        btn45Measured->Visible = true;
-                        pnlAlarmMessage->Caption = "";
-                        // 等手動量測完成: send "Data" command
-                        while(1) {
-                           WaitTime(500);
-                           if(Manual45Measure != 1) {
-                              if(Manual45Measure == 2) {
-                                 WriteSystemLog("手動45度量測完成.");
-                              }
-                              else {
-                                 WriteSystemLog("Yuanli: Timeout!");
-                                 Manual45Measure = 0;
-                                 pnlAlarmMessage->Caption = "YuanLi timeout failed, Stop.";
-                              }
-                              break;
-                           }
-                        }
-                        if(Manual45Measure == 2) {
-                           Manual45Measure = 0;
-                           goto m45done;
-                        }
-                     }
-                     else {
-                        pnlAlarmMessage->Caption = "YuanLi timeout failed, Stop.";
-                     }
-                     // Alarm
-                     boolrunabort = true;
-                     goto runabort;
-                  }
-               }
-m45done:
-               // 2023 8 20 - chc to motion ccd
-               DoMotionCCD();
+               // 2021 9 23 - chc 標示下一點的編號
+               //btnFocusDone->Caption = "下一點";
+               //pnlSystemMessage->Caption = "請開始量測，量測完畢後請按[下一點]";
+               // 2022 1 3 - chc English
+               //btnFocusDone->Caption = "點位: " + IntToStr(j+2);
+               //pnlSystemMessage->Caption = "請開始量測點位" + IntToStr(j+1) + ", 量測完畢後請按[點位: " + IntToStr(j+2) + "]";
+               btnFocusDone->Caption = "到點位" + IntToStr(j+2) + " Point: " + IntToStr(j+2);
+               pnlSystemMessage->Caption = "目前在點位" + IntToStr(j+1) + ", 量測完請按[到點位: " + IntToStr(j+2) + "]";
+               if(side == 0)
+                  pnlSystemRun->Caption = "0 量測[點位" + IntToStr(j+1) + "]";
+               else
+                  pnlSystemRun->Caption = "45 量測[點位" + IntToStr(j+1) + "]";
+               pnlFocusDoneE->Caption = "Start measuring point " + IntToStr(j+1) + ", Then press [Point " + IntToStr(j+2) + "]";
 
             }
+            btnFocusDone->Hint = pnlSystemMessage->Caption;
+
+            // 2022 1 3 - chc 定義pnlFocusDoneE
+            //pnlSystemRun->Caption = pnlSystemMessage->Caption;
+
+            pcSystem->Enabled = false;
+
+            // 2021 8 13 - chc 操作指示
+            pnlFocusDone->Caption = pnlSystemMessage->Caption;
+            pnlFocusDone->Visible = true;
+
+            // 2022 1 3 - chc 定義pnlFocusDoneE
+            pnlFocusDoneE->Visible = true;
+
+            // 2021 7 19 - chc 改用runabort
+            WriteSystemLog("關閉作業頁面5. [" + btnFocusDone->Caption + "]");
+
+            btnFocusDone->Visible = true;
+
+            // 2021 9 23b - chc SetButtonDelay
+            SetButtonDelay(3);
+
+            // 2021 9 23b - chc 顯示
+            pnlSideNo->Visible = true;
+            pnlDotNoRun1->Visible = true;
+
+            while(1) {
+               WaitTime(500);
+               if(boolTestFocusDone == true)
+                  break;
+            }
+            pcSystem->Enabled = true;
+            btnFocusDone->Visible = false;
 
             // 2021 9 23b - chc 顯示
             pnlSideNo->Visible = false;
@@ -19360,8 +19032,6 @@ m45done:
             pnlFocusDoneE->Visible = false;
 
             // 2021 6 11 - chc 這裡存才對, 0度點位存檔
-            // 2023 8 20 - chc 移到前面
-            /*
             if(side == 0) {
                double fcmd;
                int pos;
@@ -19377,13 +19047,151 @@ m45done:
                msg.sprintf("[Run]量測後0度點位存檔XYZ(定位後): %d-%d,%d,%d",j+1,x,y,z);
                WriteSystemLog(msg);
             }
-            */
 
+            // Z Up
+            // 結束: 上升10mm
+            if(j == dottno-1 && side == 1) {
+               WriteSystemLog("Recipe Run: Z上升10000um");
+               pnlSystemMessage->Caption = "Recipe Run: Z上升10000um...";
+               pnlSystemRun->Caption = pnlSystemMessage->Caption;
+               gap = (10000.0 / Z_RESOLUTION);
+               if(MoveToAxisGap(Z_AXIS, 0-gap) == false) {
+                  WriteSystemLog("Recipe Run: Z上升10000um失敗!");
+                  pnlAlarmMessage->Caption = "Recipe Run: Z上升10000um失敗!";
+                  pnlSystemRun->Caption = pnlAlarmMessage->Caption;
+                  pnlSystemMessage->Caption = "";
+
+                  // 2021 9 20a - chc Alarm
+                  boolrunabort = true;
+
+                  goto runabort;
+               }
+               if(cbTestStep->Checked == true) {
+                  if(Application->MessageBox("Yuanli Socket測試: Z上升10000um ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+
+                     // 2021 7 19 - chc 改用runabort
+                     //goto stop;
+                     goto runabort;
+
+                  }
+               }
+
+               // 2021 7 19 - chc 是否結束量測?
+               boolEndMeasure = true;
+
+            }
+            else {
+
+               // 2021 10 4 - chc side=0, 最後1點不用上升, 改到[切換到5x]後再上升
+               if(j != dottno-1 || side != 0) {
+
+                  WriteSystemLog("Recipe Run: Z上升1000um");
+                  pnlSystemMessage->Caption = "流程測試: Z上升1000um...";
+                  pnlSystemRun->Caption = pnlSystemMessage->Caption;
+                  gap = (1000.0 / Z_RESOLUTION);
+                  if(MoveToAxisGap(Z_AXIS, 0-gap) == false) {
+                     WriteSystemLog("Recipe Run: Z上升1000um失敗!");
+                     pnlAlarmMessage->Caption = "流程測試: Z上升1000um失敗!";
+                     pnlSystemRun->Caption = pnlAlarmMessage->Caption;
+                     pnlSystemMessage->Caption = "";
+
+                     // 2021 9 20a - chc Alarm
+                     boolrunabort = true;
+
+                     goto runabort;
+                  }
+                  if(cbTestStep->Checked == true) {
+                     if(Application->MessageBox("Yuanli Socket測試: Z上升1000um ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+
+                        // 2021 7 19 - chc 改用runabort
+                        //goto stop;
+                        goto runabort;
+
+                     }
+                  }
+
+               }
+
+            }
             if(StopMeasure() == true) {
                msg.sprintf("Abort: %d-%d",i+1,j+1);
                pnlSystemRun->Caption = msg;
                // 要做處理: Z Up, 0degree, 入料點
                goto runabort;
+            }
+            // 提示5x
+            if(j == dottno-1 && side == 0) {
+               boolTestFocusDone = false;
+
+               // 2022 1 3 - chc English
+               //btnFocusDone->Caption = "切換到5x";
+               btnFocusDone->Caption = "切換到5x  SwitchTo 5x";
+
+               pnlSystemMessage->Caption = "物鏡請切換至5x，切換完畢後請按[切換到5x]";
+               btnFocusDone->Hint = pnlSystemMessage->Caption;
+               pnlSystemRun->Caption = pnlSystemMessage->Caption;
+               pcSystem->Enabled = false;
+
+               // 2021 8 13 - chc 操作指示
+               pnlFocusDone->Caption = pnlSystemMessage->Caption;
+               pnlFocusDone->Visible = true;
+
+               // 2022 1 3 - chc 定義pnlFocusDoneE
+               pnlFocusDoneE->Caption = "Switch to 5x, Then press [Switch to 5x]";
+               pnlFocusDoneE->Visible = true;
+
+               // 2021 9 23b - chc SetButtonDelay
+               SetButtonDelay(4);
+
+               // 2021 7 19 - chc 改用runabort
+               WriteSystemLog("關閉作業頁面6. [切換到5x]");
+
+               // 2021 9 23b - chc 顯示
+               // 21 9 25 - chc 不需要顯示角度
+               //pnlSideNo->Visible = true;
+               //pnlDotNoRun1->Visible = true;
+               pnlSideNo->Visible = false;
+               pnlDotNoRun1->Visible = false;
+
+               btnFocusDone->Visible = true;
+               while(1) {
+                  WaitTime(500);
+                  if(boolTestFocusDone == true)
+                     break;
+               }
+               pcSystem->Enabled = true;
+               btnFocusDone->Visible = false;
+
+               // 2021 9 23b - chc 顯示
+               pnlSideNo->Visible = false;
+               pnlDotNoRun1->Visible = false;
+
+               // 2021 8 13 - chc 操作指示
+               pnlFocusDone->Visible = false;
+
+               // 2022 1 3 - chc 定義pnlFocusDoneE
+               pnlFocusDoneE->Visible = false;
+
+               // 2021 10 4 - chc side=0, 最後1點不用上升, 改到[切換到5x]後再上升
+               WriteSystemLog("Recipe Run: Z上升1000um");
+               pnlSystemMessage->Caption = "流程測試: Z上升1000um...";
+               pnlSystemRun->Caption = pnlSystemMessage->Caption;
+               gap = (1000.0 / Z_RESOLUTION);
+               if(MoveToAxisGap(Z_AXIS, 0-gap) == false) {
+                  WriteSystemLog("Recipe Run: Z上升1000um失敗!");
+                  pnlAlarmMessage->Caption = "流程測試: Z上升1000um失敗!";
+                  pnlSystemRun->Caption = pnlAlarmMessage->Caption;
+                  pnlSystemMessage->Caption = "";
+                  // Alarm
+                  boolrunabort = true;
+                  goto runabort;
+               }
+               if(cbTestStep->Checked == true) {
+                  if(Application->MessageBox("Yuanli Socket測試: Z上升1000um ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+                     goto runabort;
+                  }
+               }
+
             }
             WaitTime(1000);
             // 單點量測結束: sgDot->Cells[5][j+1] => Recipe
@@ -19431,7 +19239,7 @@ end:
    boolSendSCESCommand = true;
    rgSecsCommandSet->ItemIndex = SECS_CMD_PREV - SECS_CMD_STAT_1;
    if(cbTestStep->Checked == true) {
-      if(Application->MessageBox("Recipe Run: Send STATUS_PROCESSEND ok, Continue?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+      if(Application->MessageBox("Yuanli Socket測試: 送STATUS_PROCESSEND ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
 
          // 2021 7 19 - chc 改用runabort
          //goto stop;
@@ -19459,17 +19267,14 @@ runabort:
    // 2021 7 19 - chc 改用runabort
    WriteSystemLog("[中斷量測]3");
 
-   // 2023 8 20 - chc 一定送Stop
-   boolEndMeasure = true;
-
    // 2021 7 19 - chc 是否結束量測? Stop
    if(boolEndMeasure == true) {
       WriteSystemLog("Recipe Run: YuanLi Stop");
       pnlSystemRun->Caption = "YuanLi Stop...";
       pnlSystemMessage->Caption = "Recipe Run: YuanLi Stop...";
-      if(WaitYuanliCmd(CMD_STOP,30000) != CMD_ACK_E) {
-         pnlSystemRun->Caption = "YuanLi Stop failed!";
-         pnlAlarmMessage->Caption = "YuanLi Stop failed, Stop.";
+      if(WaitYuanliCmd(CMD_STOP) != CMD_ACK_E) {
+         pnlSystemRun->Caption = "YuanLi Stop失敗!";
+         pnlAlarmMessage->Caption = "YuanLi Stop異常, 停止執行.";
          pnlSystemMessage->Caption = "";
          goto stop;
       }
@@ -19477,32 +19282,28 @@ runabort:
    }
 
    // 上-升
-   // 2023 8 18 - chc 不用做: 使用於手動系統
-   // 2023 8 20a - chc Z要提高
-   WriteSystemLog("Recipe Run: Z Up 2000um");
-   pnlSystemMessage->Caption = "Recipe Run: Z Up 2000um...";
-   gap = (2000.0 / Z_RESOLUTION);
+   WriteSystemLog("Recipe Run: Z上升10000um");
+   pnlSystemMessage->Caption = "Recipe Run: Z上升10000um...";
+   gap = (10000.0 / Z_RESOLUTION);
    if(MoveToAxisGap(Z_AXIS, 0-gap) == false) {
-      WriteSystemLog("Recipe Run: Z Up 2000um failed!");
-      pnlAlarmMessage->Caption = "Recipe Run: Z Up 2000um failed!";
+      WriteSystemLog("Recipe Run: Z上升10000um失敗!");
+      pnlAlarmMessage->Caption = "Recipe Run: Z上升10000um失敗!";
       pnlSystemMessage->Caption = "";
       goto stop;
    }
    if(cbTestStep->Checked == true) {
-      if(Application->MessageBox("Recipe Run: Z Up 2000um ok, Continue?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+      if(Application->MessageBox("Yuanli Socket測試: Z上升10000um ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
          goto stop;
       }
    }
 
-   // 2023 8 19 - chc 不需要Init & 到0度: 使用於手動系統
-   /*
    // 2021 7 9 - chc Init
    WriteSystemLog("Recipe Run: YuanLi Init");
    pnlSystemRun->Caption = "YuanLi Init...";
    pnlSystemMessage->Caption = "Recipe Run: YuanLi Init...";
-   if(WaitYuanliCmd(CMD_INIT,30000) != CMD_ACK_E) {
-      pnlSystemRun->Caption = "YuanLi Init failed!";
-      pnlAlarmMessage->Caption = "YuanLi Init failed, Stop.";
+   if(WaitYuanliCmd(CMD_INIT) != CMD_ACK_E) {
+      pnlSystemRun->Caption = "YuanLi Init失敗!";
+      pnlAlarmMessage->Caption = "YuanLi Init異常, 停止執行.";
       pnlSystemMessage->Caption = "";
       goto stop;
    }
@@ -19513,7 +19314,7 @@ runabort:
 
    // 0 度
    WriteSystemLog("Recipe Run: 0度");
-   pnlSystemMessage->Caption = "Recipe Run: 0 Degree";
+   pnlSystemMessage->Caption = "Recipe Run: 0度";
    btnToZeroPositionClick(this);
    if(pnlToZeroPosition->Color != clLime) {
       WriteSystemLog("Recipe Run: 0度失敗!");
@@ -19530,23 +19331,21 @@ runabort:
    pnlMoving->Caption = "Working...";
 
    if(cbTestStep->Checked == true) {
-      if(Application->MessageBox("Recipe Run: 0度 ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+      if(Application->MessageBox("Yuanli Socket測試: 0度 ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
          goto stop;
       }
    }
-   */
-
    // 回到入料點
-   pnlSystemRun->Caption = "Done, To Load...";
+   pnlSystemRun->Caption = "Done, 到入料點...";
    btnToLoadPositionClick(this);
    if(pnlToLoadPosition->Color != clLime) {
       WriteSystemLog("Recipe Run: 到入料點失敗!");
-      pnlAlarmMessage->Caption = "Recipe Run: To Load failed!";
+      pnlAlarmMessage->Caption = "Recipe Run: 到入料點失敗!";
       pnlSystemMessage->Caption = "";
       goto stop;
    }
    if(cbTestStep->Checked == true) {
-      if(Application->MessageBox("Recipe Run: To Load ok, Continue?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
+      if(Application->MessageBox("Yuanli Socket測試: 到入料點 ok, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
          goto stop;
       }
    }
@@ -19593,8 +19392,8 @@ runabort:
    //if((cbOffLine->Checked == false && cbSECSAtuo->Checked == true) || (cbOffLine->Checked == true && cbOffLineAtuo->Checked == true)) {
 
       if(tmAutoUnloadWafer->Enabled == false) {
-         pnlSystemMessage->Caption = "After the measurement to do UnLoad.";
-         WriteSystemLog("量測完成到入料點後: 自動進行Timer退片作業.");
+         pnlSystemMessage->Caption = "量測完成到入料點後: 自動進行Timer退片作業.";
+         WriteSystemLog(pnlSystemMessage->Caption);
          tmAutoUnloadWafer->Enabled = true;
          if(btnSystemRun->Enabled == true)
             btnSystemRun->Enabled = false;
@@ -19610,7 +19409,7 @@ runabort:
 
 stop:
    btnSystemRun->Enabled = true;
-   pnlSystemRun->Caption = "Recipe Run unfinished!";
+   pnlSystemRun->Caption = "Recipe Run未完成!";
    btnMeasureStop->Visible = false;
    btnRunStop->Visible = false;
 
@@ -19644,10 +19443,6 @@ stop:
    pnlMoveTCounterclockwise->Enabled = true;
    pnlMoveTClockwise->Enabled = true;
    pnlMoveLeft->Enabled = true;
-
-   // 2023 8 25 - chc 解鎖
-   cbPO->Enabled = true;
-   btnOLSToLocal->Enabled = true;
 
 }
 //---------------------------------------------------------------------------
@@ -19695,10 +19490,6 @@ AnsiString msg;
       RecipeBuffer[recipeno].DotBuf[i].Recipe = "NA";
       RecipeBuffer[recipeno].DotBuf[i].Row = 0;
       RecipeBuffer[recipeno].DotBuf[i].Col = 1;
-
-      // 2023 8 16 - chc 加入Macro
-      RecipeBuffer[recipeno].DotBuf[i].Macro = "NA";
-
    }
 
    // Grid全部存到Buffer
@@ -19753,9 +19544,6 @@ AnsiString msg;
       RecipeBuffer[recipeno].DotBuf[i].Row = sgDot->Cells[6][i].ToInt();
       RecipeBuffer[recipeno].DotBuf[i].Col = sgDot->Cells[7][i].ToInt();
 
-      // 2023 8 16 - chc 加入Macro
-      RecipeBuffer[recipeno].DotBuf[i].Macro = sgDot->Cells[8][i];
-
    }
 
    // 2019 12 13 - chc 要加2
@@ -19777,16 +19565,10 @@ AnsiString msg;
       sgDot->Cells[6][i] = IntToStr(RecipeBuffer[recipeno].DotBuf[i].Row);
       sgDot->Cells[7][i] = IntToStr(RecipeBuffer[recipeno].DotBuf[i].Col);
 
-      // 2023 8 16 - chc 加入Macro
-      sgDot->Cells[8][i] = RecipeBuffer[recipeno].DotBuf[i].Macro;
-
    }
 
    // 2019 12 13 - chc 清除最後一Row
-   // 2023 8 16 - chc 加入Macro
-   //for(int i=0 ; i<8 ; i++)
-   for(int i=0 ; i<sgDot->ColCount ; i++)
-
+   for(int i=0 ; i<8 ; i++)
       sgDot->Cells[i][sgDot->RowCount-1] = "";
 
 }
@@ -19945,9 +19727,6 @@ AnsiString msg;
       RecipeBuffer[recipeno].DotBuf[i].Row = 32;
       RecipeBuffer[recipeno].DotBuf[i].Col = 32;
 
-      // 2023 8 16 - chc 加入Macro
-      RecipeBuffer[recipeno].DotBuf[i].Macro = "NA";
-
    }
    sgDot->RowCount = dottno + 2;
    // 重新顯示Grid
@@ -19965,16 +19744,10 @@ AnsiString msg;
       sgDot->Cells[6][i] = IntToStr(RecipeBuffer[recipeno].DotBuf[i].Row);
       sgDot->Cells[7][i] = IntToStr(RecipeBuffer[recipeno].DotBuf[i].Col);
 
-      // 2023 8 16 - chc 加入Macro
-      sgDot->Cells[8][i] = RecipeBuffer[recipeno].DotBuf[i].Macro;
-
    }
 
    // 2019 12 13 - chc 清除最後一Row
-   // 2023 8 16 - chc 加入Macro
-   //for(int i=0 ; i<8 ; i++)
-   for(int i=0 ; i<sgDot->ColCount ; i++)
-
+   for(int i=0 ; i<8 ; i++)
       sgDot->Cells[i][sgDot->RowCount-1] = "";
 
 }
@@ -20128,7 +19901,7 @@ int left,top,width,height,ccdno,no,areano;
 
       // 2019 12 11 - chc for test
       if(boolForTest == false) {
-         PatternROI.Attach(&CCDImageAry[ccdno]);
+         PatternROI.Attach(&scA1300ImageAry[ccdno]);
          PatternROI.SetPlacement(left,top,width,height);
       }
 
@@ -20180,7 +19953,7 @@ int left,top,width,height,ccdno,no,areano;
       if(boolForTest == false)
          PatternROI.Save((path+filename).c_str(),E_FILE_FORMAT_GRAY_LEVEL_BMP);
 
-      pnlSystemMessage->Caption = filename + " Saved.";
+      pnlSystemMessage->Caption = filename + " 存檔完成.";
       WriteSystemLog("Save Pattern: " + path + filename);
 
       // 2019 12 11 - chc 直接設定
@@ -20347,22 +20120,22 @@ AnsiString msg;
    bz2 = pnlBase2Z->Caption.ToInt();
    // 移動Base1
    rgMatchSource->ItemIndex = 1;
-   pnlSystemRun->Caption = "Base 1 Move...";
+   pnlSystemRun->Caption = "基準點1移動...";
    btnBase1ToClick(this);
    if(pnlToBase1Position->Color != clLime) {
-      pnlSystemMessage->Caption = "Base 1 movement failed!";
+      pnlSystemMessage->Caption = "基準點1移動失敗!";
       return false;
    }
    // AutoFocus Base1
    if(cbAutoFocus->Checked == true) {
       DelayTime(500);
-      pnlSystemRun->Caption = "Base 1 Focus...";
+      pnlSystemRun->Caption = "基準點1Focus...";
       btnAutoFocusClick(this);
    }
    DelayTime(500);
    // Match
 match1:
-   pnlSystemRun->Caption = "Base 1 Locate...";
+   pnlSystemRun->Caption = "基準點1定位...";
    btnAutoMatchClick(this);
    shMarkMatch->Visible = true;
    shMarkMatch->Refresh();
@@ -20416,13 +20189,13 @@ match1:
    pnlSystemRun->Caption = "基準點2移動...";
    btnBase2ToClick(this);
    if(pnlToBase2Position->Color != clLime) {
-      pnlSystemMessage->Caption = "Base 2 movement failed!";
+      pnlSystemMessage->Caption = "基準點2移動失敗!";
       return false;
    }
    // AutoFocus Base2
    if(cbAutoFocus->Checked == true) {
       DelayTime(500);
-      pnlSystemRun->Caption = "Base 2 Focus...";
+      pnlSystemRun->Caption = "基準點2Focus...";
       btnAutoFocusClick(this);
    }
    DelayTime(500);
@@ -20433,14 +20206,14 @@ match1:
 
    // Match
 match2:
-   pnlSystemRun->Caption = "Base 2 Locate...";
+   pnlSystemRun->Caption = "基準點2定位...";
    btnAutoMatchClick(this);
    shMarkMatch->Visible = true;
    shMarkMatch->Refresh();
 
    // 2019 12 18 - chc 對位失敗!
    if(pnlNCC->Color != clLime) {
-      pnlSystemRun->Caption = "Base 2 Alignment Abnormal!";
+      pnlSystemRun->Caption = "基準點2對位異常!";
       pnlMatchError->Visible = true;
       pnlMatchErrorMsg->Caption = "Base2 Alignment error! Redesignate the position?";
       MatchProcess = 0;
@@ -20818,7 +20591,7 @@ double fx,fy;
       return;
 
    if(sgkmf->RowCount < 2) {
-      pnlSystemMessage->Caption = "Coordinate: No Data Matched!";
+      pnlSystemMessage->Caption = "座標: No Data Matched!";
       return;
    }
    recno = sgkmf->Row;
@@ -20893,13 +20666,13 @@ AnsiString tbuf;
    spath = RecipeDirectory + "\\" + pnlRecipeTypeRecipe->Caption;
    dpath = RecipeDirectory + "\\" + combRecipe->Text;
    if(!DirectoryExists(spath)) {
-      pnlSystemMessage->Caption = "Old Recipe path: " + spath + " not exist, cannot generate new recipe!";
+      pnlSystemMessage->Caption = "舊Recipe資料夾: " + spath + "不存在, 無法產生新Recipe!";
       return;
    }
    if(!DirectoryExists(dpath))
       mkdir(dpath.c_str());
    if(!DirectoryExists(dpath)) {
-      pnlSystemMessage->Caption = "New Recipe path: " + dpath + " not exist, cannot generaate new Recipe!";
+      pnlSystemMessage->Caption = "新Recipe資料夾: " + dpath + "不存在, 無法產生新Recipe!";
       return;
    }
    // Copy files
@@ -21094,7 +20867,7 @@ AnsiString str;
 void __fastcall TMainForm::btnReadkmfToPointClick(TObject *Sender)
 {
 int tno,x,y;
-double ratiox,ratioy;
+double ratiox,ratioy;      
 
    // mm
    if(rgkmfUnit->ItemIndex == 0)
@@ -21172,16 +20945,10 @@ double ratiox,ratioy;
       sgDot->Cells[5][sgDot->RowCount-1] = "NA";
       sgDot->Cells[6][sgDot->RowCount-1] = "0";
       sgDot->Cells[7][sgDot->RowCount-1] = "1";
-
-      // 2023 8 16 - chc 加入Macro
-      sgDot->Cells[8][sgDot->RowCount-1] = "NA";
-
       sgDot->RowCount++;
    }
    // 清除最後一Row
-   // 2023 8 16 - chc 加入Macro[彰化]
-   //for(int i=0 ; i<6 ; i++)
-   for(int i=0 ; i<sgDot->ColCount ; i++)
+   for(int i=0 ; i<6 ; i++)
 
       // 2020 1 21 - chc 寫錯
       //sgDot->Cells[i][sgkmf->RowCount-1] = "";
@@ -21194,16 +20961,9 @@ void __fastcall TMainForm::ClearDotArray()
 {
 
    sgDot->RowCount = 2;
-
-   // 2023 8 16 - chc 加入Macro
-   //sgDot->ColCount = 8;
-   sgDot->ColCount = 9;
-
+   sgDot->ColCount = 8;
    // 清除最後一Row
-   // 2023 8 16 - chc 加入Macro
-   //for(int i=0 ; i<8 ; i++)
-   for(int i=0 ; i<sgDot->ColCount ; i++)
-
+   for(int i=0 ; i<8 ; i++)
       sgDot->Cells[i][sgDot->RowCount-1] = "";
 }
 //---------------------------------------------------------------------------
@@ -21266,7 +21026,7 @@ AnsiString filename,name,sfname,dfname,recipename;
    sfname = RecipeDirectory + "\\" + recipename + "\\" + comboPattern->Text;
    dfname = RecipeDirectory + "\\" + recipename + "\\" + filename;
    CopyFile(sfname.c_str(),dfname.c_str(),false);
-   pnlSystemMessage->Caption = filename + " Saved.";
+   pnlSystemMessage->Caption = filename + " 存檔完成.";
    WriteSystemLog("Save Pattern: " + dfname);
    btnAssignPattern->Font->Color = clNavy;
 }
@@ -21349,7 +21109,7 @@ int recno;
       ChangePriorityCount = edPasswordSwitchSecond->Text.ToInt();
 
    if(sgDot->RowCount < 2) {
-      pnlSystemMessage->Caption = "Point: No Data Matched!";
+      pnlSystemMessage->Caption = "點位: No Data Matched!";
       return;
    }
    recno = sgDot->Row;
@@ -21362,10 +21122,6 @@ int recno;
       comboOlympusVisionName1->Text = sgDot->Cells[5][recno];
       pnlDotRow->Caption = sgDot->Cells[6][recno];
       pnlDotCol->Caption = sgDot->Cells[7][recno];
-
-      // 2023 8 16 - chc 加入Macro
-      comboOlympusMacroName->Text = sgDot->Cells[8][recno];
-
       btnDotToClick(this);
    }
 }
@@ -21382,7 +21138,7 @@ double fx,fy;
       return;
 
    if(sgkmf->RowCount < 2) {
-      pnlSystemMessage->Caption = "Coordinate: No Data Matched!";
+      pnlSystemMessage->Caption = "座標: No Data Matched!";
       return;
    }
    recno = sgkmf->Row;
@@ -21500,7 +21256,7 @@ int recno,selectno;
 AnsiString sfname,dfname,recipename;
 
    if(sgDot->RowCount < 2) {
-      pnlSystemMessage->Caption = "Point: No Data Matched!";
+      pnlSystemMessage->Caption = "點位: No Data Matched!";
       return;
    }
    recno = sgDot->Row;
@@ -22950,12 +22706,11 @@ void __fastcall TMainForm::pnlDOCDAClick(TObject *Sender)
       if(pnlBit6->Color == clSilver) {
 
          // 2020 4 21 - chc 有歸過home才要做
-         // 2023 8 17 - chc 不動
-         //if(MainForm->boolHomeDone == true)
-         //
-         //   // 2020 5 21 - chc 進入Maintenance Mode時由水平改到原點
-         //   //btnToInputClick(this);
-         //   btnToOriginalClick(this);
+         if(MainForm->boolHomeDone == true)
+
+            // 2020 5 21 - chc 進入Maintenance Mode時由水平改到原點
+            //btnToInputClick(this);
+            btnToOriginalClick(this);
 
          HSL_IO_OuStatus |= 0x10;
          pnlDOCDA->Color = clLime;
@@ -22974,7 +22729,7 @@ void __fastcall TMainForm::pnlDOCDAClick(TObject *Sender)
 
       }
       else {
-         pnlSystemMessage->Caption = "Enter the maintenance mode after starting with the Key.";
+         pnlSystemMessage->Caption = "以Key啟動後才能進入維修模式.";
       }
    }
    else {
@@ -22989,7 +22744,7 @@ void __fastcall TMainForm::pnlDOCDAClick(TObject *Sender)
       MainForm->pnlEFEMMaintenanceMode->Color = clSilver;
       // EMEM Status
       if(EFEMStatus == 1) {
-         MainForm->AddErrorLog("[System] Leave EFEM Maintenance Mode.");
+         MainForm->AddErrorLog("[System] 結束EFEM Maintenance Mode.");
       }   
       EFEMStatus = 0;
 
@@ -23108,12 +22863,10 @@ void __fastcall TMainForm::pnlDOPolarizerClick(TObject *Sender)
    if(pnlDOPolarizer->Color == clSilver) {
       HSL_IO_OuStatus |= 0x400;
       pnlDOPolarizer->Color = clLime;
-      cbPO->Checked = true;
    }
    else {
       HSL_IO_OuStatus &= ~(0x400);
       pnlDOPolarizer->Color = clSilver;
-      cbPO->Checked = false;
    }
    APS_set_field_bus_d_output(BoardHSL, HSL_BUS, IO1_ID, HSL_IO_OuStatus);
 }
@@ -23374,17 +23127,9 @@ int portno;
 
    // 2021 11 9 - chc 記錄Load button狀態
    bool boolloadbutton;
+   boolloadbutton = btnCassetteLoad->Enabled;
+   btnCassetteLoad->Enabled = false;
 
-   // 2023 8 17 - chc LP1/LP2
-   if(rgLoadPortSelect->ItemIndex == LOADPORT_2) {
-      boolloadbutton = btnCassette2Load->Enabled;
-      btnCassette2Load->Enabled = false;
-   }
-   else {
-
-      boolloadbutton = btnCassetteLoad->Enabled;
-      btnCassetteLoad->Enabled = false;
-   }
    // 2020 7 17 - chc Mapping Error
    // 2023 8 10 - chc LP1/LP2
    //if(boolMappingStatus == false) {
@@ -23959,12 +23704,7 @@ error:
    pnlStartMessage->Visible = false;
 
    // 2021 11 9 - chc 記錄Load button狀態
-   // 2023 8 17 - chc LP1/LP2
-   if(rgLoadPortSelect->ItemIndex == LOADPORT_2)
-      btnCassette2Load->Enabled = boolloadbutton;
-   else
-
-      btnCassetteLoad->Enabled = boolloadbutton;
+   btnCassetteLoad->Enabled = boolloadbutton;
 
    // 2021 11 12 - chc 關閉UI
    pcSystem->Enabled = true;
@@ -24082,17 +23822,9 @@ bool boollastwafer = false;
 
    // 2021 11 9 - chc 記錄Load button狀態
    bool boolloadbutton;
+   boolloadbutton = btnCassetteLoad->Enabled;
+   btnCassetteLoad->Enabled = false;
 
-   // 2023 8 17 - chc LP1/LP2
-   if(rgLoadPortSelect->ItemIndex == LOADPORT_2) {
-      boolloadbutton = btnCassette2Load->Enabled;
-      btnCassette2Load->Enabled = false;
-   }
-   else {
-
-      boolloadbutton = btnCassetteLoad->Enabled;
-      btnCassetteLoad->Enabled = false;
-   }
    // 記錄退片中
    boolInUnLoad = true;
 
@@ -24415,41 +24147,20 @@ error:
    if(boollastwafer == true && ((cbOffLine->Checked == false && cbSECSAtuo->Checked == true) || (cbOffLine->Checked == true && cbOffLineAtuo->Checked == true))) {
 
       if(tmAutoUnload->Enabled == false) {
-         pnlSystemMessage->Caption = "After the last wafer is unloaded: Automatically perform Timer UnLoad operation.";
+         pnlSystemMessage->Caption = "最後一片退片後: 自動進行Timer UnLoad作業.";
          WriteSystemLog(pnlSystemMessage->Caption);
-
-         // 2023 8 17a - chc 針對指定PortNo作動[彰化: 只有單一個Port故可不管]
-         SECSAssignPortNo = rgLoadPortSelect->ItemIndex;
-
          tmAutoUnload->Enabled = true;
-
-         // 2023 8 24 - chc 若另一個Loadport已Ready且尚未做過就可以取片
-         if(CheckNextLoadportReady() == true) {
-            pnlSystemMessage->Caption = "After the last wafer is unloaded: automatic timer Get operation.";
-            WriteSystemLog(pnlSystemMessage->Caption);
-            WaitTime(1000);
-            if(rgLoadPortSelect->ItemIndex == LOADPORT_1)
-               rgLoadPortSelect->ItemIndex = LOADPORT_2;
-            else
-               rgLoadPortSelect->ItemIndex = LOADPORT_1;
-            tmAutoLoadWafer->Enabled = true;
-         }
-
       }
    }
 
    // 2022 2 13 - chc RCMD: 1-Cancel, 2-Abort SECSRemoteCommand
    else if(SECSRemoteCommand == SECS_REMOTE_CANCEL) {
-      pnlSystemMessage->Caption = "Cancel after unloading: Automatically perform Timer UnLoad operation.";
+      pnlSystemMessage->Caption = "退片後處理Cancel: 自動進行Timer UnLoad作業.";
       WriteSystemLog(pnlSystemMessage->Caption);
-
-      // 2023 8 17a - chc 針對指定PortNo作動[彰化: 只有單一個Port故可不管]
-      SECSAssignPortNo = rgLoadPortSelect->ItemIndex;
-
       tmAutoUnload->Enabled = true;
    }
 
-   // 2021 10 17a - chc 退片後, 自動取片
+   // 2021 10 17a - chc 自動取片
    // 2021 11 11 - chc 離線也可以
    //else if(boollastwafer == false && cbOffLine->Checked == false && cbSECSAtuo->Checked == true) {
    // 2021 11 15 - chc 寫錯!
@@ -24457,7 +24168,7 @@ error:
    else if(boollastwafer == false && ((cbOffLine->Checked == false && cbSECSAtuo->Checked == true) || (cbOffLine->Checked == true && cbOffLineAtuo->Checked == true))) {
 
       if(tmAutoLoadWafer->Enabled == false) {
-         pnlSystemMessage->Caption = "After the wafer is unloaded: automatic timer Get operation.";
+         pnlSystemMessage->Caption = "退片後: 自動進行Timer取片作業.";
          WriteSystemLog(pnlSystemMessage->Caption);
          Sleep(1000);
          tmAutoLoadWafer->Enabled = true;
@@ -24465,12 +24176,7 @@ error:
    }
 
    // 2021 11 9 - chc 記錄Load button狀態
-   // 2023 8 17 - chc LP1/LP2
-   if(rgLoadPortSelect->ItemIndex == LOADPORT_2)
-      btnCassette2Load->Enabled = boolloadbutton;
-   else
-
-      btnCassetteLoad->Enabled = boolloadbutton;
+   btnCassetteLoad->Enabled = boolloadbutton;
 
    // 2021 11 12 - chc 關閉UI
    pcSystem->Enabled = true;
@@ -24937,18 +24643,8 @@ bool status = true;
          SendSECSStatus(EQ_STATUS_INIT);
 
          // 2023 8 2 - chc Init Start
-         pnlSECSUnit->Caption = "Completed.";
+         pnlSECSUnit->Caption = "Connected.";
 
-      }
-
-      // 2023 8 17 - chc 再確認
-      if(pnlSECSConnect->Color == clLime) {
-         pnlSECSUnit->Font->Color = clBlack;
-         pnlSECSUnit->Caption = "Completed.";
-         if(pnlStartMessage->Caption == "SECS Disconnected!") {
-            pnlAlarmMessage->Caption = "";
-            pnlStartMessage->Caption = "";
-         }
       }
 
       WriteSystemLog("SetupEFEM() Check Socket and COM Port Result...");
@@ -24958,7 +24654,7 @@ bool status = true;
          pnlRFID18->Color == clLime && pnlRFID112->Color == clLime &&
          pnlRFID28->Color == clLime && pnlRFID212->Color == clLime) {
          WriteSystemLog("SetupEFEM() Socket, Com ok.");
-         pnlSystemMessage->Caption = "EFEM init: Is there Wafer on Aligner?";
+         pnlSystemMessage->Caption = "EFEM初始: Aligner上是否有Wafer?";
 
          // 2023 8 2 - chc Init Start
          pnlEFEMUnit->Caption = "Wafer Checking...";
@@ -24992,7 +24688,7 @@ bool status = true;
 
          // Check上是否有Wafer
          // 2021 7 17 - chc EFEM Setup不檢察Stage
-         //pnlSystemMessage->Caption = "EFEM init: Is there Wafer on Stage?";
+         //pnlSystemMessage->Caption = "EFEM初始: Stage上是否有Wafer?";
          //if(IsChuckWithWafer() == true) {
          //   WriteSystemLog("SetupEFEM() Chuck with wafer!");
          //   pnlAlarmMessage->Caption = "Chuck上有Wafer!";
@@ -25000,18 +24696,8 @@ bool status = true;
          //   goto end;
          //}
 
-         // 2023 8 17 - chc 再確認
-         if(pnlSECSConnect->Color == clLime) {
-            pnlSECSUnit->Font->Color = clBlack;
-            pnlSECSUnit->Caption = "Completed.";
-            if(pnlStartMessage->Caption == "SECS Disconnected!") {
-               pnlAlarmMessage->Caption = "";
-               pnlStartMessage->Caption = "";
-            }
-         }
-
          // Robot上是否有Wafer
-         pnlSystemMessage->Caption = "EFEM init: Is there Wafer on Robot?";
+         pnlSystemMessage->Caption = "EFEM初始: Robot上是否有Wafer?";
          if(IsRobotWithWafer() == true) {
             WriteSystemLog("SetupEFEM(Err) Robot with wafer!");
             pnlAlarmMessage->Caption = "Robot with Wafer!";
@@ -25058,16 +24744,6 @@ bool status = true;
 
          // 2023 8 2 - chc Init Start
          pnlEFEMUnit->Caption = "LoadPort Homing...";
-
-         // 2023 8 17 - chc 再確認
-         if(pnlSECSConnect->Color == clLime) {
-            pnlSECSUnit->Font->Color = clBlack;
-            pnlSECSUnit->Caption = "Completed.";
-            if(pnlStartMessage->Caption == "SECS Disconnected!") {
-               pnlAlarmMessage->Caption = "";
-               pnlStartMessage->Caption = "";
-            }
-         }
 
          // 2021 4 30 - chc 兩個LoadPort改用Timer同時作業
          tmLoadPort1ORGN->Enabled = true;
@@ -25126,7 +24802,7 @@ bool status = true;
 
          // 2021 4 30 - chc Aligner & 兩個LoadPort改用Timer同時作業
          // Aligner ORGN, Loadport Init....
-         //pnlSystemMessage->Caption = "EFEM Init: Aligner homing...";
+         //pnlSystemMessage->Caption = "EFEM初始: Aligner原點復歸...";
          //btnRorzeAlignerORGNClick(this);
          //if(pnlAlignerORGN1->Color != clLime) {
          //   WriteSystemLog("SetupEFEM() Aligner ORGN Fail");
@@ -25134,7 +24810,7 @@ bool status = true;
          //   status = false;
          //   goto end;
          //}
-         //pnlSystemMessage->Caption = "EFEM Init: LoadPort1 Homing...";
+         //pnlSystemMessage->Caption = "EFEM初始: LoadPort1原點復歸...";
          //btnLoadPort1ORGNClick(this);
          //if(pnlLoadPort1ORGN->Color != clLime) {
          //   WriteSystemLog("SetupEFEM() LoadPort1 ORGN Fail");
@@ -25142,7 +24818,7 @@ bool status = true;
          //   status = false;
          //   goto end;
          //}
-         //pnlSystemMessage->Caption = "EFEM Init: LoadPort2 Homing...";
+         //pnlSystemMessage->Caption = "EFEM初始: LoadPort2原點復歸...";
          //btnLoadPort2ORGNClick(this);
          //if(pnlLoadPort2ORGN->Color != clLime) {
          //   WriteSystemLog("SetupEFEM() LoadPort2 ORGN Fail");
@@ -25150,16 +24826,6 @@ bool status = true;
          //   status = false;
          //   goto end;
          //}
-
-         // 2023 8 17 - chc 再確認
-         if(pnlSECSConnect->Color == clLime) {
-            pnlSECSUnit->Font->Color = clBlack;
-            pnlSECSUnit->Caption = "Completed.";
-            if(pnlStartMessage->Caption == "SECS Disconnected!") {
-               pnlAlarmMessage->Caption = "";
-               pnlStartMessage->Caption = "";
-            }
-         }
 
          pnlStartMessage->Caption = "EFEM Init: succ.";
       }
@@ -25307,7 +24973,7 @@ void __fastcall TMainForm::btnRobotConnectClick(TObject *Sender)
       ShowMessage("ybRobot: " + e.Message);
       boolRobotStatus = false;
       RobotButton();
-      MainForm->pnlSystemMessage->Caption = "COM Port(Robot) startup failed!";
+      MainForm->pnlSystemMessage->Caption = "COM Port(Robot) 啟動失敗!";
       MainForm->WriteSystemLog(MainForm->pnlSystemMessage->Caption);
    }
    UpdateRobotStatus();
@@ -25347,7 +25013,7 @@ void __fastcall TMainForm::btnLoadPortConnectClick(TObject *Sender)
       ShowMessage("ybLoadPort: " + e.Message);
       boolLoadPortStatus = false;
       LoadPortButton(0);
-      MainForm->pnlSystemMessage->Caption = "COM Port(LoadPort) startup failed!";
+      MainForm->pnlSystemMessage->Caption = "COM Port(LoadPort) 啟動失敗!";
       MainForm->WriteSystemLog(MainForm->pnlSystemMessage->Caption);
    }
    UpdateLoadPortStatus();
@@ -25382,7 +25048,7 @@ void __fastcall TMainForm::btnAlignerConnectClick(TObject *Sender)
       ShowMessage("ybAligner: " + e.Message);
       boolAlignerStatus = false;
       AlignerButton();
-      MainForm->pnlSystemMessage->Caption = "COM Port(Aligner) startup failed!";
+      MainForm->pnlSystemMessage->Caption = "COM Port(Aligner) 啟動失敗!";
       MainForm->WriteSystemLog(MainForm->pnlSystemMessage->Caption);
    }
    UpdateAlignerStatus();
@@ -27732,8 +27398,7 @@ AnsiString msg;
             btnLoadWafer->Enabled = true;
 
             // 2023 8 11 - chc Log
-            // 2023 8 18 - chc 不Log
-            //WriteSystemLog("LP1: LED是Load後可使用LoadWafer.");
+            WriteSystemLog("LP1: LED是Load後可使用LoadWafer.");
 
          }
       }
@@ -27921,10 +27586,6 @@ void __fastcall TMainForm::btnCassetteLoadClick(TObject *Sender)
          else {
             pnlStartMessage->Caption = "Check before Cassette UnLoading...";
             pnlStartMessage->Visible = true;
-
-            // 2023 8 17 - chc clear All slot's information
-            ClearAllSlot(LOADPORT_1);
-
          }
          // 先做Robot ORGN(GP1/GP0) & 偵測pnlLoadPortS12是否為1?
          if(BeforeLoadPortLoadUnloadFun(LOADPORT_1) == false) {
@@ -28035,10 +27696,6 @@ void __fastcall TMainForm::btnCassetteLoadClick(TObject *Sender)
                pnlOperationMessage->Caption = "LP1 Loaded.";
                pnlAlarmMessage->Caption = pnlOperationMessage->Caption;
                WriteSystemLog("boolSendSCESCommand: 5");
-
-               // 2023 8 17a - chc 在LP1/LP2做Load時決定, LP2若不UnLoad就要變更
-               if(btnCassette2Load->Caption == "Load")
-                  rgLoadPortSelect->ItemIndex = LOADPORT_1;
 
                // 2021 5 4 - chc 進入Run
                // 2021 10 21 - chc 由Idle/Run/Down改成Init/Idle/Setup/Ready/Execution/Pause
@@ -28237,17 +27894,10 @@ void __fastcall TMainForm::btnChuckVacuumOnClick(TObject *Sender)
       pnlStageVacuumClick(this);
 
    // 2021 6 3 - chc 12"
-   // 2023 8 17 - chc LP1/LP2
-   //if(rgLoadPortSelect->ItemIndex == LOADPORT_2) {
-   //   if(pnlStageVacuum1->Color != clLime)
-   //      pnlStageVacuum1Click(this);
-   //}
-   if((rgLoadPortSelect->ItemIndex == LOADPORT_2 && rgLoadPort2WaferSize->ItemIndex == WAFER_SIZE_12) ||
-      (rgLoadPortSelect->ItemIndex == LOADPORT_1 && rgLoadPort1WaferSize->ItemIndex == WAFER_SIZE_12)) {
+   if(rgLoadPortSelect->ItemIndex == LOADPORT_2) {
       if(pnlStageVacuum1->Color != clLime)
          pnlStageVacuum1Click(this);
    }
-
 }
 //---------------------------------------------------------------------------
 
@@ -28317,7 +27967,7 @@ void __fastcall TMainForm::InitRobotCom()
 {
 
    // 由參數決定COM Port
-   pnlSystemMessage->Caption = "Init Robot Com Port...";
+   pnlSystemMessage->Caption = "啟動Robot Com Port...";
    try {
       pnlRobotStatus->Color = clSilver;
       ybRobot->Active = false;
@@ -28358,7 +28008,7 @@ void __fastcall TMainForm::InitRobotCom()
       RobotButton();
    }
    UpdateRobotStatus();
-   pnlSystemMessage->Caption = "Init Robot Com Port.";
+   pnlSystemMessage->Caption = "啟動Robot Com Port.";
 
 }
 //---------------------------------------------------------------------------
@@ -28367,7 +28017,7 @@ void __fastcall TMainForm::InitLoadPortCom()
 {
 
    // 由參數決定COM Port
-   pnlSystemMessage->Caption = "Init LoadPort Com Port...";
+   pnlSystemMessage->Caption = "啟動LoadPort Com Port...";
    try {
       pnlLoadPortStatus->Color = clSilver;
       ybLoadPort->Active = false;
@@ -28403,7 +28053,7 @@ void __fastcall TMainForm::InitLoadPortCom()
       LoadPortButton(0);
    }
    UpdateLoadPortStatus();
-   pnlSystemMessage->Caption = "Init LoadPort Com Port.";
+   pnlSystemMessage->Caption = "啟動LoadPort Com Port.";
 
 }
 //---------------------------------------------------------------------------
@@ -28412,7 +28062,7 @@ void __fastcall TMainForm::InitAlignerCom()
 {
 
    // 由參數決定COM Port
-   pnlSystemMessage->Caption = "Init Aligner Com Port...";
+   pnlSystemMessage->Caption = "啟動Aligner Com Port...";
    try {
       pnlAlignerStatus->Color = clSilver;
       ybAligner->Active = false;
@@ -28448,7 +28098,7 @@ void __fastcall TMainForm::InitAlignerCom()
       AlignerButton();
    }
    UpdateAlignerStatus();
-   pnlSystemMessage->Caption = "Init Aligner Com Port.";
+   pnlSystemMessage->Caption = "啟動Aligner Com Port.";
 
 }
 //---------------------------------------------------------------------------
@@ -28532,14 +28182,14 @@ nextwafer:
       rgWaferNo->ItemIndex = indexno;
       btnLoadWaferClick(this);
       if(pnlLoadWafer->Color != clLime) {
-         pnlSystemMessage->Caption = "Abnormal film fetching!";
+         pnlSystemMessage->Caption = "取片異常!";
          pnlLoopTest->Color = clRed;
          goto end;
       }
       WaitTime(2000);
       btnUnloadWaferClick(this);
       if(pnlUnloadWafer->Color != clLime) {
-         pnlSystemMessage->Caption = "Abnormal film storing!";
+         pnlSystemMessage->Caption = "退片異常!";
          pnlLoopTest->Color = clRed;
          goto end;
       }
@@ -28598,7 +28248,6 @@ nextwafer:
       if(cbTwoLoadport->Checked == true) {
          // 由原Loadport再開始
          portno = oportno;
-         rgLoadPortSelect->ItemIndex = portno;
          goto nextloadport;
       }
 
@@ -28810,11 +28459,8 @@ void __fastcall TMainForm::tmSetupEFEMTimer(TObject *Sender)
       pnlLeftWindow->Color = clSilver;
       pcEFEMH->Enabled = true;
       pcEFEMR->Enabled = true;
-      pnlSystemMessage->Caption = "EFEM ok! System Ready.";
+      pnlSystemMessage->Caption = "EFEM正常! 系統Ready.";
       boolEFEMStatus = true;
-
-      // 2023 8 21 - chc 空出時間給SysstemTimer處理SVON
-      WaitTime(1000);
 
       // 2021 4 25 - chc TSMC修改: 亮黃燈
       if(EFEMMode == EFEM_RORZE) {
@@ -28839,20 +28485,6 @@ void __fastcall TMainForm::tmSetupEFEMTimer(TObject *Sender)
       MainForm->StageFFU(true);
       MainForm->EFEMFFU(true);
 
-   }
-
-   // 2023 8 17 - chc OLS5000 Connect
-   pnlOLS5000UnitConnect->Caption = "Connecting...";
-   if(cbOLS5000Wait->Checked == true) {
-      WriteSystemLog("等OLS5000...");
-      if(SetupOLS5000(true) == false)
-         pnlOLS5000UnitConnect->Caption = "Control Fail!";
-      else
-         pnlOLS5000UnitConnect->Caption = "Control Ready.";
-   }
-   else {
-      WriteSystemLog("不等OLS5000...");
-      tmSetupOLS5000->Enabled = true;
    }
 
    // 2021 5 4 - chc 先做Update
@@ -28972,13 +28604,12 @@ bool __fastcall TMainForm::BeforeLoadPortLoadUnload()
 }
 //---------------------------------------------------------------------------
 // 2020 5 4 - chc Save Aligner Parameters
-// Hirata
 void __fastcall TMainForm::btnAlignerSaveClick(TObject *Sender)
 {
 TIniFile *pSystemFile;
 AnsiString str;
 
-   pnlSystemMessage->Caption = "Aligner parameters are being updated...";
+   pnlSystemMessage->Caption = "Aligner參數更新中...";
    pnlAlignerMessage->Caption = pnlSystemMessage->Caption;
    // ini檔名與目錄
    pSystemFile = new TIniFile(MainForm->SystemINIFilename);
@@ -29007,7 +28638,7 @@ void __fastcall TMainForm::LoadAlignerParameter()
 TIniFile *pSystemFile;
 AnsiString str;
 
-   pnlSystemMessage->Caption = "Aligner parameter reading...";
+   pnlSystemMessage->Caption = "Aligner參數讀取中...";
    pnlAlignerMessage->Caption = pnlSystemMessage->Caption;
    // ini檔名與目錄
    pSystemFile = new TIniFile(MainForm->SystemINIFilename);
@@ -29017,11 +28648,6 @@ AnsiString str;
       AlignerDegree = pSystemFile->ReadInteger("Aligner Parameter" ,"Degree"     ,0);
       rgWaferSize->ItemIndex = AlignerSize;
       rgWaferDegree->ItemIndex = AlignerDegree;
-
-      // 2023 8 16 - chc 加入補償角度
-      RorzeAlignerDegree = pSystemFile->ReadFloat("Aligner Parameter" ,"RorzeAlignerDegree"      ,0);
-      str.sprintf("%.2f",RorzeAlignerDegree);
-      edRorzeAlignerDegree->Text = str;
 
       // 2021 7 22 - chc update
       rgWaferOrientation->ItemIndex = AlignerDegree;
@@ -29041,7 +28667,7 @@ AnsiString str;
       edAlignerDegreeOut->Text = IntToStr(AlignerDegreeOut);
    }
    delete pSystemFile;
-   pnlSystemMessage->Caption = "Aligner parameter reading completed.";
+   pnlSystemMessage->Caption = "Aligner參數讀取完成.";
    pnlAlignerMessage->Caption = pnlSystemMessage->Caption;
 
 }
@@ -29217,7 +28843,7 @@ bool first = true;
 
    for(int i=0 ; i<25 ; i++) {
       panel = (TPanel*)(FindComponent("pnlTray" + IntToStr(i+1) + "Select"));
-      if(panel->Color == WaferColor_Select) {
+      if(panel->Color == clLime) {
          // 第一片位置
          // 小到大
          if(rgLoadOrder->ItemIndex == 0) {
@@ -29357,17 +28983,10 @@ TPanel *panel,*panel1;
    for(int i=1 ; i<=25 ; i++) {
       panel = (TPanel*)(FindComponent("pnlTray" + IntToStr(i)));
       panel1 = (TPanel*)(FindComponent("pnlTray" + IntToStr(i) + "Select"));
-
-      // 2023 8 17 - chc 使用指定Color
-      //if(panel->Color == clLime)
-      //   panel1->Color = panel->Color;
-      //else
-      //   panel1->Color = clGray;
-      if(panel->Color == WaferColor_Select)
-         panel1->Color = WaferColor_Select;
+      if(panel->Color == clLime)
+         panel1->Color = panel->Color;
       else
-         panel1->Color = WaferColor_No;
-
+         panel1->Color = clGray;
    }
 
    // 2021 7 17 -  chc 記錄為Load後的第一片
@@ -30567,7 +30186,7 @@ int progress = 0;
    if(rgLoadOrder->ItemIndex == 0) {
       for(int i=0 ; i<25 ; i++) {
          panel = (TPanel*)(FindComponent("pnlTray" + IntToStr(i+1) + "Select"));
-         if(panel->Color == WaferColor_Select) {
+         if(panel->Color == clLime) {
             cno++;
             if((i+1) == no) {
                WriteSystemLog("UpdateProgress小到大: 片數= " + IntToStr(cno) + "," + IntToStr(pbWafer->MaxValue));
@@ -30580,7 +30199,7 @@ int progress = 0;
    else {
       for(int i=24 ; i>=0 ; i--) {
          panel = (TPanel*)(FindComponent("pnlTray" + IntToStr(i+1) + "Select"));
-         if(panel->Color == WaferColor_Select) {
+         if(panel->Color == clLime) {
             cno++;
             if((i+1) == no) {
                WriteSystemLog("UpdateProgress大到小: 片數= " + IntToStr(cno) + "," + IntToStr(pbWafer->MaxValue));
@@ -30605,7 +30224,7 @@ void __fastcall TMainForm::rgMaintenanceModeClick(TObject *Sender)
 TIniFile *pSystemFile;
 int mode;
 
-   pnlSystemMessage->Caption = "Updating maintenance mode parameters...";
+   pnlSystemMessage->Caption = "維護模式參數更新中...";
    pnlAlignerMessage->Caption = pnlSystemMessage->Caption;
    // ini檔名與目錄
    pSystemFile = new TIniFile(MainForm->SystemINIFilename);
@@ -30765,7 +30384,7 @@ static bool boolunload = false;
 
          //if(pnlBit13->Color == clLime) {
          if(HSL_IO_InStatus[13] == true) {
-            pnlSystemMessage->Caption = "Stage door lock is abnormal! Keep closed.";
+            pnlSystemMessage->Caption = "Stage門鎖異常! 維持關閉狀態.";
             pnlOperationMessage->Caption = pnlSystemMessage->Caption;
             pnlStageLockClick(this);
             cbMaintenanceMode->Checked = false;
@@ -30777,7 +30396,7 @@ static bool boolunload = false;
             btnLoadWafer->Enabled = false;
             pnlLoadWafer->Color = clSilver;
             btnUnloadWafer->Enabled = false;
-            pnlOperationMessage->Caption = "Enter observation mode.";
+            pnlOperationMessage->Caption = "進入開啟觀測模式.";
             pnlSystemMessage->Caption = pnlOperationMessage->Caption;
          }
 
@@ -30812,13 +30431,13 @@ stage_again:
          goto stage_again;
       }
       else {
-         pnlSystemMessage->Caption = "Check Stage Door Lock: Closed.";
+         pnlSystemMessage->Caption = "檢查Stage門鎖: 已關閉.";
          rgWaferNo->Enabled = true;
          btnLoadWafer->Enabled = true;
          btnUnloadWafer->Enabled = true;
          btnLoadWafer->Enabled = boolload;
          btnUnloadWafer->Enabled = boolunload;
-         pnlOperationMessage->Caption = "Close observation mode.";
+         pnlOperationMessage->Caption = "關閉觀測模式.";
       }
 
    }
@@ -30857,7 +30476,7 @@ void __fastcall TMainForm::CheckStageDoor()
       // 檢查DI13是否為On? 若不是則不作業: 要DO0 Off - 關門 - 再DO0 On
       //if(pnlBit13->Color != clLime) {
       if(HSL_IO_InStatus[13] != true) {
-         pnlSystemMessage->Caption = "The stage door is not closed, please close.";
+         pnlSystemMessage->Caption = "Stage門尚未關閉, 請關閉.";
          Application->MessageBox("請確認Stage門已關閉, 關閉後繼續...   ", " Olympus Operation", MB_OK);
          // DO0 Off
          if(pnlStageLock->Color == clLime) {
@@ -30867,7 +30486,7 @@ void __fastcall TMainForm::CheckStageDoor()
          }
       }
       else {
-         pnlSystemMessage->Caption = "Check Stage Door Lock: Closed.";
+         pnlSystemMessage->Caption = "檢查Stage門鎖: 已關閉.";
          break;
       }
 
@@ -31136,17 +30755,17 @@ int no,gain,shutter;
    WriteSystemLog("進入rgCCDSeletctChange: " + IntToStr(rgCCDSelect->ItemIndex));
 
    // 目前CCD(0/1/2)若在取像中要關閉
-   if(CCDSelectNo != -1 && bool_CCD_StatusAry[CCDSelectNo] == true) {
+   if(CCDSelectNo != -1 && bool_scA1300_StatusAry[CCDSelectNo] == true) {
       if(btnReviewLive->Caption == "Grab") {
-         if(CCDThreadAry[CCDSelectNo]->boolBaslerLive == true) {
-            CCDThreadAry[CCDSelectNo]->boolBaslerLive = false;
+         if(scA1300ThreadAry[CCDSelectNo]->boolBaslerLive == true) {
+            scA1300ThreadAry[CCDSelectNo]->boolBaslerLive = false;
             btnReviewLive->Caption = "Live";
          }
       }
    }
 
    no = rgCCDSelect->ItemIndex;
-   if(bool_CCD_StatusAry[no] == false) {
+   if(bool_scA1300_StatusAry[no] == false) {
       return;
    }
    CCDSelectNo = no;
@@ -31170,8 +30789,8 @@ int no,gain,shutter;
    no = rgCCDSelect->ItemIndex;
    GigaWidth = CCDInfoAry[no].Width;
    GigaHeight = CCDInfoAry[no].Height;
-   shutter = CCDShutterAry[no];
-   gain = CCDGainAry[no];
+   shutter = scA1300ShutterAry[no];
+   gain = scA1300GainAry[no];
 
 }
 //---------------------------------------------------------------------------
@@ -31322,9 +30941,6 @@ int wafersize;
    wafersize = rgWaferSize->ItemIndex + 1;
    // 使用current size(P4=0)
    //str.sprintf("ALGN(1,D%06.2f,1,%d)",waferdegree,wafersize);
-
-   // 2023 8 16 - chc 加入補償角度: edRorzeAlignerDegree->Text
-   waferdegree += edRorzeAlignerDegree->Text.ToDouble();
 
    // 2021 4 29 - chc 使用(1,0,1,0)會有異常, 要為(1,0,0,0)
    //str.sprintf("ALGN(1,D%06.2f,1,0)",waferdegree);
@@ -32590,7 +32206,7 @@ int cnt;
 
    // Reset前要取下Wafer
    if(Application->MessageBox("Executing ORGN, make sure there is no Wafer on the Fork? ", "Robot Reset", MB_OKCANCEL) == IDCANCEL) {
-      pnlSystemMessage->Caption = "Wafer on Fork should be removed before Reset";
+      pnlSystemMessage->Caption = "Reset前要排除Fork上的Wafer";
       return;
    }
    // 清除內部Status
@@ -32732,7 +32348,7 @@ void __fastcall TMainForm::btnRobotHOMEClick(TObject *Sender)
 
    // Reset前要取下Wafer
    if(Application->MessageBox("Executing ORGN, make sure there is no Wafer on the Fork? ", "Robot Home", MB_OKCANCEL) == IDCANCEL) {
-      pnlSystemMessage->Caption = "Wafer on Fork should be removed before Home";
+      pnlSystemMessage->Caption = "Home前要排除Fork上的Wafer";
       return;
    }
    // 清除內部Status
@@ -32873,7 +32489,7 @@ TPanel *panel;
       //if(panel->Color != clLime) {
       if(panel->Color != WaferColor_Select) {
 
-         pnlSystemMessage->Caption = "CST " + combRobotSlot->Text + " no Wafer!";
+         pnlSystemMessage->Caption = "CST " + combRobotSlot->Text + " 上無Wafer!";
          pnlAlarmMessage->Caption = pnlSystemMessage->Caption;
          WriteSystemLog(pnlAlarmMessage->Caption);
          pnlRorzeRobotGet->Color = clRed;
@@ -32951,7 +32567,7 @@ TPanel *panel;
          //if(MoveToZ(inz) == false) {
          if(MoveToZ(inz,MOVE_WAIT) == false) {
 
-            pnlSystemMessage->Caption = "Z failed to CCD focus height!";
+            pnlSystemMessage->Caption = "Z上升到CCD對焦高度Fail!";
             pnlAlarmMessage->Caption = pnlSystemMessage->Caption;
             return;
          }
@@ -32960,7 +32576,7 @@ TPanel *panel;
       if(IsChuckWithWafer() == false) {
          pnlRorzeRobotGet->Color = clRed;
          WriteSystemLog("Robot取片: Stage上無片!");
-         pnlAlarmMessage->Caption = "Robot Get: Stage no wafer!";
+         pnlAlarmMessage->Caption = "Robot取片: Stage上無片!";
 
          // 2021 9 20a - chc Alarm
          if(boolChuckWithoutWafer == false) {
@@ -32983,8 +32599,8 @@ TPanel *panel;
       btnDemoLFVacuumOffClick(this);
       if(boolLFUpState == false) {
          pnlRorzeRobotGet->Color = clRed;
-         pnlSystemMessage->Caption = "Lift Failed to release vacuum position!";
-         WriteSystemLog("Robot Get: Lift Pin to vacuum point fail!");
+         pnlSystemMessage->Caption = "Lift 到解真空位置失敗!";
+         WriteSystemLog("Robot取片: Stage Pin到真空點 Error!");
          return;
       }
       WriteSystemLog("Robot取片: Stage Pin到真空點.");
@@ -33016,7 +32632,7 @@ TPanel *panel;
       btnDemoLFUpClick(this);
       if(boolLFUpState == false) {
          pnlRorzeRobotGet->Color = clRed;
-         pnlSystemMessage->Caption = "Lift pin up failure!";
+         pnlSystemMessage->Caption = "Lift pin上升失敗!";
          WriteSystemLog("Robot取片: Stage Pin上升 Error!");
          return;
       }
@@ -33371,7 +32987,7 @@ ok:
       btnDemoLFDownClick(this);
       if(boolLFUpState == false) {
          pnlRorzeRobotGet->Color = clRed;
-         pnlSystemMessage->Caption = "Lift pin down failure!";
+         pnlSystemMessage->Caption = "Lift pin下降失敗!";
          WriteSystemLog("Robot取片: Stage Pin到下位點 Error");
          return;
       }
@@ -33484,7 +33100,7 @@ TPanel *panel;
          //if(MoveToZ(inz) == false) {
          if(MoveToZ(inz,MOVE_WAIT) == false) {
 
-            pnlSystemMessage->Caption = "Z rises to CCD focus height fail!";
+            pnlSystemMessage->Caption = "Z上升到CCD對焦高度Fail!";
             pnlAlarmMessage->Caption = pnlSystemMessage->Caption;
             return;
          }
@@ -33505,7 +33121,7 @@ TPanel *panel;
       if(IsChuckWithWafer() == true) {
          pnlRorzeRobotPut->Color = clRed;
          WriteSystemLog("Robot放片: Stage上有片!");
-         pnlAlarmMessage->Caption = "Robot Put: Stage has wafer!";
+         pnlAlarmMessage->Caption = "Robot放片: Stage上有片!";
          return;
       }
       WriteSystemLog("Robot放片: Stage Pin上升...");
@@ -33513,7 +33129,7 @@ TPanel *panel;
       btnDemoLFUpClick(this);
       if(boolLFUpState == false) {
          pnlRorzeRobotPut->Color = clRed;
-         pnlSystemMessage->Caption = "Lift pin up failure!";
+         pnlSystemMessage->Caption = "Lift pin上升失敗!";
          WriteSystemLog("Robot放片: Stage Pin上升 Error!");
          return;
       }
@@ -33615,13 +33231,7 @@ ok:
       }
 
       // 2021 6 3 - chc 12"
-      // 2023 8 17 - chc 要判定8"/12"
-      //if(rgLoadPortSelect->ItemIndex == LOADPORT_2) {
-      //   if(pnlStageVacuum1->Color != clLime)
-      //      pnlStageVacuum1Click(this);
-      //}
-      if((rgLoadPortSelect->ItemIndex == LOADPORT_1 && rgLoadPort1WaferSize->ItemIndex == WAFER_SIZE_12) ||
-         (rgLoadPortSelect->ItemIndex == LOADPORT_2 && rgLoadPort2WaferSize->ItemIndex == WAFER_SIZE_12)) {
+      if(rgLoadPortSelect->ItemIndex == LOADPORT_2) {
          if(pnlStageVacuum1->Color != clLime)
             pnlStageVacuum1Click(this);
       }
@@ -33631,7 +33241,7 @@ ok:
       btnDemoLFDownClick(this);
       if(boolLFUpState == false) {
          pnlRunTest->Color = clRed;
-         pnlSystemMessage->Caption = "Lift pin down failure!";
+         pnlSystemMessage->Caption = "Lift pin下降失敗!";
          WriteSystemLog("Put: Stage Pin到下位點 Error");
          goto error;
       }
@@ -34650,16 +34260,12 @@ void __fastcall TMainForm::btnLoadPort1CLMPClick(TObject *Sender)
 {
 
    // 2021 11 22 - chc 記錄目前是否在做取退片? boolInLoadWafer, boolInUnloadWafer
-   // 2023 8 17 - chc 目前是LP2就不檢查, 可以做Load
-   if(rgLoadPortSelect->ItemIndex == LOADPORT_2) {
-
-      if(boolInLoadWafer == true || boolInUnloadWafer == true || boolInMeasureRun == true || WaferInSystem() == true) {
-         pnlAlarmMessage->Caption = "In Operation, LP1 cannot Load!";
-         WriteSystemLog(pnlAlarmMessage->Caption);
-         pnlLoadPort1CLMP->Color = clRed;
-         Beep(500);
-         return;
-      }
+   if(boolInLoadWafer == true || boolInUnloadWafer == true || boolInMeasureRun == true || WaferInSystem() == true) {
+      pnlAlarmMessage->Caption = "In Operation, LP1 cannot Load!";
+      WriteSystemLog(pnlAlarmMessage->Caption);
+      pnlLoadPort1CLMP->Color = clRed;
+      Beep(500);
+      return;
    }
 
    // 2021 11 21 - chc Load Image
@@ -34723,12 +34329,6 @@ void __fastcall TMainForm::btnLoadPort1CLMPClick(TObject *Sender)
       // 2021 9 15 - chc SECS強制為clLime
       if(cbOffLine->Checked == false)
          pnlCassetteLoad->Color = clLime;
-
-      // 2023 8 17 - chc 若為8"再等2sec: 8" Load動作較快, 取Map可能會是全空白!
-      if(rgLoadPort1WaferSize->ItemIndex == WAFER_SIZE_8)
-         WaitTime(1500);
-      else
-         WaitTime(500);
 
       // 2021 5 4 - chc 加做GetMap
       // 2021 5 5 - chc btnLoadPort2GMAPClick無反應!
@@ -35620,34 +35220,6 @@ static AnsiString errorcodeold = "00";
                      cbLP1E84->Enabled = false;
                   }
 
-                  // 2023 8 18 - chc E84
-                  bool boolLReq,boolUReq,boolReady,boolHOAVBL,boolES;
-                  boolLReq = GetBitValue(dibuf, 56);
-                  boolUReq = GetBitValue(dibuf, 57);
-                  boolReady = GetBitValue(dibuf, 59);
-                  boolHOAVBL = GetBitValue(dibuf, 62);
-                  boolES = GetBitValue(dibuf, 63);
-                  if(boolLReq == true)
-                     pnlLP1LReq->Color = clLime;
-                  else
-                     pnlLP1LReq->Color = clSilver;
-                  if(boolUReq == true)
-                     pnlLP1UReq->Color = clLime;
-                  else
-                     pnlLP1UReq->Color = clSilver;
-                  if(boolReady == true)
-                     pnlLP1Ready->Color = clLime;
-                  else
-                     pnlLP1Ready->Color = clSilver;
-                  if(boolHOAVBL == true)
-                     pnlLP1HOAVBL->Color = clLime;
-                  else
-                     pnlLP1HOAVBL->Color = clSilver;
-                  if(boolES == true)
-                     pnlLP1ES->Color = clLime;
-                  else
-                     pnlLP1ES->Color = clSilver;
-
                   // Load
                   bool boolFOUPLeftDoor,boolFOUPRightDoor,boolCarrierClamp;
                   // FOUP Left Door: 9
@@ -35796,8 +35368,7 @@ static AnsiString errorcodeold = "00";
                               pnlLoadWafer->Color = clSilver;
 
                               // 2023 8 11 - chc Log
-                              // 2023 8 18 - chc 不Log
-                              //WriteSystemLog("LP1: Socket UnLoad後不可使用LoadWafer.");
+                              WriteSystemLog("LP1: Socket UnLoad後不可使用LoadWafer.");
                            }
 
                         }
@@ -35806,8 +35377,7 @@ static AnsiString errorcodeold = "00";
                            btnLoadWafer->Enabled = true;
 
                            // 2023 8 11 - chc Log
-                           // 2023 8 18 - chc 不Log
-                           //WriteSystemLog("LP1: Socket後可使用LoadWafer.");
+                           WriteSystemLog("LP1: Socket後可使用LoadWafer.");
 
                            MainForm->GreenLamp(true);
                            MainForm->YellowLamp(false);
@@ -36671,16 +36241,12 @@ void __fastcall TMainForm::btnLoadPort2CLMPClick(TObject *Sender)
 {
 
    // 2021 11 22 - chc 記錄目前是否在做取退片? boolInLoadWafer, boolInUnloadWafer
-   // 2023 8 17 - chc 目前是LP2就不檢查, 可以做Load
-   if(rgLoadPortSelect->ItemIndex == LOADPORT_1) {
-
-      if(boolInLoadWafer == true || boolInUnloadWafer == true || boolInMeasureRun == true || WaferInSystem() == true) {
-         pnlAlarmMessage->Caption = "In Operation, LP2 cannot Load!";
-         WriteSystemLog(pnlAlarmMessage->Caption);
-         pnlLoadPort2CLMP->Color = clRed;
-         Beep(500);
-         return;
-      }
+   if(boolInLoadWafer == true || boolInUnloadWafer == true || boolInMeasureRun == true || WaferInSystem() == true) {
+      pnlAlarmMessage->Caption = "In Operation, LP2 cannot Load!";
+      WriteSystemLog(pnlAlarmMessage->Caption);
+      pnlLoadPort2CLMP->Color = clRed;
+      Beep(500);
+      return;
    }
 
    // 2021 11 21 - chc Load Image
@@ -36742,12 +36308,6 @@ void __fastcall TMainForm::btnLoadPort2CLMPClick(TObject *Sender)
       // 2021 9 15 - chc SECS強制為clLime
       if(cbOffLine->Checked == false)
          pnlCassetteLoad->Color = clLime;
-
-      // 2023 8 17 - chc 若為8"再等2sec: 8" Load動作較快, 取Map可能會是全空白!
-      if(rgLoadPort2WaferSize->ItemIndex == WAFER_SIZE_8)
-         WaitTime(1500);
-      else
-         WaitTime(500);
 
       // 2021 5 4 - chc 加做GetMap
       // 2021 5 5 - chc btnLoadPort2GMAPClick無反應!
@@ -37665,34 +37225,6 @@ static AnsiString errorcodeold = "00";
                      cbLP2E84->Enabled = false;
                   }
 
-                  // 2023 8 18 - chc E84
-                  bool boolLReq,boolUReq,boolReady,boolHOAVBL,boolES;
-                  boolLReq = GetBitValue(dibuf, 56);
-                  boolUReq = GetBitValue(dibuf, 57);
-                  boolReady = GetBitValue(dibuf, 59);
-                  boolHOAVBL = GetBitValue(dibuf, 62);
-                  boolES = GetBitValue(dibuf, 63);
-                  if(boolLReq == true)
-                     pnlLP1LReq->Color = clLime;
-                  else
-                     pnlLP1LReq->Color = clSilver;
-                  if(boolUReq == true)
-                     pnlLP1UReq->Color = clLime;
-                  else
-                     pnlLP1UReq->Color = clSilver;
-                  if(boolReady == true)
-                     pnlLP1Ready->Color = clLime;
-                  else
-                     pnlLP1Ready->Color = clSilver;
-                  if(boolHOAVBL == true)
-                     pnlLP1HOAVBL->Color = clLime;
-                  else
-                     pnlLP1HOAVBL->Color = clSilver;
-                  if(boolES == true)
-                     pnlLP1ES->Color = clLime;
-                  else
-                     pnlLP1ES->Color = clSilver;
-
                   // Load
                   bool boolFOUPLeftDoor,boolFOUPRightDoor,boolCarrierClamp;
                   // FOUP Left Door: 9
@@ -37741,8 +37273,7 @@ static AnsiString errorcodeold = "00";
                         boolunloadled = false;
 
                         // 2023 8 13 - chc Log
-                        // 2023 8 18 - chc 不Log
-                        //WriteSystemLog("8吋(LP2)Protrusion.6: Off");
+                        WriteSystemLog("8吋(LP2)Protrusion.6: Off");
 
                      }
                      else {
@@ -37750,8 +37281,7 @@ static AnsiString errorcodeold = "00";
                         boolunloadled = true;
 
                         // 2023 8 13 - chc Log
-                        // 2023 8 18 - chc 不Log
-                        //WriteSystemLog("8吋(LP2)Protrusion.6: On");
+                        WriteSystemLog("8吋(LP2)Protrusion.6: On");
 
                      }
                   }
@@ -37851,8 +37381,7 @@ static AnsiString errorcodeold = "00";
                            btnCassette2Load->Enabled = true;
 
                            // 2023 8 11 - chc Log
-                           // 2023 8 18 - chc 不Log
-                           //WriteSystemLog("LP2: 已UnLoad, 設為Load.");
+                           WriteSystemLog("LP2: 已UnLoad, 設為Load.");
 
                            // 2023 8 13 - chc 是LP1才要做
                            if(rgLoadPortSelect->ItemIndex == LOADPORT_2 && btnCassetteLoad->Caption == "Load") {
@@ -37861,8 +37390,7 @@ static AnsiString errorcodeold = "00";
                               pnlLoadWafer->Color = clSilver;
 
                               // 2023 8 11 - chc Log
-                              // 2023 8 18 - chc 不Log
-                              //WriteSystemLog("LP2: Socket UnLoad後不可使用LoadWafer.");
+                              WriteSystemLog("LP2: Socket UnLoad後不可使用LoadWafer.");
                            }
                            
                            // 2023 8 3 - chc 不Log
@@ -37873,12 +37401,10 @@ static AnsiString errorcodeold = "00";
                            btnLoadWafer->Enabled = true;
 
                            // 2023 8 11 - chc Log
-                           // 2023 8 18 - chc 不Log
-                           //WriteSystemLog("LP2: 已Load, 設為UnLoad.");
+                           WriteSystemLog("LP2: 已Load, 設為UnLoad.");
 
                            // 2023 8 11 - chc Log
-                           // 2023 8 18 - chc 不Log
-                           //WriteSystemLog("LP2: Load後可使用LoadWafer.");
+                           WriteSystemLog("LP2: Load後可使用LoadWafer.");
 
                            MainForm->GreenLamp(true);
                            MainForm->YellowLamp(false);
@@ -39593,7 +39119,7 @@ TYbCommDevice *ybRFID;
 AnsiString name;
 
    // 由參數決定COM Port
-   pnlSystemMessage->Caption = "Init RFID Com Port...";
+   pnlSystemMessage->Caption = "啟動RFID Com Port...";
    for(int i=0 ; i<4 ; i++) {
       switch(i) {
          case 0:
@@ -39644,7 +39170,7 @@ AnsiString name;
          panel->Color = clRed;
          boolRFIDStatus[i] = false;
       }
-      pnlSystemMessage->Caption = "Init " + name + "Com Port.";
+      pnlSystemMessage->Caption = "啟動" + name + "Com Port.";
    }
 
 }
@@ -39766,7 +39292,7 @@ bool boolclearerrorcode = false;
                   if(pnlOlympusStatus->Color == clLime) {
 
                      pnlSystemMessage->Caption = "Cassette Load(8吋): YuanLi RFID...";
-                     if(WaitYuanliCmd(CMD_RFID,30000) != CMD_ACK_E) {
+                     if(WaitYuanliCmd(CMD_RFID) != CMD_ACK_E) {
                         pnlAlarmMessage->Caption = "YuanLi RFID(8吋)傳送異常!";
                         WriteSystemLog(pnlAlarmMessage->Caption);
                      }
@@ -39889,7 +39415,7 @@ bool boolclearerrorcode = false;
                   if(pnlOlympusStatus->Color == clLime) {
 
                      pnlSystemMessage->Caption = "Cassette Load(12吋): YuanLi RFID...";
-                     if(WaitYuanliCmd(CMD_RFID,30000) != CMD_ACK_E) {
+                     if(WaitYuanliCmd(CMD_RFID) != CMD_ACK_E) {
                         pnlAlarmMessage->Caption = "YuanLi RFID(12吋)傳送異常!";
                         WriteSystemLog(pnlAlarmMessage->Caption);
                      }
@@ -40014,7 +39540,7 @@ bool boolclearerrorcode = false;
                   if(pnlOlympusStatus->Color == clLime) {
 
                      pnlSystemMessage->Caption = "Cassette Load(8吋): YuanLi RFID...";
-                     if(WaitYuanliCmd(CMD_RFID,30000) != CMD_ACK_E) {
+                     if(WaitYuanliCmd(CMD_RFID) != CMD_ACK_E) {
                         pnlAlarmMessage->Caption = "YuanLi RFID(8吋)傳送異常!";
                         WriteSystemLog(pnlAlarmMessage->Caption);
                      }
@@ -40138,7 +39664,7 @@ bool boolclearerrorcode = false;
                   if(pnlOlympusStatus->Color == clLime) {
 
                      pnlSystemMessage->Caption = "Cassette Load(12吋): YuanLi RFID...";
-                     if(WaitYuanliCmd(CMD_RFID,30000) != CMD_ACK_E) {
+                     if(WaitYuanliCmd(CMD_RFID) != CMD_ACK_E) {
                         pnlAlarmMessage->Caption = "YuanLi RFID(12吋)傳送異常!";
                         WriteSystemLog(pnlAlarmMessage->Caption);
                      }
@@ -40222,10 +39748,7 @@ void __fastcall TMainForm::SetupEFEMSocket()
    InitRFIDCom();
 
    // SECS init
-   // 2023 8 19 - chc 指定
-   //ssSECSSocket->Port = 5900;
-   ssSECSSocket->Port = edSECSPortSet->Text.ToInt();
-
+   ssSECSSocket->Port = 5900;
    ssSECSSocket->Active = true;
 
 }
@@ -40281,7 +39804,7 @@ void __fastcall TMainForm::btnRorzeEFEMSetupClick(TObject *Sender)
    }
    else {
       pnlEFEMReady->Color = clLime;
-      pnlSystemMessage->Caption = "EFEM ok, System Ready.";
+      pnlSystemMessage->Caption = "EFEM正常! 系統Ready.";
    }
 }
 //---------------------------------------------------------------------------
@@ -40419,7 +39942,7 @@ void __fastcall TMainForm::btnAlignerSaveRClick(TObject *Sender)
 TIniFile *pSystemFile;
 AnsiString str;
 
-   pnlSystemMessage->Caption = "Aligner parameters are being updated...";
+   pnlSystemMessage->Caption = "Aligner參數更新中...";
    pnlAlignerMessage->Caption = pnlSystemMessage->Caption;
    // ini檔名與目錄
    pSystemFile = new TIniFile(MainForm->SystemINIFilename);
@@ -40429,10 +39952,6 @@ AnsiString str;
    pSystemFile->WriteInteger("Aligner Parameter" ,"Size"                        ,AlignerSize);
    AlignerDegree = rgWaferDegree->ItemIndex;
    pSystemFile->WriteInteger("Aligner Parameter" ,"Degree"                      ,AlignerDegree);
-
-   // 2023 8 16 - chc 加入補償角度: edRorzeAlignerDegree->Text
-   RorzeAlignerDegree = edRorzeAlignerDegree->Text.ToDouble();
-   pSystemFile->WriteFloat("Aligner Parameter" ,"RorzeAlignerDegree"            ,RorzeAlignerDegree);
 
    delete pSystemFile;
    pnlSystemMessage->Caption = "Aligner: Parameter update complete.";
@@ -41900,7 +41419,6 @@ void __fastcall TMainForm::btnYuanliSendClick(TObject *Sender)
 {
 int no,sno,count,eno,timedelay;
 
-   WriteSystemLog("btnYuanliSendClick ...");
    btnYuanliSend->Enabled = false;
    pnlSocketReady->Color = clSilver;
    int pos,len;
@@ -41915,17 +41433,15 @@ int no,sno,count,eno,timedelay;
    }
    len += 1;
 
-   WriteSystemLog("btnYuanliSendClick ...1");
    // 2023 8 15 - chc 不用長度
    //cmd.sprintf("%02d,%s>",len,str.c_str());
-   cmd.sprintf("%s>",str.c_str());
+   cmd.sprintf("%s>",len,str.c_str());
 
    sprintf(buf,"%s",cmd.c_str());
    pnlYuanli->Caption = cmd;
    len = strlen(buf);
    AddYuanliMessage("[>] " + pnlYuanli->Caption);
 
-   WriteSystemLog("btnYuanliSendClick ...2");
    // 2021 4 26 - chc 改成Client
    //if(ssYuanliSocket->Active == true && ssYuanliSocket->Socket->ActiveConnections > 0) {
    //   pnlYuanliSend->Color = clLime;
@@ -41942,7 +41458,6 @@ int no,sno,count,eno,timedelay;
       //   SimulateSocket(buf);
       //}
    }
-   WriteSystemLog("btnYuanliSendClick ...3");
    btnYuanliSend->Enabled = true;
    return;
 }
@@ -41966,7 +41481,7 @@ void __fastcall TMainForm::btnYunliReConnectClick(TObject *Sender)
       //WriteSystemLog(">>Error(btnSECSReConnectClick): "+e.Message);
       //pnlSystemMessage->Caption = "SSECS Socket重連線失敗!";
       WriteSystemLog(">>Error(btnYunliReConnectClick): "+e.Message);
-      pnlSystemMessage->Caption = "Yunli Socket reconnection failed!";
+      pnlSystemMessage->Caption = "Yunli Socket重連線失敗!";
 
    }
 
@@ -42155,16 +41670,6 @@ double par1,par2;
          parno = 1;
          break;
 
-      // 2023 8 16 - chc 加入Done
-      case CMD_DONE:
-         parno = 1;
-         break;
-
-      // 2023 8 24 - chc 加入Data
-      case CMD_DATA:
-         parno = 1;
-         break;
-
       case CMD_MOTION:
          parno = 0;
          break;
@@ -42321,52 +41826,14 @@ double par1,par2;
       case CMD_RFID:
          if(spar[0] == "s" || spar[0] == "e") {
             pnlSocketReady->Color = clLime;
-
-            // 2023 8 16 - chc RFID
-            //AddYuanliMessage("[<] InPos - " + spar[0]);
-            AddYuanliMessage("[<] RFID - " + spar[0]);                          // [彰化]
-
+            AddYuanliMessage("[<] InPos - " + spar[0]);
             if(spar[0] == "e")
                YuanliCmdStatus[CMD_RFID] = CMD_ACK_E;
          }
          else if(spar[0] == "x") {
             pnlSocketReady->Color = clRed;
-
-            // 2023 8 16 - chc RFID
-            //AddYuanliMessage("[<] InPos - x");
-            AddYuanliMessage("[<] RFID - x");                                   // [彰化]
-
+            AddYuanliMessage("[<] InPos - x");
             YuanliCmdStatus[CMD_RFID] = CMD_ACK_X;
-         }
-         break;
-
-      // 2023 8 16 - chc 加入Done
-      case CMD_DONE:
-         if(spar[0] == "s" || spar[0] == "e") {
-            pnlSocketReady->Color = clLime;
-            AddYuanliMessage("[<] Done - " + spar[0]);
-            if(spar[0] == "e")
-               YuanliCmdStatus[CMD_DONE] = CMD_ACK_E;
-         }
-         else if(spar[0] == "x") {
-            pnlSocketReady->Color = clRed;
-            AddYuanliMessage("[<] Done - x");
-            YuanliCmdStatus[CMD_DONE] = CMD_ACK_X;
-         }
-         break;
-
-      // 2023 8 24 - chc 加入Data
-      case CMD_DATA:
-         if(spar[0] == "s" || spar[0] == "e") {
-            pnlSocketReady->Color = clLime;
-            AddYuanliMessage("[<] Data - " + spar[0]);
-            if(spar[0] == "e")
-               YuanliCmdStatus[CMD_DATA] = CMD_ACK_E;
-         }
-         else if(spar[0] == "x") {
-            pnlSocketReady->Color = clRed;
-            AddYuanliMessage("[<] Data - x");
-            YuanliCmdStatus[CMD_DATA] = CMD_ACK_X;
          }
          break;
 
@@ -42388,11 +41855,6 @@ double par1,par2;
 
    if(boolresult == true) {
       if(cmdno == CMD_GET_ERR) {
-
-         // 2023 8 20 - chc Set ErrorCode
-         if(pnlErrorCode->Caption == "")
-            pnlErrorCode->Caption = "0000";
-
          sack.sprintf("%02d,%s,%s>",scmd.Length()+6,scmd.c_str(),pnlErrorCode->Caption.c_str());
       }
       else if(cmdno == CMD_READ_RECIPE) {
@@ -42450,11 +41912,6 @@ AnsiString msg;
          break;
       // Stop
       case CMD_STOP:
-
-         // 2023 8 20 - chc Set ErrorCode
-         if(pnlErrorCode->Caption == "")
-            pnlErrorCode->Caption = "0000";
-
          cmd = "Stop," + pnlErrorCode->Caption;
          break;
       // Busy
@@ -42494,28 +41951,6 @@ AnsiString msg;
                msg = "8";
          }
          cmd = "RFID," + pnlCSTCode->Caption + "," + msg;
-         break;
-
-      // 2023 8 16 - chc 加入Done
-      // Done
-      case CMD_DONE:
-         cmd = "Done";
-         break;
-
-      // 2023 8 24 - chc 加入Data: pnl45NiUp/pnl45NiDown/pnl45CuUp/pnl45CuDown
-      case CMD_DATA:
-         double fni,fcu,factor;
-         int ini,icu;
-         factor = 0.56;
-         fni = abs(pnl45NiUp->Caption.ToInt() - pnl45NiDown->Caption.ToInt());
-         fcu = abs(pnl45CuUp->Caption.ToInt() - pnl45CuDown->Caption.ToInt());
-         fni++;
-         fcu++;
-         fni /= factor;
-         fcu /= factor;
-         ini = fni;
-         icu = fcu;
-         cmd.sprintf("Data,%d,%d",ini,icu);
          break;
 
    }
@@ -42559,25 +41994,9 @@ void __fastcall TMainForm::SetCmdSet()
    CmdSet[7] = "Invalid";
    CmdSet[8] = "InPos";
 
-   // 2023 8 16 - chc 加入Done
-   CmdSet[9] = "RFID";                                                          // [彰化]
-   CmdSet[10] = "Done";
-
-   // 2023 8 24 - chc 加入Data
-   CmdSet[11] = "Data";
-
-   // 2023 8 16 - chc 加入Done
-   //CmdSet[9] = "Motion";
-   //CmdSet[10] = "ReadRecipe";
-   //CmdSet[11] = "GetErr";
-   // 2023 8 24 - chc 加入Data
-   //CmdSet[11] = "Motion";
-   //CmdSet[12] = "ReadRecipe";
-   //CmdSet[13] = "GetErr";
-   CmdSet[12] = "Motion";
-   CmdSet[13] = "ReadRecipe";
-   CmdSet[14] = "GetErr";
-
+   CmdSet[9] = "Motion";
+   CmdSet[10] = "ReadRecipe";
+   CmdSet[11] = "GetErr";
 }
 //---------------------------------------------------------------------------
 // mode: 0-未加入長度, 1-已加入長度
@@ -43479,7 +42898,7 @@ void __fastcall TMainForm::btnSECSReConnectClick(TObject *Sender)
    }
    catch(Exception &e) {
       WriteSystemLog(">>Error(btnSECSReConnectClick): "+e.Message);
-      pnlSystemMessage->Caption = "SSECS Socket reconnection failed!";
+      pnlSystemMessage->Caption = "SSECS Socket重連線失敗!";
    }
 
 }
@@ -43846,17 +43265,9 @@ double par1,par2;
                panel->Caption = WaferBuffer[LOADPORT_1][slotno-1].ID;
                sno += 4;
                if(WaferBuffer[LOADPORT_1][slotno-1].Priority == 0)
-
-                  // 2023 8 17 - chc 指定Color
-                  //panel1->Color = clSilver;
-                  panel1->Color = WaferColor_No;
-
+                  panel1->Color = clSilver;
                else
-
-                  // 2023 8 17 - chc 指定Color
-                  //panel1->Color = clLime;
-                  panel1->Color = WaferColor_Select;
-
+                  panel1->Color = clLime;
             }
             else {
                WaferBuffer[LOADPORT_2][slotno-1].ID = spar[sno+1];
@@ -43867,17 +43278,9 @@ double par1,par2;
                panel->Caption = WaferBuffer[LOADPORT_2][slotno-1].ID;
                sno += 4;
                if(WaferBuffer[LOADPORT_2][slotno-1].Priority == 0)
-
-                  // 2023 8 17 - chc 指定Color
-                  //panel1->Color = clSilver;
-                  panel1->Color = WaferColor_No;
-
+                  panel1->Color = clSilver;
                else
-
-                  // 2023 8 17 - chc 指定Color
-                  //panel1->Color = clLime;
-                  panel1->Color = WaferColor_Select;
-
+                  panel1->Color = clLime;
             }
 
          }
@@ -43924,23 +43327,10 @@ double par1,par2;
 
          // 2021 10 17 - chc 自動取片
          if(cbOffLine->Checked == false && cbSECSAtuo->Checked == true) {
-
-            // 2023 8 24 - chc 令另一個Port運作中不可以取片: 在Loadport退回最後一片後才會考量是否取另一個Loadport(SECS)
-            if(WaferInSystem() == true || rgSECSPortNo->ItemIndex != rgLoadPortSelect->ItemIndex) {
-               if(WaferInSystem() == true) {
-                  WriteSystemLog("系統有片, PIDN後不取片!");
-               }
-               if(rgSECSPortNo->ItemIndex != rgLoadPortSelect->ItemIndex) {
-                  WriteSystemLog("目前LoadPort與PIDN指定的Loadport不同, PIDN後不取片!");
-               }
-            }
-            else {
-
-               if(tmAutoLoadWafer->Enabled == false) {
-                  pnlSystemMessage->Caption = "SECS obtains Mapping data: Automatically performs Timer fetching operations.";
-                  WriteSystemLog(pnlSystemMessage->Caption);
-                  tmAutoLoadWafer->Enabled = true;
-               }
+            if(tmAutoLoadWafer->Enabled == false) {
+               pnlSystemMessage->Caption = "SECS取得Mapping資料: 自動進行Timer取片作業.";
+               WriteSystemLog(pnlSystemMessage->Caption);
+               tmAutoLoadWafer->Enabled = true;
             }
          }
 
@@ -43980,11 +43370,10 @@ double par1,par2;
             WriteSystemLog("RCMD(From SECS): Mapping");
 
             // 2021 9 8a - chc 設定PortNo
-            // 2023 8 17a - chc 不在這裡做(只能改變SECS的PortNo), 在LP1/LP2做Load時決定
-            //if(rgSECSPortNo->ItemIndex == LOADPORT_1)
-            //   rgLoadPortSelect->ItemIndex = LOADPORT_1;
-            //else
-            //   rgLoadPortSelect->ItemIndex = LOADPORT_2;
+            if(rgSECSPortNo->ItemIndex == LOADPORT_1)
+               rgLoadPortSelect->ItemIndex = LOADPORT_1;
+            else
+               rgLoadPortSelect->ItemIndex = LOADPORT_2;
 
             // 2021 5 6 - chc 先送出
             if(mode == 1) {
@@ -44022,15 +43411,12 @@ double par1,par2;
                SendSECSSocket(sack,1);
             }
 
-            // 2023 8 17a - chc 針對指定PortNo作動[彰化: 只有單一個Port故可不管]
-            SECSAssignPortNo = rgSECSPortNo->ItemIndex;
-
             if(btnCassetteLoad->Enabled == true && btnCassetteLoad->Caption == "UnLoad") {
                SECSRemoteCommand = SECS_REMOTE_CANCEL;
                // 記錄目前是否在做取退片? boolInLoadWafer, boolInUnloadWafer
                if(boolInLoadWafer == false && boolInUnloadWafer == false && boolInMeasureRun == false && WaferInSystem() == false) {
                   if(tmAutoUnload->Enabled == false) {
-                     pnlSystemMessage->Caption = "RCMD(From SECS): Cancel: Automatically performs Timer UnLoad. Port= " + IntToStr(SECSAssignPortNo+1);
+                     pnlSystemMessage->Caption = "RCMD(From SECS): Cancel: 自動進行Timer UnLoad作業.";
                      WriteSystemLog(pnlSystemMessage->Caption);
                      tmAutoUnload->Enabled = true;
                   }
@@ -45156,7 +44542,7 @@ int tno,pno;
       //#define CMD_ACK_X                 2
       //#define CMD_ACK_TIMEOUT           3
       pnlSystemMessage->Caption = "流程測試: Yuanli Init...";
-      if(WaitYuanliCmd(CMD_INIT,30000) != CMD_ACK_E) {
+      if(WaitYuanliCmd(CMD_INIT) != CMD_ACK_E) {
          if(Application->MessageBox("Yuanli Socket測試: Init異常, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
             pnlRunTest->Color = clRed;
             goto end;
@@ -45558,7 +44944,7 @@ step2:;
       WriteSystemLog("流程測試: Yuanli SetRecipe");
       // SetRecipe
       pnlSystemMessage->Caption = "流程測試: Yuanli SetRecipe...";
-      if(WaitYuanliCmd(CMD_SET_RECIPE,30000) != CMD_ACK_E) {
+      if(WaitYuanliCmd(CMD_SET_RECIPE) != CMD_ACK_E) {
          if(Application->MessageBox("Yuanli Socket測試: SetRecipe異常, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
             pnlRunTest->Color = clRed;
             goto end;
@@ -45579,7 +44965,7 @@ step2:;
       edWaferID->Text = WaferBuffer[rgSECSPortNo->ItemIndex][0].ID;
 
       pnlSystemMessage->Caption = "流程測試: Yuanli Start...";
-      if(WaitYuanliCmd(CMD_START,30000) != CMD_ACK_E) {
+      if(WaitYuanliCmd(CMD_START) != CMD_ACK_E) {
          if(Application->MessageBox("Yuanli Socket測試: Start,5異常, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
             pnlRunTest->Color = clRed;
             goto end;
@@ -45595,7 +44981,7 @@ step2:;
       // Mode = Top
       rgMode->ItemIndex = 0;
       pnlSystemMessage->Caption = "流程測試: Yuanli Mode.Top...";
-      if(WaitYuanliCmd(CMD_MODE,30000) != CMD_ACK_E) {
+      if(WaitYuanliCmd(CMD_MODE) != CMD_ACK_E) {
          if(Application->MessageBox("Yuanli Socket測試: Mode.Top異常, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
             pnlRunTest->Color = clRed;
             goto end;
@@ -45694,7 +45080,7 @@ step2:;
                // Init
                WriteSystemLog("流程測試: Yuanli Init");
                pnlSystemMessage->Caption = "流程測試: Yuanli Init...";
-               if(WaitYuanliCmd(CMD_INIT,30000) != CMD_ACK_E) {
+               if(WaitYuanliCmd(CMD_INIT) != CMD_ACK_E) {
                   if(Application->MessageBox("Yuanli Socket測試: Init異常, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
                      pnlRunTest->Color = clRed;
                      goto end;
@@ -45783,7 +45169,7 @@ step2:;
                   WriteSystemLog("流程測試: Yuanli Mode");
                   rgMode->ItemIndex = 1;
                   pnlSystemMessage->Caption = "流程測試: Yuanli Mode.Side...";
-                  if(WaitYuanliCmd(CMD_MODE,30000) != CMD_ACK_E) {
+                  if(WaitYuanliCmd(CMD_MODE) != CMD_ACK_E) {
                      if(Application->MessageBox("Yuanli Socket測試: Mode.Side異常, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
                         pnlRunTest->Color = clRed;
                         goto end;
@@ -45916,7 +45302,7 @@ step2:;
             WriteSystemLog("流程測試: Yuanli InPos");
             rgYuanliPoint->ItemIndex = pt;
             pnlSystemMessage->Caption = "流程測試: Yuanli InPos...";
-            if(WaitYuanliCmd(CMD_INPOS,30000) != CMD_ACK_E) {
+            if(WaitYuanliCmd(CMD_INPOS) != CMD_ACK_E) {
                if(Application->MessageBox("Yuanli Socket測試: InPos異常, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
                   pnlRunTest->Color = clRed;
                   goto end;
@@ -46486,9 +45872,6 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
    }
    */
 
-   // 2023 8 15 - chc disable
-   btnFindCenter->Enabled = false;
-
    // 2. 到中心點, NotchOffset(5000um,5000um)
    btnToRealCenterPositionClick(this);
    if(pnlToRealCenterPosition->Color != clLime) {
@@ -46564,7 +45947,7 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
    move = 0 - dr;
    if(MoveToAxisGap(X_AXIS, move) == false) {
       WriteSystemLog("到右邊界: Stage移動失敗!");
-      pnlSystemMessage->Caption = "Failed to move right boundary!";
+      pnlSystemMessage->Caption = "右邊界觀測點移動失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46573,13 +45956,13 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
    // 0-Right, 1-Left, 2-Up, 3-Down
    DelayTime(2000);
 
-   // 2023 8 15 - chc 改成傳回xy, 用0
+   // 2023 8 15 - chc 改成傳回xy
    //right = FindEdge(0);
    right = FindEdge(0,&x1,&y1);
 
    if(right == -1) {
       WriteSystemLog("右邊界尋找失敗!");
-      pnlSystemMessage->Caption = "Right border seek failed!";
+      pnlSystemMessage->Caption = "右邊界尋找失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46599,7 +45982,7 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
    move = dr*2;
    if(MoveToAxisGap(X_AXIS, move) == false) {
       WriteSystemLog("到左邊界: Stage移動失敗!");
-      pnlSystemMessage->Caption = "Failed to move left boundary!";
+      pnlSystemMessage->Caption = "左邊界觀測點移動失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46608,13 +45991,13 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
    // 0-Right, 1-Left, 2-Up, 3-Down
    DelayTime(2000);
 
-   // 2023 8 15 - chc 改成傳回xy, 用1
+   // 2023 8 15 - chc 改成傳回xy
    //left = FindEdge(1);
    left = FindEdge(1,&x2,&y2);
 
    if(left == -1) {
       WriteSystemLog("左邊界尋找失敗!");
-      pnlSystemMessage->Caption = "Left border seek failed!";
+      pnlSystemMessage->Caption = "左邊界尋找失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46629,18 +46012,11 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
       DelayTime(1500);
    ClearEdgeMark();
 
-   // 2023 8 6 - chc MoveToXYZT不用改變Z/Z1
-   boolMoveToXYZT_DoZ = false;
-
    // 回到中心
    btnToRealCenterPositionClick(this);
-
-   // 2023 8 6 - chc MoveToXYZT不用改變Z/Z1
-   boolMoveToXYZT_DoZ = true;
-
    if(pnlToRealCenterPosition->Color != clLime) {
       WriteSystemLog("到中心: Stage移動失敗!");
-      pnlSystemMessage->Caption = "Stage center point movement failed!";
+      pnlSystemMessage->Caption = "Stage中心點移動失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46653,7 +46029,7 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
 
    if(MoveToAxisGap(X_AXIS, move) == false) {
       WriteSystemLog("到中心參考點X: Stage移動失敗!");
-      pnlSystemMessage->Caption = "Stage Center reference point X movement failed!";
+      pnlSystemMessage->Caption = "Stage中心參考點X移動失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46671,7 +46047,7 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
    move = dr;
    if(MoveToAxisGap(Y_AXIS, move) == false) {
       WriteSystemLog("到上邊界: Stage移動失敗!");
-      pnlSystemMessage->Caption = "Failed to move upper boundary!";
+      pnlSystemMessage->Caption = "上邊界觀測點移動失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46680,13 +46056,13 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
    // 0-Right, 1-Left, 2-Up, 3-Down
    DelayTime(2000);
 
-   // 2023 8 15 - chc 改成傳回xy, 用2
+   // 2023 8 15 - chc 改成傳回xy
    //up = FindEdge(2);
    up = FindEdge(2,&x3,&y3);
 
    if(up == -1) {
       WriteSystemLog("上邊界尋找失敗!");
-      pnlSystemMessage->Caption = "upper border seek failed!";
+      pnlSystemMessage->Caption = "上邊界尋找失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46704,14 +46080,13 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
 
    // 2023 8 15 - chc 三點算中心
    CalculateCenter(x1,y1,x2,y2,x3,y3,&cx,&cy);
-   WriteSystemLog("三頂定中心完成(cx,cy): " + IntToStr(cx) + "," + IntToStr(cy));
    goto foundcenter;
 
    // 3. Y- : Down
    move = 0 - dr*2;
    if(MoveToAxisGap(Y_AXIS, move) == false) {
       WriteSystemLog("到下邊界: Stage移動失敗!");
-      pnlSystemMessage->Caption = "Failed to move lower boundary!";
+      pnlSystemMessage->Caption = "下邊界觀測點移動失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46726,7 +46101,7 @@ int x1,x2,x3,x4,y1,y2,y3,y4,wafersize;
 
    if(down == -1) {
       WriteSystemLog("下邊界尋找失敗!");
-      pnlSystemMessage->Caption = "Lower border seek failed!";
+      pnlSystemMessage->Caption = "下邊界尋找失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
@@ -46752,14 +46127,14 @@ foundcenter:
    btnToRealCenterPositionClick(this);
    if(pnlToRealCenterPosition->Color != clLime) {
       WriteSystemLog("到中心: Stage移動失敗!");
-      pnlSystemMessage->Caption = "Stage center point movement failed!";
+      pnlSystemMessage->Caption = "Stage中心點移動失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
    }
    btnFindCenter->Color = clLime;
    WriteSystemLog("中心尋找: 完成");
-   pnlSystemMessage->Caption = "Center Finding: Done";
+   pnlSystemMessage->Caption = "中心尋找: 完成";
    if(cbCenterStep->Checked == true) {
       if(Application->MessageBox("已回到中心點, 繼續?     ", "Olympus Operation", MB_YESNO|MB_SYSTEMMODAL) == IDNO) {
          btnFindCenter->Color = clRed;
@@ -46770,22 +46145,22 @@ foundcenter:
    move = cx - centerx;
    if(MoveToAxisGap(X_AXIS, move) == false) {
       WriteSystemLog("到X實際中心: Stage移動失敗!");
-      pnlSystemMessage->Caption = "X actual center point movement failed!";
+      pnlSystemMessage->Caption = "X實際中心點移動失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
    }
    move = cy - centery;
    if(MoveToAxisGap(Y_AXIS, move) == false) {
-      WriteSystemLog("到Y實際中心: Stage移動失敗!");
-      pnlSystemMessage->Caption = "Y actual center point movement failed!";
+      WriteSystemLog("到X實際中心: Stage移動失敗!");
+      pnlSystemMessage->Caption = "X實際中心點移動失敗!";
       btnFindCenter->Color = clRed;
       ret = false;
       goto end;
    }
 ok:
    WriteSystemLog("實際中心移動: 完成");
-   pnlSystemMessage->Caption = "Actual Center Move: Done";
+   pnlSystemMessage->Caption = "實際中心移動: 完成";
 
    // 2021 5 8 - chc 更新中心點偏移量
    UpdateCenterOffset();
@@ -46815,9 +46190,6 @@ end:
          SetSECSAlarm(43001,0,0,"Center Point setting Abnormal");
       }
    }
-
-   // 2023 8 15 - chc disable
-   btnFindCenter->Enabled = true;
 
    return;
 }
@@ -46951,7 +46323,7 @@ int cx,cy;
 //---------------------------------------------------------------------------
 // 0-Right, 1-Left, 2-Up, 3-Down
 // ret : -1 Error
-// CCDCaptureNoAry[no]
+// BaslerCaptureNoAry[no]
 // 2023 8 15 - chc 改成傳回xy
 //int __fastcall TMainForm::FindEdge(int mode)
 int __fastcall TMainForm::FindEdge(int mode, int *x, int *y)
@@ -47018,7 +46390,6 @@ rightagain:
             row += offset;
          }
          pos = (edge[0] + edge[1] + edge[2]) / 3;
-         WriteSystemLog("右邊界位置(1,2,3,v): " + IntToStr(edge[0]) + "," + IntToStr(edge[1]) + "," + IntToStr(edge[2]) + "," + IntToStr(pos));
          // 移動量太多, 少1/2
          if(pos < 100) {
             WriteSystemLog("調整右邊界: " + IntToStr(adjustx));
@@ -47034,20 +46405,20 @@ rightagain:
             cnt++;
             if(cnt > maxno) {
                WriteSystemLog("調整: 找不到右邊界!");
-               pnlSystemMessage->Caption = "Fix: Can't find right border!";
+               pnlSystemMessage->Caption = "調整: 找不到右邊界!";
                return(-1);
             }
-            pnlSystemMessage->Caption = "Fix: right border";
+            pnlSystemMessage->Caption = "調整右邊界";
             if(MoveToAxisGap(X_AXIS, mv) == false) {
                WriteSystemLog("調整右邊界: Stage移動失敗!");
-               pnlSystemMessage->Caption = "Fix: failed to move right boundary!";
+               pnlSystemMessage->Caption = "調整右邊界觀測點移動失敗!";
                return(-1);
             }
-            // CCDCaptureNoAry[no]
+            // BaslerCaptureNoAry[no]
             //DelayTime(1200);
             if(WaitMoreFrame(5,2000) == false) {
                WriteSystemLog("調整右邊界: CCD取像異常!");
-               pnlSystemMessage->Caption = "Fix: CCD capture failed in right boundary!";
+               pnlSystemMessage->Caption = "調整右邊界: CCD取像異常!";
                return(-1);
             }
             goto rightagain;
@@ -47125,7 +46496,6 @@ leftagain:
          }
 
          pos = (edge[0] + edge[1] + edge[2]) / 3;
-         WriteSystemLog("左邊界位置(1,2,3,v): " + IntToStr(edge[0]) + "," + IntToStr(edge[1]) + "," + IntToStr(edge[2]) + "," + IntToStr(pos));
          // 移動量太多, 少1/2
          if(pos > (width-100)) {
 toleft:
@@ -47142,20 +46512,20 @@ toleft:
             cnt++;
             if(cnt > maxno) {
                WriteSystemLog("調整: 找不到左邊界!");
-               pnlSystemMessage->Caption = "Fix: Can't find left border!";
+               pnlSystemMessage->Caption = "調整: 找不到左邊界!";
                return(-1);
             }
-            pnlSystemMessage->Caption = "Fix: left border";
+            pnlSystemMessage->Caption = "調整左邊界";
             if(MoveToAxisGap(X_AXIS, mv) == false) {
                WriteSystemLog("調整左邊界: Stage移動失敗!");
-               pnlSystemMessage->Caption = "Fix: failed to move left boundary!";
+               pnlSystemMessage->Caption = "調整左邊界觀測點移動失敗!";
                return(-1);
             }
-            // CCDCaptureNoAry[no]
+            // BaslerCaptureNoAry[no]
             //DelayTime(1200);
             if(WaitMoreFrame(5,2000) == false) {
                WriteSystemLog("調整左邊界: CCD取像異常!");
-               pnlSystemMessage->Caption = "Fix: CCD capture failed in left boundary!";
+               pnlSystemMessage->Caption = "調整左邊界: CCD取像異常!";
                return(-1);
             }
             goto leftagain;
@@ -47234,7 +46604,6 @@ upagain:
          }
 
          pos = (edge[0] + edge[1] + edge[2]) / 3;
-         WriteSystemLog("上邊界位置(1,2,3,v): " + IntToStr(edge[0]) + "," + IntToStr(edge[1]) + "," + IntToStr(edge[2]) + "," + IntToStr(pos));
          // 移動量太多, 少1/2
          if(pos > (height-100)) {
 todown:
@@ -47263,20 +46632,20 @@ todown:
             cnt++;
             if(cnt > maxno) {
                WriteSystemLog("調整: 找不到上邊界!");
-               pnlSystemMessage->Caption = "Fix: Can't find upper border!";
+               pnlSystemMessage->Caption = "調整: 找不到上邊界!";
                return(-1);
             }
-            pnlSystemMessage->Caption = "Fix: upper border";
+            pnlSystemMessage->Caption = "調整上邊界";
             if(MoveToAxisGap(Y_AXIS, mv) == false) {
                WriteSystemLog("調整上邊界: Stage移動失敗!");
-               pnlSystemMessage->Caption = "Fix: failed to move upper boundary!";
+               pnlSystemMessage->Caption = "調整上邊界觀測點移動失敗!";
                return(-1);
             }
-            // CCDCaptureNoAry[no]
+            // BaslerCaptureNoAry[no]
             //DelayTime(1200);
             if(WaitMoreFrame(5,2000) == false) {
                WriteSystemLog("調整上邊界: CCD取像異常!");
-               pnlSystemMessage->Caption = "Fix: CCD capture failed in upper boundary!";
+               pnlSystemMessage->Caption = "調整上邊界: CCD取像異常!";
                return(-1);
             }
             goto upagain;
@@ -47348,8 +46717,8 @@ downagain:
             col += offset;
          }
 
+
          pos = (edge[0] + edge[1] + edge[2]) / 3;
-         WriteSystemLog("下邊界位置(1,2,3,v): " + IntToStr(edge[0]) + "," + IntToStr(edge[1]) + "," + IntToStr(edge[2]) + "," + IntToStr(pos));
          // 移動量太多, 少1/2
          if(pos < 100) {
             WriteSystemLog("調整下邊界: " + IntToStr(adjusty));
@@ -47365,20 +46734,20 @@ downagain:
             cnt++;
             if(cnt > maxno) {
                WriteSystemLog("調整: 找不到下邊界!");
-               pnlSystemMessage->Caption = "Fix: Can't find lower border!";
+               pnlSystemMessage->Caption = "調整: 找不到下邊界!";
                return(-1);
             }
-            pnlSystemMessage->Caption = "Fix: lower border";
+            pnlSystemMessage->Caption = "調整下邊界";
             if(MoveToAxisGap(Y_AXIS, mv) == false) {
                WriteSystemLog("調整下邊界: Stage移動失敗!");
-               pnlSystemMessage->Caption = "Fix: failed to move lower boundary!";
+               pnlSystemMessage->Caption = "調整下邊界觀測點移動失敗!";
                return(-1);
             }
-            // CCDCaptureNoAry[no]
+            // BaslerCaptureNoAry[no]
             //DelayTime(1200);
             if(WaitMoreFrame(5,2000) == false) {
                WriteSystemLog("調整下邊界: CCD取像異常!");
-               pnlSystemMessage->Caption = "Fix: CCD capture failed in lower boundary!";
+               pnlSystemMessage->Caption = "調整下邊界: CCD取像異常!";
                return(-1);
             }
             goto downagain;
@@ -47433,7 +46802,7 @@ void __fastcall TMainForm::ClearEdgeMark()
    shHorzEdge->Visible = false;
 }
 //---------------------------------------------------------------------------
-// CCDCaptureNoAry[no]
+// BaslerCaptureNoAry[no]
 bool __fastcall TMainForm::WaitMoreFrame(int frameno, int timeout)
 {
 long StartTime,StopTime,Elapsedms;
@@ -47441,7 +46810,7 @@ short StartTick,StopTick;
 int sno;
 
    GetTimeTic(&StartTime,&StartTick);
-   sno = CCDCaptureNoAry[0];
+   sno = BaslerCaptureNoAry[0];
    while(1) {
       Sleep(50);
       Application->ProcessMessages();
@@ -47449,7 +46818,7 @@ int sno;
       Elapsedms = ((StopTime*1000+StopTick) - (StartTime*1000+StartTick));
       if(Elapsedms > timeout) 
          return false;
-      if((CCDCaptureNoAry[0] - sno) > frameno)
+      if((BaslerCaptureNoAry[0] - sno) > frameno)
          return true;
    }
 }
@@ -47866,12 +47235,12 @@ void __fastcall TMainForm::btnMotionResetClick(TObject *Sender)
 //#define CMD_ACK_TIMEOUT           3
 //int YuanliCmdStatus[YUANLI_CMD_NO];
 // Send and wait
-int __fastcall TMainForm::WaitYuanliCmd(int mode, int timeout)
+int __fastcall TMainForm::WaitYuanliCmd(int mode)
 {
 long StartTime,StopTime,Elapsedms;
 short StartTick,StopTick;
 // 30sec
-//int timeout = 30000;
+int timeout = 30000;
 
    // 2021 12 18 - chc 先確認YuanLi是否連線?
    if(pnlOlympusStatus->Color != clLime) {
@@ -47935,7 +47304,7 @@ again:
       }
    }
    // YuanLi Command
-   if(WaitYuanliCmd(CMD_YUANLI,30000) != CMD_ACK_E) {
+   if(WaitYuanliCmd(CMD_YUANLI) != CMD_ACK_E) {
       if(boolreconnect == false) {
          pnlOperationMessage->Caption = "YuanLi通訊失敗! 重連線中...";
          pnlSystemMessage->Caption = pnlOperationMessage->Caption;
@@ -48383,7 +47752,6 @@ void __fastcall TMainForm::pnlWidthValueClick(TObject *Sender)
 {
 
    // 2021 10 27a - chc 要更新ItemIndex
-   /*
    if(boolForTest == true) {
 
       // 2021 1 15 - chc 測試Robot Wafer
@@ -48427,8 +47795,7 @@ void __fastcall TMainForm::pnlWidthValueClick(TObject *Sender)
          cbRecipe->ItemIndex = no;
       cbRecipeSelect(this);
    }
-   */
-   
+
    if(PriorityLevel >= PRIORITY_AD) {
       pcSystem->Enabled = true;
 
@@ -48450,8 +47817,6 @@ void __fastcall TMainForm::pnlWidthValueClick(TObject *Sender)
 
       pcMotion->Enabled = true;
 
-      btnSystemRun->Enabled = true;
-      imClose->Enabled = true;
    }
 }
 //---------------------------------------------------------------------------
@@ -48465,7 +47830,7 @@ void __fastcall TMainForm::tmPinLiftUpTimer(TObject *Sender)
    btnDemoLFUpClick(this);
    if(boolLFUpState == false) {
       pnlRorzeRobotPut->Color = clRed;
-      pnlSystemMessage->Caption = "Lift pin up failed!";
+      pnlSystemMessage->Caption = "Lift pin上升失敗!";
       WriteSystemLog("Robot放片: Stage Pin上升 Error!");
       return;
    }
@@ -48483,7 +47848,7 @@ void __fastcall TMainForm::tmPinLiftDownTimer(TObject *Sender)
    btnDemoLFDownClick(this);
    if(boolLFUpState == false) {
       pnlRorzeRobotGet->Color = clRed;
-      pnlSystemMessage->Caption = "Lift pin down failed!";
+      pnlSystemMessage->Caption = "Lift pin下降失敗!";
       WriteSystemLog("Robot取片: Stage Pin到下位點 Error");
       return;
    }
@@ -48530,7 +47895,7 @@ double fw,fh;
 
    no = sgArea->RowCount - 2;
    if(no <= 0) {
-      pnlSystemMessage->Caption = "no point data!";
+      pnlSystemMessage->Caption = "無點位資料!";
       return;
    }
    cx = sgArea->Cells[1][1].ToInt();
@@ -48579,7 +47944,7 @@ AnsiString path,bmpfname,txtfname,datetime;
 FILE *fp;
 int ccol,crow,code,row,col;
 
-   pnlSystemMessage->Caption = "Output file is being generated...";
+   pnlSystemMessage->Caption = "輸出檔產生中...";
    // 1x
    tbZoom->Position = 1;
    sbWaferMap->VertScrollBar->Position = 0;
@@ -48609,7 +47974,7 @@ int ccol,crow,code,row,col;
       fprintf(fp,"\n");
    }
    fclose(fp);
-   pnlSystemMessage->Caption = "Output file: " + txtfname + " is generated";
+   pnlSystemMessage->Caption = "輸出檔: " + txtfname + " 產生完成";
 }
 //---------------------------------------------------------------------------
 // 2021 10 24 - chc 第一次呼叫InMeasure
@@ -48706,7 +48071,7 @@ double fw,fh;
 AnsiString msg;
 
    if(tbZoom->Position != 1) {
-      pnlSystemMessage->Caption = "Coordinate movement can only be done under 1X!";
+      pnlSystemMessage->Caption = "要在1X下才能做座標移動!";
       return;
    }
    // Mouse位置
@@ -49132,17 +48497,10 @@ TPanel *panel,*panel1;
    for(int i=1 ; i<=25 ; i++) {
       panel = (TPanel*)(FindComponent("pnlTray" + IntToStr(i)));
       panel1 = (TPanel*)(FindComponent("pnlTray" + IntToStr(i) + "Select"));
-
-      // 2023 8 17 - chc 使用指定Color
-      //if(panel->Color == clLime)
-      //   panel1->Color = clSilver;
-      //else
-      //   panel1->Color = clGray;
-      if(panel->Color == WaferColor_Select)
-         panel1->Color = WaferColor_Exist;
+      if(panel->Color == clLime)
+         panel1->Color = clSilver;
       else
-         panel1->Color = WaferColor_No;
-
+         panel1->Color = clGray;
    }
 
    // 2021 7 17 -  chc 記錄為Load後的第一片
@@ -50747,7 +50105,7 @@ void __fastcall TMainForm::tmAutoLoadWaferTimer(TObject *Sender)
 
    tmAutoLoadWafer->Enabled = false;
    if(btnLoadWafer->Enabled == true) {
-      pnlSystemMessage->Caption = "Automatic Timer fetch wafer operation: start...";
+      pnlSystemMessage->Caption = "自動Timer取片作業: 進行...";
       WriteSystemLog(pnlSystemMessage->Caption);
       btnLoadWaferClick(this);
    }
@@ -50759,7 +50117,7 @@ void __fastcall TMainForm::tmAutoUnloadWaferTimer(TObject *Sender)
 
    tmAutoUnloadWafer->Enabled = false;
    if(btnUnloadWafer->Enabled == true) {
-      pnlSystemMessage->Caption = "Automatic Timer store wafer operation: start...";
+      pnlSystemMessage->Caption = "自動Timer退片作業: 進行...";
       WriteSystemLog(pnlSystemMessage->Caption);
       btnUnloadWaferClick(this);
    }
@@ -50771,15 +50129,9 @@ void __fastcall TMainForm::tmAutoUnloadTimer(TObject *Sender)
 
    tmAutoUnload->Enabled = false;
    if(btnCassetteLoad->Enabled == true && btnCassetteLoad->Caption == "UnLoad") {
-      pnlSystemMessage->Caption = "Automatic Timer UnLoad operation: start...";
+      pnlSystemMessage->Caption = "自動Timer UnLoad作業: 進行...";
       WriteSystemLog(pnlSystemMessage->Caption);
-
-      // 2023 8 17a - chc SECS指定PortNo
-      if(SECSAssignPortNo == LOADPORT_2)
-         btnCassette2LoadClick(this);
-      else
-
-         btnCassetteLoadClick(this);
+      btnCassetteLoadClick(this);
    }
 }
 //---------------------------------------------------------------------------
@@ -50790,7 +50142,7 @@ void __fastcall TMainForm::tmAutoStartTimer(TObject *Sender)
    tmAutoStart->Enabled = false;
    pcSystem->ActivePage = tsSystem;
    pcOP->ActivePage = tsRun;
-   pnlSystemMessage->Caption = "Automatic Timer [Start] job: start...";
+   pnlSystemMessage->Caption = "自動Timer Start作業: 進行...";
    WriteSystemLog(pnlSystemMessage->Caption);
    btnSystemRunClick(this);
 }
@@ -50910,7 +50262,7 @@ int dayno,duration,delno;
 
    dayno = edLogReservedDay->Text.ToInt();
    if(dayno < 60) {
-      pnlSystemMessage->Caption = "Minimum storage days: 60!";
+      pnlSystemMessage->Caption = "至少應保留天數: 60!";
       return;
    }
    TSearchRec sr;
@@ -51250,7 +50602,7 @@ bool bmode;
 AnsiString fname;
 
    // Read Mode.ini
-   pnlSystemMessage->Caption = "Load the Mode parameter...";
+   pnlSystemMessage->Caption = "載入Mode參數...";
 
    // ini檔名與目錄
    fname = SystemDirectory + "\\Mode.ini";
@@ -51260,7 +50612,7 @@ AnsiString fname;
    cbNewMode->Checked = bmode;
 
    delete pSystemFile;
-   pnlSystemMessage->Caption = "Load the Mode parameter completed.";
+   pnlSystemMessage->Caption = "載入Mode參數完成.";
 }
 //---------------------------------------------------------------------------
 // 2021 12 18 - chc Mode.ini
@@ -51271,7 +50623,7 @@ bool bmode;
 AnsiString fname;
 
    // Write Mode.ini
-   pnlSystemMessage->Caption = "Write Mode parameter...";
+   pnlSystemMessage->Caption = "寫入Mode參數...";
 
    // ini檔名與目錄
    fname = SystemDirectory + "\\Mode.ini";
@@ -51281,7 +50633,7 @@ AnsiString fname;
    pSystemFile->WriteBool("Mode","Value"                                        ,bmode);
 
    delete pSystemFile;
-   pnlSystemMessage->Caption = "Write Mode parameter completed.";
+   pnlSystemMessage->Caption = "寫入Mode參數完成.";
 
    DrawBigImage();
 
@@ -51624,57 +50976,9 @@ void __fastcall TMainForm::pnlWaferRobotInformationLow2Click(
 //---------------------------------------------------------------------------
 // 2023 7 25 - chc for demo
 // 初始: clGray
-bool boolInTest = false;
 void __fastcall TMainForm::Label188Click(TObject *Sender)
 {
 TPanel *panel,*panelsel;
-
-   //tbLED2CH1->Position = 61;
-   //return;
-
-   /*
-   MainForm->pnlVieworks->Left = 104;
-   MainForm->pnlVieworks->Top = 11;
-   MainForm->pnlVieworks->Width = 1102;
-   MainForm->pnlVieworks->Height = 910;
-
-   MainForm->imVieworks->Left = 8;
-   MainForm->imVieworks->Top = 8;
-   MainForm->imVieworks->Width = 896;
-   MainForm->imVieworks->Height = 896;
-
-   MainForm->imVieworks->Picture->Bitmap->Width = 1600;
-   MainForm->imVieworks->Picture->Bitmap->Height = 1600;
-   boolInTest = true;
-   pnlVieworks->Visible = true;
-
-   MainForm->usb_ImageAry[2].SetSize(VieworksCCD->m_Width,VieworksCCD->m_Height);
-   WriteSystemLog("Load EImageAry...");
-   EImageAry.Load("E:\\test1.bmp");
-   WriteSystemLog("Load EImageAry.");
-
-   usb_ImageAry[2].Load("E:\\test2.bmp");
-   WriteSystemLog("Load usb_ImageAry[2].");
-
-   for(int i=0 ; i<50000 ; i++) {
-      if((i % 2) == 0)
-         MainForm->EImageAry.Draw(MainForm->imVieworks->Canvas->Handle);
-      else
-         MainForm->usb_ImageAry[2].Draw(MainForm->imVieworks->Canvas->Handle);
-      imVieworks->Refresh();
-      WaitTime(20);
-      pnlCST1->Caption = IntToStr(i);
-      if(boolInTest == false)
-         break;
-   }
-   return;
-   */
-
-   //DoTiltCapture();
-   //return;
-
-   //DeleteAllFiles();
-   //return;
 
    pnlCassetteStatus->Visible = true;
 
@@ -51725,8 +51029,8 @@ TPanel *panel,*panelsel;
    }
 
    edLoopTestCount->Text = 500;
-   pnlLoopTestCount->Caption = "26";
-   pnlTestWaferCount->Caption = "105";
+   pnlLoopTestCount->Caption = "113";
+   pnlTestWaferCount->Caption = "454";
    imClose->Enabled = true;
    btnLoopTestStop->Visible = true;
 
@@ -51747,24 +51051,12 @@ TIniFile *pSystemFile;
    pSystemFile = new TIniFile(SystemConfigName);
 
    // Lamp Life
-   SystemConfig.LampLife = pSystemFile->ReadInteger("System","Lamp Life"                            ,2000);
+   SystemConfig.LampLife = pSystemFile->ReadInteger("Alignment","Lamp Life"                            ,2000);
    edLampLife->Text = IntToStr(SystemConfig.LampLife);
 
    // 加入SECS Port: edSECSPort
-   SystemConfig.SECSPort = pSystemFile->ReadInteger("System","SECSPort"                             ,5900);
-   edSECSPortSet->Text = IntToStr(SystemConfig.SECSPort);
-
-   // 2023 8 16 - chc Path
-   SystemConfig.RecipePath = pSystemFile->ReadString("System","RecipePath"                          ,"\\\\192.168.0.1\\Remote");
-   edRecipePath->Text = SystemConfig.RecipePath;
-   SystemConfig.MacroPath = pSystemFile->ReadString("System","MacroPath"                            ,"\\\\192.168.0.3\\Remote\\Recipe");
-   edMacroPath->Text = SystemConfig.MacroPath;
-   SystemConfig.ImagePath = pSystemFile->ReadString("System","ImagePath"                            ,"D:\\Capture");
-   edImagePath->Text = SystemConfig.ImagePath;
-
-   // 2023 8 19 - chc Macro Timeout: edMacroTimeout
-   SystemConfig.MacroTimeout = pSystemFile->ReadInteger("System","MacroTimeout"                            ,120);
-   edMacroTimeout->Text = IntToStr(SystemConfig.MacroTimeout);
+   SystemConfig.SECSPort = pSystemFile->ReadInteger("Alignment","SECSPort"                             ,5200);
+   edSECSPort->Text = IntToStr(SystemConfig.SECSPort);
 
    // 12" Edge
    // 1
@@ -51915,23 +51207,11 @@ TIniFile *pSystemFile;
 
    // Lamp Life
    SystemConfig.LampLife = edLampLife->Text.ToInt();
-   pSystemFile->WriteInteger("System","Lamp Life"                            ,SystemConfig.LampLife);
+   pSystemFile->WriteInteger("Alignment","Lamp Life"                            ,SystemConfig.LampLife);
 
    // SECS Port: edSECSPort
-   SystemConfig.SECSPort = edSECSPortSet->Text.ToInt();
-   pSystemFile->WriteInteger("System","SECSPort"                                ,SystemConfig.SECSPort);
-
-   // 2023 8 16 - chc Path
-   SystemConfig.RecipePath = edRecipePath->Text;
-   pSystemFile->WriteString("System","RecipePath"                               ,SystemConfig.RecipePath);
-   SystemConfig.MacroPath = edMacroPath->Text;
-   pSystemFile->WriteString("System","MacroPath"                                ,SystemConfig.MacroPath);
-   SystemConfig.ImagePath = edImagePath->Text;
-   pSystemFile->WriteString("System","ImagePath"                                ,SystemConfig.ImagePath);
-
-   // 2023 8 19 - chc Macro Timeout: edMacroTimeout
-   SystemConfig.MacroTimeout = edMacroTimeout->Text.ToInt();
-   pSystemFile->WriteInteger("System","MacroTimeout"                            ,SystemConfig.MacroTimeout);
+   SystemConfig.SECSPort = edSECSPort->Text.ToInt();
+   pSystemFile->WriteInteger("Alignment","SECSPort"                             ,SystemConfig.SECSPort);
 
    pSystemFile->UpdateFile();
    delete pSystemFile;
@@ -52055,10 +51335,6 @@ void __fastcall TMainForm::btnCassette2LoadClick(TObject *Sender)
          else {
             pnlStartMessage->Caption = "Check before Cassette UnLoading...";
             pnlStartMessage->Visible = true;
-
-            // 2023 8 17 - chc clear All slot's information
-            ClearAllSlot(LOADPORT_2);
-
          }
          // 先做Robot ORGN(GP1/GP0) & 偵測pnlLoadPortS12是否為1?
          if(BeforeLoadPortLoadUnloadFun(LOADPORT_2) == false) {
@@ -52173,10 +51449,6 @@ void __fastcall TMainForm::btnCassette2LoadClick(TObject *Sender)
                pnlOperationMessage->Caption = "LP2 Loaded.";
                pnlAlarmMessage->Caption = pnlOperationMessage->Caption;
                WriteSystemLog("boolSendSCESCommand: 6");
-
-               // 2023 8 17a - chc 在LP1/LP2做Load時決定, LP1若不UnLoad就要變更
-               if(btnCassetteLoad->Caption == "Load")
-                  rgLoadPortSelect->ItemIndex = LOADPORT_2;
 
                // 2021 5 4 - chc 進入Run
                // 2021 10 21 - chc 由Idle/Run/Down改成Init/Idle/Setup/Ready/Execution/Pause
@@ -53095,11 +52367,6 @@ void GetDeviceInfo(int nIndex, AnsiString *strVenderName, AnsiString *strModelNa
 void __fastcall TMainForm::btnLiveClick(TObject *Sender)
 {
 
-   // 2023 8 21 - chc DFK
-   if(TiltCCDType == CCDTYPE_DFK) {
-      return;
-   }
-
    // 2023 8 6 - chc 另建module
    /*
    if(NULL == m_pCamera) {
@@ -53187,7 +52454,6 @@ void __fastcall TMainForm::btnLiveClick(TObject *Sender)
       return;
    }
    */
-   WriteSystemLog("啟動Vieworks CCD live mode: CCDLive");
    VieworksCCD->CCDLive();
 }
 //---------------------------------------------------------------------------
@@ -53246,36 +52512,9 @@ void MakeUnPackedBuffer()
 void __fastcall TMainForm::rgCCDSourceChange(TObject *Sender,
       int ButtonIndex)
 {
-bool bfirst = true;
-
-   if(TiltCCDType == CCDTYPE_DFK) {
-      if(rgCCDSource->ItemIndex == 0)
-         pnlVieworks->Visible = false;
-      else {
-         if(bfirst == true) {
-            MainForm->pnlVieworks->Left = 103;
-            MainForm->pnlVieworks->Top = 11;
-            MainForm->pnlVieworks->Width = 1102;
-            MainForm->pnlVieworks->Height = 910;
-
-            MainForm->imVieworks->Left = 8;
-            MainForm->imVieworks->Top = 8;
-            MainForm->imVieworks->Width = 896;
-            MainForm->imVieworks->Height = 896;
-            bfirst = false;
-         }
-         pnlVieworks->Visible = true;
-      }
-      return;
-   }
 
    if(rgCCDSource->ItemIndex == 0) {
       pnlVieworks->Visible = false;
-
-      // 2023 8 18 - chc 不用就Grab
-      if(VieworksCCD->boolVWLive == true)
-         btnGrabClick(this);
-
    }
    else {
       pnlVieworks->Visible = true;
@@ -53285,20 +52524,7 @@ bool bfirst = true;
       if(VieworksCCD->boolVWLive == false) {
 
          WriteSystemLog("啟動Vieworks CCD live mode.");
-
-         // 2023 8 20a - chc 用Grab來Live
-         //if(bfirst == true) {
-         if(bfirst == true || cbGrabFirst->Checked == false) {
-
-            WriteSystemLog("啟動Vieworks CCD live mode: btnLiveClick");
-            btnLiveClick(this);
-            bfirst = false;
-         }
-         else {
-            // 改用Grab
-            WriteSystemLog("啟動Vieworks CCD live mode: Grab");
-            VieworksCCD->Grab();
-         }
+         btnLiveClick(this);
       }
 
       // 2023 8 10 - chc 強制為Step
@@ -53334,9 +52560,6 @@ void __fastcall TMainForm::imVieworksMouseMove(TObject *Sender,
 {
 int gray,sx,sy;
 
-   if(boolForTest == true)
-      return;
-      
    // 主畫面
    unsigned char r,g,b;
    TColor color;
@@ -53362,15 +52585,7 @@ int gray,sx,sy;
       x = X + 424;
       y = Y + 224;
    }
-
-   // 2023 8 21 - chc 換DFK
-   if(TiltCCDType == CCDTYPE_DFK) {
-      int ccdno = 1;
-      dptr = (unsigned char *)usb_ImageROIAry[ccdno].GetImagePtr(0,y);
-   }
-   else
-
-      dptr = (unsigned char *)MainForm->EImageAry.GetImagePtr(0,y);
+   dptr = (unsigned char *)MainForm->EImageAry.GetImagePtr(0,y);
    b = dptr[x*3];
    g = dptr[x*3+1];
    r = dptr[x*3+2];
@@ -53642,14 +52857,10 @@ void __fastcall TMainForm::btnTriggerTestClick(TObject *Sender)
 int startz1,endz1,frames,interval,more,speed,start;
 AnsiString msg;
 
-   btnTriggerTest->Enabled = false;
-   WriteSystemLog("Trigger: Delete All bmp.");
-   DeleteAllFiles();
    pnlTriggerTest->Color = clSilver;
    pnlTriggerTest->Refresh();
    pnlSystemMessage->Caption = "";
 
-try{
    // WaitTrigger
    frames = edTriggerFrameNo->Text.ToInt();
    interval = edTriggerInterval->Text.ToInt();
@@ -53679,14 +52890,11 @@ try{
    pnlVieworksMessage->Caption = msg;
 
    // 2023 8 8 - chc 先grab
-   if(TiltCCDType == CCDTYPE_VIEWORKS)
-      btnGrabClick(this);
+   btnGrabClick(this);
 
    pnlTriggerTest->Color = clOlive;
    pnlTriggerTest->Refresh();
    pnlVieworksMessage->Caption = msg + "- to Start";
-
-   WriteSystemLog("Trigger: Z1 Move to start.");
 
    // startz1 to endz1
    // 2023 8 10 - chc 使用高速: edMaxVelT, or 2x速
@@ -53705,20 +52913,7 @@ try{
 
    // Trigger
    rgLiveMode->ItemIndex = 1;
-
-   // 2023 8 21 - chc 換DFK
-   if(TiltCCDType == CCDTYPE_DFK) {
-      boolInTrigger = true;
-      if(cbUseTrigger->Checked == true) {
-         cbCCDTrigger->Checked = true;
-         cbCCDTriggerClick(this);
-      }
-   }
-   else
-
-      VieworksCCD->SetTriggerMode(true);
-
-   WriteSystemLog("Trigger: set flag.");
+   VieworksCCD->SetTriggerMode(true);
 
    // set Motion Trigger
    //Motion(TRG CH0)
@@ -53738,34 +52933,17 @@ try{
    SetTriggerParameter(startz1,frames,interval,cbTriggerDirection->Checked);
 
    // 2023 8 8 - chc 再Live
-   if(TiltCCDType == CCDTYPE_VIEWORKS) {
-      Sleep(100);
-      btnLiveClick(this);
-   }
-
-   WriteSystemLog("Trigger: set parameter.");
+   Sleep(100);
+   btnLiveClick(this);
 
    pnlTriggerTest->Color = clYellow;
    pnlTriggerTest->Refresh();
    pnlVieworksMessage->Caption = msg + "- to End";
 
    // startz1 to endz1
-   // 2023 8 21 - chc 換DFK
-   int ointerval;
-   if(TiltCCDType == CCDTYPE_DFK) {
-      TriggerFrameNo = 0;
-      pnlTriggerCaptureNo->Caption = IntToStr(TriggerFrameNo);
-      pnlTriggerNo->Caption = IntToStr(TriggerFrameNo);
-      pnlTriggerNo->Refresh();
-      ointerval = tmISCCD2->Interval;
-      tmISCCD2->Interval = 25;
-   }
-   else {
-
-      VieworksCCD->TriggerFrameNo = 0;
-      pnlTriggerCaptureNo->Caption = IntToStr(VieworksCCD->TriggerFrameNo);
-   }
-   WriteSystemLog("Trigger: Z1 Move to end, Do capture...");
+   VieworksCCD->TriggerFrameNo = 0;
+   pnlTriggerCaptureNo->Caption = IntToStr(VieworksCCD->TriggerFrameNo);
+   WriteSystemLog("Do Trigger capture...");
    if(MoveToZ1(endz1,speed) == false) {
       pnlSystemMessage->Caption = "Trigger: Axis-Z1 EndMove Fail!";
       WriteSystemLog(pnlSystemMessage->Caption);
@@ -53773,74 +52951,32 @@ try{
       goto end;
    }
 
-   if(TiltCCDType == CCDTYPE_DFK) {
-      tmISCCD2->Interval = ointerval;
-   }
-
-   // 2023 8 21 - chc 換DFK
-   if(TiltCCDType == CCDTYPE_DFK) {
-      // 差10張以上才Error
-      if(TriggerFrameNo < (frames-11)) {
-         pnlSystemMessage->Caption = "Insufficient number of frames! " + IntToStr(TriggerFrameNo) + "[" + IntToStr(frames) + "]";
-         WriteSystemLog(pnlSystemMessage->Caption);
-         pnlTriggerTest->Color = clRed;
-         pnlVieworksMessage->Caption = msg + "- Fail!";
-      }
-      else {
-         pnlTriggerTest->Color = clLime;
-         WriteSystemLog("Trigger: succ.");
-         pnlVieworksMessage->Caption = msg + "- Succ";
-      }
+   if(VieworksCCD->TriggerFrameNo < (frames-1)) {
+      pnlSystemMessage->Caption = "Insufficient number of frames! " + IntToStr(VieworksCCD->TriggerFrameNo) + "[" + IntToStr(frames) + "]";
+      WriteSystemLog(pnlSystemMessage->Caption);
+      pnlTriggerTest->Color = clRed;
+      pnlVieworksMessage->Caption = msg + "- Fail!";
    }
    else {
-
-      // 2023 8 20 - chc 差10張以上才Error
-      //if(VieworksCCD->TriggerFrameNo < (frames-1)) {
-      if(VieworksCCD->TriggerFrameNo < (frames-11)) {
-
-         pnlSystemMessage->Caption = "Insufficient number of frames! " + IntToStr(VieworksCCD->TriggerFrameNo) + "[" + IntToStr(frames) + "]";
-         WriteSystemLog(pnlSystemMessage->Caption);
-         pnlTriggerTest->Color = clRed;
-         pnlVieworksMessage->Caption = msg + "- Fail!";
-      }
-      else {
-         pnlTriggerTest->Color = clLime;
-         WriteSystemLog("Trigger: succ.");
-         pnlVieworksMessage->Caption = msg + "- Succ";
-      }
+      pnlTriggerTest->Color = clLime;
+      WriteSystemLog("Trigger: succ.");
+      pnlVieworksMessage->Caption = msg + "- Succ";
    }
 end:
    StopTrigger();
-   WriteSystemLog("Trigger: Do capture done.");
+   WriteSystemLog("Do Trigger capture done.");
+
+   // 2023 8 8 - chc 再grab
+   Sleep(200);
+   btnGrabClick(this);
+   Sleep(200);
 
    rgLiveMode->ItemIndex = 0;
+   VieworksCCD->SetTriggerMode(false);
 
-   if(TiltCCDType == CCDTYPE_DFK) {
-      boolInTrigger = false;
-      if(cbUseTrigger->Checked == true) {
-         cbCCDTrigger->Checked = false;
-         cbCCDTriggerClick(this);
-      }   
-   }
-   else {
-
-      // 2023 8 8 - chc 再grab
-      Sleep(200);
-      btnGrabClick(this);
-      Sleep(200);
-
-      VieworksCCD->SetTriggerMode(false);
-
-      // 2023 8 8 - chc 再Live
-      Sleep(200);
-      btnLiveClick(this);
-   }
-}
-catch(Exception &e) {
-   MainForm->WriteSystemLog(">>Error(btnTriggerTestClick): " + e.Message);
-}
-
-   btnTriggerTest->Enabled = true;
+   // 2023 8 8 - chc 再Live
+   Sleep(200);
+   btnLiveClick(this);
 
 }
 //---------------------------------------------------------------------------
@@ -53871,9 +53007,6 @@ void __fastcall TMainForm::mnToLensTiltClick(TObject *Sender)
    ToLensToCCDMode_Old = ToLensToCCDMode;
 
    ToLensToCCDMode = TOLENS_TILT_MODE;
-   mnToCCD->Checked = false;
-   mnToLens->Checked = false;
-   mnToLensTilt->Checked = true;
 
    // 2019 11 14 - chc 是指目前的十字中心: DoubleClickX為imCCD的有效座標, 但shVertical->Left是pnlLeftWindow的座標!
    DoubleClickX = shVertical->Left - imCCD->Left;
@@ -53882,28 +53015,10 @@ void __fastcall TMainForm::mnToLensTiltClick(TObject *Sender)
    CCDToLens(LensNo,2);
 }
 //---------------------------------------------------------------------------
-#define OLS_CONNECT     0
-#define OLS_DISCONNECT  1
-#define OLS_LOGIN       2
-#define OLS_REMOTE      3
-#define OLS_LOCAL       4
-#define OLS_RDWIZ       5
-#define OLS_EXEWIZ      6
-#define OLS_GETSTS      7
-bool boolRDWIZ = false;
-bool boolCONNECT = false;
-bool boolDISCONNECT = false;
-bool boolREMOTE = false;
-bool boolLOGIN = false;
-bool boolWIZEXE = false;
-bool boolLOCAL = false;
-bool boolGETSTS = false;
-
 // 2023 8 8 - chc OLs5000
 void __fastcall TMainForm::btnOLS5000ConnectClick(TObject *Sender)
 {
 
-   boolCONNECT = false;
    pnlOLS5000Connect1->Color = clSilver;
    edOLS5000Cmd->Text = "CONNECT= 0";
    btnOLS5000SendClick(this);
@@ -53991,30 +53106,20 @@ bool boolclearerrorcode = false;
                if(ReplyStrOLS5000.Pos("CONNECT: +") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000Connect1->Color = clLime;
-
-                  // 2023 8 16 - chc Error
-                  boolCONNECT = true;
-
                }
                else if(ReplyStrOLS5000.Pos("CONNECT: !") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000Connect1->Color = clRed;
-                  boolCONNECT = false;
                }
 
                // DISCONNECT
                if(ReplyStrOLS5000.Pos("DISCONNECT: +") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000Disconnect->Color = clLime;
-
-                  // 2023 8 16 - chc Error
-                  boolDISCONNECT = true;
-
                }
                else if(ReplyStrOLS5000.Pos("DISCONNECT: !") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000Disconnect->Color = clRed;
-                  boolDISCONNECT = false;
                }
 
                // INITNRML
@@ -54023,85 +53128,40 @@ bool boolclearerrorcode = false;
                   pnlOLS5000LogIn->Color = clLime;
                   btnOLS5000WIZEXE->Enabled = true;
                   btnOLS5000Run->Enabled = true;
-
-                  // 2023 8 16 - chc Error
-                  boolLOGIN = true;
-                  WriteSystemLog("Login ok.");
-
                }
                else if(ReplyStrOLS5000.Pos("INITNRML: !") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000LogIn->Color = clRed;
-
-                  // 2023 8 20 - chc Error也視為完成
-                  //boolLOGIN = false;
-                  boolLOGIN = true;
-
-                  WriteSystemLog("Login faile!");
                }
 
                // CHMODE
                if(ReplyStrOLS5000.Pos("CHMODE: +") > 0) {
                   boolclearerrorcode = true;
-
-                  if(edOLS5000Cmd->Text == "CHMODE= 1") {
-                     pnlOLS5000Remote->Color = clLime;
-                     boolREMOTE = true;
-                     boolLOCAL = false;
-                  }
-                  else {
-                     pnlOLS5000Local->Color = clLime;
-                     boolREMOTE = false;
-                     boolLOCAL = true;
-                  }
-
+                  pnlOLS5000Remote->Color = clLime;
                }
                else if(ReplyStrOLS5000.Pos("CHMODE: !") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000Remote->Color = clRed;
-
-                  // 2023 8 20 - chc Error也視為完成
-                  //boolREMOTE = false;
-                  //boolLOCAL = false;
-                  boolREMOTE = true;
-                  boolLOCAL = true;
                }
 
                // RDWIZ
                if(ReplyStrOLS5000.Pos("RDWIZ: +") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000RDWIZ->Color = clLime;
-
-                  // 2023 8 16 - chc Error
-                  boolRDWIZ = true;
-
                }
                else if(ReplyStrOLS5000.Pos("RDWIZ: !") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000RDWIZ->Color = clRed;
-
-                  // 2023 8 20 - chc Error也視為完成
-                  //boolRDWIZ = false;
-                  boolRDWIZ = true;
                }
 
                // WIZEXE
                if(ReplyStrOLS5000.Pos("WIZEXE: +") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000WIZEXE->Color = clLime;
-
-                  // 2023 8 16 - chc Error
-                  boolWIZEXE = true;
-
                }
                else if(ReplyStrOLS5000.Pos("WIZEXE: !") > 0) {
                   boolclearerrorcode = true;
                   pnlOLS5000WIZEXE->Color = clRed;
-
-                  // 2023 8 20 - chc Error也視為完成
-                  //boolWIZEXE = false;
-                  boolWIZEXE = true;
-
                }
 
                // 取值GETSTS: 2
@@ -54112,10 +53172,6 @@ bool boolclearerrorcode = false;
                   boolclearerrorcode = true;
                   pos = ReplyStrOLS5000.Pos("GETSTS: ");
                   len = ReplyStrOLS5000.Length();
-
-                  // 2023 8 16 - chc Error
-                  boolGETSTS = true;
-
                   // GETSTS 1
                   // 1234567890
                   if((len-pos-7) >= 0) {
@@ -54144,7 +53200,7 @@ bool boolclearerrorcode = false;
                // Clear Error Code & Msg
                if(boolclearerrorcode == true) {
                   // Error code
-                  pnlErrorCode->Caption = "0000";
+                  pnlErrorCode->Caption = "";
                }
 
                // Clear
@@ -54178,7 +53234,7 @@ int maxno = 10;
 
    // 檢查等級
    if(PriorityLevel < PRIORITY_AD) {
-      pnlSystemMessage->Caption = "Unauthorized! Unable to change parameter.";
+      pnlSystemMessage->Caption = "未授權! 無法變更參數.";
       return;
    }
 
@@ -54187,7 +53243,7 @@ int maxno = 10;
       return;
    }
 
-   pnlSystemMessage->Caption = "OLS5000 parameter update...";
+   pnlSystemMessage->Caption = "OLS5000參數更新中...";
 
    // ini檔名與目錄
    fname = SystemDirectory + "\\OLS5000.ini" ;
@@ -54214,14 +53270,13 @@ int maxno = 10;
 
    delete pSystemFile;
 
-   pnlSystemMessage->Caption = "OLS5000 parameter update completed.";
+   pnlSystemMessage->Caption = "OLS5000參數更新完成.";
 }
 //---------------------------------------------------------------------------
 // 2023 8 8 - chc OLs5000
 void __fastcall TMainForm::btnOLS5000DisconnectClick(TObject *Sender)
 {
 
-   boolDISCONNECT = false;
    pnlOLS5000Disconnect->Color = clSilver;
    edOLS5000Cmd->Text = "DISCONNECT= 0";
    btnOLS5000SendClick(this);
@@ -54231,7 +53286,6 @@ void __fastcall TMainForm::btnOLS5000DisconnectClick(TObject *Sender)
 void __fastcall TMainForm::btnOLS5000LogInClick(TObject *Sender)
 {
 
-   boolLOGIN = false;
    // 要Disable操作, 等Log In成功: 會重啟動Data Acquisition/Data Analysis/Macro等三個程式
    btnOLS5000WIZEXE->Enabled = false;
    pnlOLS5000LogIn->Color = clSilver;
@@ -54243,7 +53297,6 @@ void __fastcall TMainForm::btnOLS5000LogInClick(TObject *Sender)
 void __fastcall TMainForm::btnOLS5000RemoteClick(TObject *Sender)
 {
 
-   boolREMOTE = false;
    pnlOLS5000Remote->Color = clSilver;
    edOLS5000Cmd->Text = "CHMODE= 1";
    btnOLS5000SendClick(this);
@@ -54253,7 +53306,6 @@ void __fastcall TMainForm::btnOLS5000RemoteClick(TObject *Sender)
 void __fastcall TMainForm::btnOLS5000WIZEXEClick(TObject *Sender)
 {
 
-   boolWIZEXE = false;
    pnlOLS5000WIZEXE->Color = clSilver;
    edOLS5000Cmd->Text = "WIZEXE= 0";
    btnOLS5000SendClick(this);
@@ -54265,7 +53317,6 @@ void __fastcall TMainForm::btnOLS5000RDWIZClick(TObject *Sender)
 TEdit *edit;
 int no;
 
-   boolRDWIZ = false;
    pnlOLS5000RDWIZ->Color = clSilver;
    no = rgMacroNo->ItemIndex + 1;
    edit = (TEdit*)(FindComponent("edOLS5000MacroName" + IntToStr(no)));
@@ -54284,7 +53335,6 @@ int no;
 void __fastcall TMainForm::btnOLS5000GETSTSClick(TObject *Sender)
 {
 
-   boolGETSTS = false;
    pnlOLS5000GETSTS->Color = clSilver;
    edOLS5000Cmd->Text = "GETSTS?";
    btnOLS5000SendClick(this);
@@ -54377,7 +53427,6 @@ void __fastcall TMainForm::InitOLS5000()
 void __fastcall TMainForm::btnOLS5000LocalClick(TObject *Sender)
 {
 
-   boolLOCAL = false;
    pnlOLS5000Local->Color = clSilver;
    edOLS5000Cmd->Text = "CHMODE= 0";
    btnOLS5000SendClick(this);
@@ -54391,7 +53440,7 @@ AnsiString fname;
 TEdit *edit;
 int maxno = 10;
 
-   pnlSystemMessage->Caption = "OLS5000 parameter reading...";
+   pnlSystemMessage->Caption = "OLS5000參數讀取中...";
 
    // ini檔名與目錄
    fname = SystemDirectory + "\\OLS5000.ini" ;
@@ -54418,7 +53467,7 @@ int maxno = 10;
 
    delete pSystemFile;
 
-   pnlSystemMessage->Caption = "OLS5000 parameter reading completed.";
+   pnlSystemMessage->Caption = "OLS5000參數讀取完成.";
 }
 //---------------------------------------------------------------------------
 
@@ -54443,7 +53492,7 @@ void __fastcall TMainForm::imVieworksMouseDown(TObject *Sender,
 // Ni Up
 void __fastcall TMainForm::mn45NiUpClick(TObject *Sender)
 {
-double resolution,fvalue,factor;
+double resolution,fvalue;
 AnsiString msg;
 
    pnl45NiUp->Caption = IntToStr(VieworksY);
@@ -54455,24 +53504,18 @@ AnsiString msg;
       //   resolution = pnl45Resolution->Caption.ToDouble() / 0.75;
       //else
          resolution = pnl45Resolution->Caption.ToDouble();
-      factor = edFactor->Text.ToDouble();
       fvalue = abs(pnl45NiUp->Caption.ToInt() - pnl45NiDown->Caption.ToInt());
       fvalue += 1;
       fvalue *= resolution;
-      fvalue *= factor;
       msg.sprintf("%.3fum",fvalue);
       pnl45Ni->Caption = msg;
-
-      // 2023 8 23 - chc Measure data
-      AddMeasureData("Ni", msg);
-
    }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::mn45NiDownClick(TObject *Sender)
 {
-double resolution,fvalue,factor;
+double resolution,fvalue;
 AnsiString msg;
 
    pnl45NiDown->Caption = IntToStr(VieworksY);
@@ -54484,24 +53527,18 @@ AnsiString msg;
       //   resolution = pnl45Resolution->Caption.ToDouble() / 0.75;
       //else
          resolution = pnl45Resolution->Caption.ToDouble();
-      factor = edFactor->Text.ToDouble();
       fvalue = abs(pnl45NiUp->Caption.ToInt() - pnl45NiDown->Caption.ToInt());
       fvalue += 1;
       fvalue *= resolution;
-      fvalue *= factor;
       msg.sprintf("%.3fum",fvalue);
       pnl45Ni->Caption = msg;
-
-      // 2023 8 23 - chc Measure data
-      AddMeasureData("Ni", msg);
-
    }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::mn45CuUpClick(TObject *Sender)
 {
-double resolution,fvalue,factor;
+double resolution,fvalue;
 AnsiString msg;
 
    pnl45CuUp->Caption = IntToStr(VieworksY);
@@ -54513,24 +53550,18 @@ AnsiString msg;
       //   resolution = pnl45Resolution->Caption.ToDouble() / 0.75;
       //else
          resolution = pnl45Resolution->Caption.ToDouble();
-      factor = edFactor->Text.ToDouble();
       fvalue = abs(pnl45CuUp->Caption.ToInt() - pnl45CuDown->Caption.ToInt());
       fvalue += 1;
       fvalue *= resolution;
-      fvalue *= factor;
       msg.sprintf("%.3fum",fvalue);
       pnl45Cu->Caption = msg;
-
-      // 2023 8 23 - chc Measure data
-      AddMeasureData("Cu", msg);
-
    }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::mn45CuDownClick(TObject *Sender)
 {
-double resolution,fvalue,factor;
+double resolution,fvalue;
 AnsiString msg;
 
    pnl45CuDown->Caption = IntToStr(VieworksY);
@@ -54542,58 +53573,28 @@ AnsiString msg;
       //   resolution = pnl45Resolution->Caption.ToDouble() / 0.75;
       //else
          resolution = pnl45Resolution->Caption.ToDouble();
-      fvalue *= resolution;
       fvalue = abs(pnl45CuUp->Caption.ToInt() - pnl45CuDown->Caption.ToInt());
       fvalue += 1;
       fvalue *= resolution;
-      fvalue *= factor;
       msg.sprintf("%.3fum",fvalue);
       pnl45Cu->Caption = msg;
-
-      // 2023 8 23 - chc Measure data
-      AddMeasureData("Cu", msg);
-
    }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::mn45SaveClick(TObject *Sender)
 {
-AnsiString filename;
 
-   // Save panel
-   spCCDImage->InitialDir = BaslerBitmapDirectory;
-   spCCDImage->Filter = "BMP(*.bmp)|*.bmp";
-   if(spCCDImage->Execute()) {
-      // 改變副檔名
-      filename = ChangeFileExt(spCCDImage->FileName,".bmp");
-
-      TCanvas *csBuf = new TCanvas;
-      Graphics::TBitmap *Source = new Graphics::TBitmap();
-      HDC hDC = GetDC(pnlVieworks->Handle);
-      csBuf->Handle = hDC;
-      Source->Width = pnlVieworks->Width;
-      Source->Height = pnlVieworks->Height;
-
-      pnlVieworks->Refresh();
-      Source->Canvas->CopyRect( Rect(0,0,Source->Width,Source->Height),csBuf,Rect(0,0,pnlVieworks->Width,pnlVieworks->Height));
-
-      // 存jpeg
-      if(false) {
-         TJPEGImage *jpeg;
-         jpeg = new TJPEGImage;
-         //jpeg->Assign(imInspection->Picture->Graphic);
-         jpeg->Assign(Source);
-         jpeg->CompressionQuality = 95;
-         jpeg->SaveToFile(filename);
-         delete jpeg;
-      }
-      else
-         Source->SaveToFile(filename);
-      delete csBuf;
-      delete Source;
-   }
-
+   pnl45NiUp->Caption = "";
+   pnl45NiDown->Caption = "";
+   pnl45CuUp->Caption = "";
+   pnl45CuDown->Caption = "";
+   sh45NiUp->Visible = false;
+   sh45NiDown->Visible = false;
+   sh45CuUp->Visible = false;
+   sh45CuDown->Visible = false;
+   pnl45Ni->Caption = "";
+   pnl45Cu->Caption = "";
 }
 //---------------------------------------------------------------------------
 
@@ -54629,7 +53630,7 @@ int cx,cy,X,Y;
 
       // 2023 2 7 - chc Run時不可以DoubleClick
       if(boolInMeasureRun == true) {
-         pnlSystemMessage->Caption = "During the measurement operation, Move cannot be executed!";
+         pnlSystemMessage->Caption = "量測作業中, 不可以執行Move!";
          return;
       }
    }
@@ -54738,21 +53739,11 @@ int cx,cy,X,Y;
 
 void __fastcall TMainForm::cb45FullImageClick(TObject *Sender)
 {
-double fvalue;
-AnsiString msg;
 
-   if(cb45FullImage->Checked == true) {
-      //pnl45Resolution->Caption = "0.123";
-      fvalue = 0.123;
-   }
-   else {
-      //pnl45Resolution->Caption = "0.069";
-      fvalue = 0.069;
-   }
-   //fvalue *= 1.4142;
-   msg.sprintf("%.3f",fvalue);
-   pnl45Resolution->Caption = msg;
-
+   if(cb45FullImage->Checked == true)
+      pnl45Resolution->Caption = "0.123";
+   else
+      pnl45Resolution->Caption = "0.069";
 }
 //---------------------------------------------------------------------------
 
@@ -54772,7 +53763,7 @@ void __fastcall TMainForm::btnOLS5000ReConnectClick(TObject *Sender)
    }
    catch(Exception &e) {
       WriteSystemLog(">>Error(btnOLS5000ReConnectClick): " + e.Message);
-      pnlSystemMessage->Caption = "OLS5000 Socket reconnection failed!";
+      pnlSystemMessage->Caption = "OLS5000 Socket重連線失敗!";
    }
 }
 //---------------------------------------------------------------------------
@@ -54788,46 +53779,23 @@ void __fastcall TMainForm::btn45GainClick(TObject *Sender)
 {
 double fgain;
 
-   if(TiltCCDType == CCDTYPE_DFK) {
-      int gain;
-      double fgain;
-      if(pnlISCCD2Staus->Color != clLime)
-         return;
-      gain = (int)ed45Gain->Text.ToDouble();
-      try {
-         ICImagingControl2->Gain = gain;
-         pnlAlarmMessage->Caption = "Gain2 Changed.";
-      }
-      catch(Exception &e) {
-         MainForm->WriteSystemLog(">>Error(Gain2 Change): " + IntToStr(gain) + "," + e.Message);
-         pnlSystemMessage->Caption = "Gain2 Change: " + IntToStr(gain) + "," + e.Message;
-      }
-      return;
-   }
-
    fgain = ed45Gain->Text.ToDouble();
-   edRecipeGain->Text = ed45Gain->Text;
    VieworksCCD->SetTriggerGain(fgain);
 }
 //---------------------------------------------------------------------------
 // 2023 8 11 - chc Reset Vieworks CCD
-// 連續多次會導至DFK CCD當掉!!
 void __fastcall TMainForm::btn45ResetClick(TObject *Sender)
 {
 
-   pnlVieworksMessage->Caption = "Stop Capture...";
    VieworksCCD->CCDGrab();
    WriteSystemLog("Vieworks CCD Reset: Grab");
-   pnlVieworksMessage->Caption = "Close CCD...";
    VieworksCCD->CloseCCD();
    WriteSystemLog("Vieworks CCD Reset: Close");
-   pnlVieworksMessage->Caption = "Delete CCD...";
    delete VieworksCCD;
    WriteSystemLog("Vieworks CCD Reset: Delete");
 
-   WaitTime(500);
+   Sleep(1000);
 
-   pnlVieworksMessage->Caption = "New CCD...";
    VieworksCCD = new VworksCCD();
    WriteSystemLog("Vieworks CCD Reset: New");
    if(VieworksCCD->boolVworksCCD == true) {
@@ -54838,20 +53806,10 @@ void __fastcall TMainForm::btn45ResetClick(TObject *Sender)
    }
    WriteSystemLog("Vieworks CCD Reset: done.");
 
-   pnlVieworksMessage->Caption = "New CCD done.";
-
    // 2023 8 15 - chc Live
-   VieworksCCD->ClearActive();
-   WaitTime(500);
+   Sleep(1000);
    WriteSystemLog("Vieworks CCD Reset: To Live.");
-   pnlVieworksMessage->Caption = "Start Capture...";
    btnLiveClick(this);
-
-   WaitTime(100);
-   btn45TargetBrightnessClick(this);
-   WaitTime(100);
-   btn45GainClick(this);
-   pnlVieworksMessage->Caption = "Gain,Brightness Done.";
 
 }
 //---------------------------------------------------------------------------
@@ -55667,1484 +54625,6 @@ double fx,fy;
 
    *rcx = cx;
    *rcy = cy;
-}
-//---------------------------------------------------------------------------
-// 2023 8 15 - chc Trigger.ini
-//   struct TRIGGER_STRU {
-//      int LiveMode;
-//      int Source;
-//      int Mode;
-//      int Timens;
-//      int StartPulse;
-//      int Frames;
-//      int Interval;
-//      int Speed;
-//      int Type;
-//      int Gain;
-//      int TargetBrightness;
-//      bool boolExposureAuto;
-//      bool boolDownToUp;
-//   };
-//   struct TRIGGER_STRU TriggerParameter;
-void __fastcall TMainForm::btn45SaveClick(TObject *Sender)
-{
-TIniFile *pSystemFile;
-
-   // ini檔名與目錄
-   pSystemFile = new TIniFile(WaferColorINIFilename);
-
-   // LiveMode
-   TriggerParameter.LiveMode = rgLiveMode->ItemIndex;
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"LiveMode"               ,TriggerParameter.LiveMode);
-   // Source
-   TriggerParameter.Source = rgSource->ItemIndex;
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"Source"                 ,TriggerParameter.Source);
-   // Source
-   TriggerParameter.Mode = rgMode->ItemIndex;
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"Mode"                   ,TriggerParameter.Mode);
-   // Timens
-   TriggerParameter.Timens = edTriggerTime->Text.ToInt();
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"Timens"                 ,TriggerParameter.Timens);
-   // StartPulse
-   TriggerParameter.StartPulse = edTriggerStart->Text.ToInt();
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"StartPulse"             ,TriggerParameter.StartPulse);
-   // Frames
-   TriggerParameter.Frames = edTriggerFrameNo->Text.ToInt();
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"Frames"                 ,TriggerParameter.Frames);
-   // Interval
-   TriggerParameter.Interval = edTriggerInterval->Text.ToInt();
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"Interval"               ,TriggerParameter.Interval);
-   // Speed
-   TriggerParameter.Speed = edTriggerSpeed->Text.ToInt();
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"Speed"                  ,TriggerParameter.Speed);
-   // Type
-   TriggerParameter.Type = rgImageType->ItemIndex;
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"Type"                   ,TriggerParameter.Type);
-   // Gain
-   TriggerParameter.Gain = ed45Gain->Text.ToInt();
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"Gain"                   ,TriggerParameter.Gain);
-   // TargetBrightness
-   TriggerParameter.TargetBrightness = ed45TargetBrightness->Text.ToInt();
-   pSystemFile->WriteInteger(TRIGGER_PARAMETER_SECTION,"TargetBrightness"       ,TriggerParameter.TargetBrightness);
-   // boolExposureAuto
-   TriggerParameter.boolExposureAuto = cb45ExposureAuto->Checked;
-   pSystemFile->WriteBool(TRIGGER_PARAMETER_SECTION,"boolExposureAuto"          ,TriggerParameter.boolExposureAuto);
-   // boolExposureAuto
-   TriggerParameter.boolDownToUp = cbTriggerDirection->Checked;
-   pSystemFile->WriteBool(TRIGGER_PARAMETER_SECTION,"boolDownToUp"              ,TriggerParameter.boolDownToUp);
-
-   // 2023 8 20 - chc Load & Reset
-   TriggerParameter.boolLoadFirst = cbLoadFirst->Checked;
-   pSystemFile->WriteBool(TRIGGER_PARAMETER_SECTION,"boolLoadFirst"            ,TriggerParameter.boolLoadFirst);
-   TriggerParameter.boolResetFirst = cbResetFirst->Checked;
-   pSystemFile->WriteBool(TRIGGER_PARAMETER_SECTION,"boolResetFirst"            ,TriggerParameter.boolResetFirst);
-
-   delete pSystemFile;
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::LoadTrigger()
-{
-TIniFile *pSystemFile;
-
-   // ini檔名與目錄
-   pSystemFile = new TIniFile(WaferColorINIFilename);
-
-   // LiveMode
-   TriggerParameter.LiveMode = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"LiveMode"               ,0);
-   rgLiveMode->ItemIndex = TriggerParameter.LiveMode;
-   // Source
-   TriggerParameter.Source = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"Source"                 ,0);
-   rgSource->ItemIndex = TriggerParameter.Source;
-   // Source
-   TriggerParameter.Mode = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"Mode"                   ,1);
-   rgMode->ItemIndex = TriggerParameter.Mode;
-   // Timens
-   TriggerParameter.Timens = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"Timens"                 ,200);
-   edTriggerTime->Text = IntToStr(TriggerParameter.Timens);
-   // StartPulse
-   TriggerParameter.StartPulse = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"StartPulse"             ,200);
-   edTriggerStart->Text = IntToStr(TriggerParameter.StartPulse);
-   // Frames
-   TriggerParameter.Frames = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"Frames"                 ,60);
-   edTriggerFrameNo->Text = IntToStr(TriggerParameter.Frames);
-   // Interval
-   TriggerParameter.Interval = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"Interval"               ,20);
-   edTriggerInterval->Text = IntToStr(TriggerParameter.Interval);
-   // Speed
-   TriggerParameter.Speed = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"Speed"                  ,320);
-   edTriggerSpeed->Text = IntToStr(TriggerParameter.Speed);
-   // Type
-   TriggerParameter.Type = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"Type"                   ,2);
-   rgImageType->ItemIndex = TriggerParameter.Type;
-   // Gain
-   TriggerParameter.Gain = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"Gain"                   ,15);
-   ed45Gain->Text = IntToStr(TriggerParameter.Gain);
-   // TargetBrightness
-   TriggerParameter.TargetBrightness = pSystemFile->ReadInteger(TRIGGER_PARAMETER_SECTION,"TargetBrightness"       ,48);
-   ed45TargetBrightness->Text = IntToStr(TriggerParameter.TargetBrightness);
-   // boolExposureAuto
-   TriggerParameter.boolExposureAuto = pSystemFile->ReadBool(TRIGGER_PARAMETER_SECTION,"boolExposureAuto"       ,true);
-   cb45ExposureAuto->Checked = TriggerParameter.boolExposureAuto;
-   // boolExposureAuto
-   TriggerParameter.boolDownToUp = pSystemFile->ReadBool(TRIGGER_PARAMETER_SECTION,"boolDownToUp"       ,false);
-   cbTriggerDirection->Checked = TriggerParameter.boolDownToUp;
-
-   // 2023 8 20 - chc Load & Reset
-   TriggerParameter.boolLoadFirst = pSystemFile->ReadBool(TRIGGER_PARAMETER_SECTION,"boolLoadFirst"       ,false);
-   cbLoadFirst->Checked = TriggerParameter.boolLoadFirst;
-   TriggerParameter.boolResetFirst = pSystemFile->ReadBool(TRIGGER_PARAMETER_SECTION,"boolResetFirst"       ,false);
-   cbResetFirst->Checked = TriggerParameter.boolResetFirst;
-
-   delete pSystemFile;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btn45TargetBrightnessClick(TObject *Sender)
-{
-int targetbrightness;
-
-   // 2023 8 21 - chc DFK: Shutter
-   if(TiltCCDType == CCDTYPE_DFK) {
-      int brightness = ed45TargetBrightness->Text.ToInt();
-      ICImagingControl2->Brightness = brightness;
-      edRecipeBrightness->Text = ed45TargetBrightness->Text;
-      return;
-   }
-
-   if(cb45ExposureAuto->Checked == false) {
-      cb45ExposureAuto->Checked = true;
-      Sleep(500);
-   }
-   targetbrightness = ed45TargetBrightness->Text.ToInt();
-   edRecipeBrightness->Text = ed45TargetBrightness->Text;
-   VieworksCCD->SetTriggerTargerBrightness(targetbrightness);
-}
-//---------------------------------------------------------------------------
-
-// 2023 8 16 - chc Create Recipe & Macro
-// comboOlympusVisionName
-// comboOlympusVisionName1 / .rcp
-// comboOlympusMacroName / .mcr
-// 0-All, 1-Recipe, 2-Macro
-void __fastcall TMainForm::CreateRecipeMacro(int mode)
-{
-AnsiString fname,name,filename,fext;
-int pos,len,rno;
-AnsiString recipefname;
-TIniFile *pSystemFile;
-
-   TSearchRec sr;
-   int iAttributes = 0;
-   //faReadOnly	  $00000001	  Read-only files
-   //faHidden	  $00000002	  Hidden files
-   //faSysFile	  $00000004	  System files
-   //faVolumeID	  $00000008	  Volume ID files
-   //faDirectory  $00000010	  Directory files
-   //faArchive	  $00000020	  Archive files
-   //faAnyFile	  $0000003F	  Any file
-
-   // Recipe
-   if(mode == 2)
-      goto domacro;
-   // Recipe是資料夾
-   rno = 0;
-   comboOlympusVisionName->Items->Clear();
-   comboOlympusVisionName1->Items->Clear();
-   //fname = edRecipePath->Text + "\\*.rcp";
-   //iAttributes |= faArchive;
-   fname = edRecipePath->Text + "\\*.*";
-   iAttributes |= faDirectory;
-   if(FindFirst(fname, iAttributes, sr) == 0) {
-      do {
-         if((sr.Attr & iAttributes) == sr.Attr) {                               // 檔名在sr.Name
-            //fext = ExtractFileExt(sr.Name);
-            //pos = sr.Name.Pos(fext);
-            //if(pos > 0) {
-            //   filename = sr.Name.SubString(1,pos-1);
-            //}
-            if(sr.Name != "." && sr.Name != "..") {
-               rno++;
-               filename = sr.Name;
-               comboOlympusVisionName->Items->Append(filename);
-               comboOlympusVisionName1->Items->Append(filename);
-            }
-            if(rno == 1) {
-               name = filename;
-            }
-         }
-      } while (FindNext(sr) == 0);
-   }
-   FindClose(sr);
-
-   if(rno == 0) {
-      comboOlympusVisionName->Text = "";
-      comboOlympusVisionName1->Text = "";
-      comboOlympusVisionName->ItemIndex = -1;
-      comboOlympusVisionName1->ItemIndex = -1;
-   }
-   else {
-      comboOlympusVisionName->Text = name;
-      comboOlympusVisionName1->Text = name;
-      comboOlympusVisionName->ItemIndex = 0;
-      comboOlympusVisionName1->ItemIndex = 0;
-   }
-   if(mode == 1)
-      goto end;
-
-domacro:
-   // Macro
-   rno = 0;
-   comboOlympusMacroName->Items->Clear();
-   fname = edMacroPath->Text + "\\*.mcr";
-   iAttributes = 0;
-   iAttributes |= faArchive;
-   if(FindFirst(fname, iAttributes, sr) == 0) {
-      do {
-         if((sr.Attr & iAttributes) == sr.Attr) {                               // 檔名在sr.Name
-            rno++;
-            fext = ExtractFileExt(sr.Name);
-            pos = sr.Name.Pos(fext);
-            if(pos > 0) {
-               filename = sr.Name.SubString(1,pos-1);
-            }
-            comboOlympusMacroName->Items->Append(filename);
-            if(rno == 1) {
-               name = filename;
-            }
-         }
-      } while (FindNext(sr) == 0);
-   }
-   FindClose(sr);
-
-   if(rno == 0) {
-      comboOlympusMacroName->Text = "";
-      comboOlympusMacroName->ItemIndex = -1;
-   }
-   else {
-      comboOlympusMacroName->Text = name;
-      comboOlympusMacroName->ItemIndex = 0;
-   }
-
-end:
-}
-//---------------------------------------------------------------------------
-// 2023 8 16 - chc Create Recipe & Macro
-void __fastcall TMainForm::pnlGetRecipeClick(TObject *Sender)
-{
-
-   // 0-All, 1-Recipe, 2-Macro
-   CreateRecipeMacro(1);
-}
-//---------------------------------------------------------------------------
-// 2023 8 16 - chc Create Recipe & Macro
-void __fastcall TMainForm::pnlGetMacroClick(TObject *Sender)
-{
-
-   // 0-All, 1-Recipe, 2-Macro
-   CreateRecipeMacro(2);
-}
-//---------------------------------------------------------------------------
-// 2023 8 16 - chc Macro: "RDWIZ: +"
-bool __fastcall TMainForm::SetMacroName(AnsiString macroname)
-{
-int ret;
-
-   pnlOLS5000RDWIZ->Color = clSilver;
-   edOLS5000Cmd->Text = "RDWIZ= " + macroname + ".mcr";
-   boolRDWIZ = false;
-   btnOLS5000SendClick(this);
-
-   ret = WaitOLS5000CMD(OLS_RDWIZ,5000);
-   if(ret == true)
-      pnlOLS5000RDWIZ->Color = clLime;
-   else
-      pnlOLS5000RDWIZ->Color = clRed;
-
-   return ret;
-}
-//---------------------------------------------------------------------------
-// 2023 8 18 - chc Macro: "EXEWIZ: +"
-bool __fastcall TMainForm::ExecuteMacro()
-{
-int ret,timeout;
-
-   btnOLS5000WIZEXEClick(this);
-
-   // 120sec
-   // 2023 8 19 - chc Macro Timeout: edMacroTimeout
-   //ret = WaitOLS5000CMD(OLS_EXEWIZ,120000);
-   timeout = edMacroTimeout->Text.ToInt() * 1000;
-   ret = WaitOLS5000CMD(OLS_EXEWIZ,timeout);
-
-   return ret;
-}
-//---------------------------------------------------------------------------
-// 1 sec
-//17:28:05:945-> <RDWIZ: +
-//17:28:04:865-> <RDWIZ:
-//17:28:04:853-> [>] RDWIZ= SPIL First Point After reflow.mcr
-//
-// => 5sec
-//17:27:49:782-> <CHMODE: +
-//17:27:44:647-> <CHMODE:
-//17:27:44:638-> [>] CHMODE= 1
-//
-// => 72sec
-//17:27:42:138-> <INITNRML: +
-//17:26:31:706-> <INITNRML:
-//17:26:31:700-> [>] INITNRML= Admin,olympus
-//
-// => 1sec
-//17:26:26:265-> <CONNECT: +
-//17:26:26:178-> <CONNECT:
-//17:26:26:158-> [>] CONNECT= 0
-void __fastcall TMainForm::btnMacroTestClick(TObject *Sender)
-{
-
-   pnlMacroTest->Color = clSilver;
-   if(SetMacroName(comboOlympusMacroName->Text) == true)
-      pnlMacroTest->Color = clLime;
-   else
-      pnlMacroTest->Color = clRed;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::comboOlympusMacroNameClick(TObject *Sender)
-{
-
-   // 2022 5 17 - chc 是PE: 固定10秒後切換到操作員等級
-   if(PriorityLevel == PRIORITY_PE)
-      ChangePriorityCount = edPasswordSwitchSecond->Text.ToInt();
-
-}
-//---------------------------------------------------------------------------
-//bool boolRDWIZ = false;
-//bool boolCONNECT = false;
-//bool boolDISCONNECT = false;
-//bool boolREMOTE = false;
-//bool boolLOGIN = false;
-//bool boolWIZEXE = false;
-//bool boolLOCAL = false;
-//bool boolGETSTS = false;
-//#define OLS_CONNECT     0
-//#define OLS_DISCONNECT     0
-//#define OLS_LOGIN     0
-//#define OLS_REMOTE     0
-//#define OLS_LOCAL     0
-//#define OLS_RDWIZ     0
-//#define OLS_EXEWIZ     0
-//#define OLS_GETSTS     0
-// 2023 8 16 - chc Macro: "RDWIZ: +"
-bool __fastcall TMainForm::WaitOLS5000CMD(int mode, int time)
-{
-int cnt,max;
-
-   cnt = 0;
-   // 5sec
-   max = time / 100;
-   while(1) {
-
-      // 2023 8 21 - chc 改用OLS專用
-      //WaitTime(100);
-      WaitTimeOLS(50);
-
-      switch(mode) {
-         case OLS_CONNECT:
-            if(boolCONNECT == true) {
-               return true;
-            }
-            break;
-         case OLS_DISCONNECT:
-            if(boolDISCONNECT == true) {
-               return true;
-            }
-            break;
-         case OLS_LOGIN:
-            if(boolLOGIN == true) {
-               WriteSystemLog("Login Wait done.");
-
-               if(pnlOLS5000LogIn->Color != clLime)
-                  return false;
-
-               return true;
-            }
-            break;
-         case OLS_REMOTE:
-            if(boolREMOTE == true) {
-               return true;
-            }
-            break;
-         case OLS_LOCAL:
-            if(boolLOCAL == true) {
-               return true;
-            }
-            break;
-         case OLS_RDWIZ:
-            if(boolRDWIZ == true) {
-               return true;
-            }
-            break;
-         case OLS_EXEWIZ:
-            if(boolWIZEXE == true) {
-               return true;
-            }
-            break;
-         case OLS_GETSTS:
-            if(boolGETSTS == true) {
-               return true;
-            }
-            break;
-
-      }
-
-      WaitTimeOLS(50);
-
-      cnt++;
-      if(cnt > max) {
-         return false;
-      }
-   }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::cb45ExposureAutoClick(TObject *Sender)
-{
-bool exposureauto;
-
-   if(TiltCCDType == CCDTYPE_VIEWORKS) {
-      exposureauto = cb45ExposureAuto->Checked;
-      VieworksCCD->SetTriggerExposureAuto(exposureauto);
-   }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btnRecipeGainClick(TObject *Sender)
-{
-double fgain;
-
-   fgain = edRecipeGain->Text.ToDouble();
-   ed45Gain->Text = edRecipeGain->Text;
-   if(TiltCCDType == CCDTYPE_DFK) {
-      btn45GainClick(this);
-   }
-   else {
-      VieworksCCD->SetTriggerGain(fgain);
-   }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btnRecipeBrightnessClick(TObject *Sender)
-{
-int targetbrightness;
-
-   targetbrightness = edRecipeBrightness->Text.ToInt();
-   ed45TargetBrightness->Text = edRecipeBrightness->Text;
-   if(TiltCCDType == CCDTYPE_DFK) {
-      btn45TargetBrightnessClick(this);
-   }
-   else {
-      if(cb45ExposureAuto->Checked == false) {
-         cb45ExposureAuto->Checked = true;
-         Sleep(500);
-      }
-      VieworksCCD->SetTriggerTargerBrightness(targetbrightness);
-   }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::mnSetLens0Click(TObject *Sender)
-{
-
-   ToLensToCCDMode_Old = TOLENS_MODE;
-   mnToCCD->Checked = false;
-   mnToLens->Checked = true;
-   mnToLensTilt->Checked = false;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::mnSetCCDClick(TObject *Sender)
-{
-
-   ToLensToCCDMode_Old = TOCCD_MODE;
-   mnToCCD->Checked = true;
-   mnToLens->Checked = false;
-   mnToLensTilt->Checked = false;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::mnSetLens45Click(TObject *Sender)
-{
-
-   ToLensToCCDMode_Old = TOLENS_TILT_MODE;
-   mnToCCD->Checked = false;
-   mnToLens->Checked = false;
-   mnToLensTilt->Checked = true;
-}
-//---------------------------------------------------------------------------
-// 2023 8 16 - chc 切換45度設定: Gain/Brightness/LightMode <= Current Recipe Setting
-void __fastcall TMainForm::SetTiltConfig()
-{
-int gain,brightness,lightmode;
-
-   gain = edRecipeGain->Text.ToInt();
-   brightness = edRecipeBrightness->Text.ToInt();
-   lightmode = rgLightMode->ItemIndex;
-   // Gain
-   btnRecipeGainClick(this);
-   Sleep(100);
-   // Brightness
-   btnRecipeBrightnessClick(this);
-   Sleep(100);
-
-   // BF 要退出
-   if(lightmode == LIGHT_BF) {
-      // in?
-      if(pnlBit14->Color == clLime) {
-         pnlDOPolarizer->Color = clLime;
-         pnlDOPolarizerClick(this);
-      }
-   }
-   // OP 要插入
-   else {
-      // out?
-      if(pnlBit15->Color == clLime) {
-         pnlDOPolarizer->Color = clSilver;
-         pnlDOPolarizerClick(this);
-      }
-   }
-
-   // 2023 8 19 - chc 加入LED
-   LED2CH1Value = edRecipeLED1->Text.ToInt();
-   LED2CH2Value = edRecipeLED2->Text.ToInt();
-   tbLED2CH1->Position = LED2CH1Value;
-   tbLED2CH2->Position = LED2CH2Value;
-   pnlLED2CH1->Caption = edRecipeLED1->Text;
-   pnlLED2CH2->Caption = edRecipeLED2->Text;
-   SetLED2Value(1,LED2CH1Value);
-
-}
-//---------------------------------------------------------------------------
-// 2023 8 17 - chc OLS5000 Remote Mode
-// true- Remote, false- Local
-void __fastcall TMainForm::SetOLS5000Mode(bool mode)
-{
-int time;
-
-   if(boolREMOTE == mode) {
-      WriteSystemLog("OLS5000: now in Remote.");
-      return;
-   }
-   if(mode == true) {
-      btnOLS5000RemoteClick(this);
-      mode = OLS_REMOTE;
-      pnlSystemMessage->Caption = "OLS5000 Enter Remote Mode...";
-      WriteSystemLog(pnlSystemMessage->Caption);
-   }
-   else {
-      btnOLS5000LocalClick(this);
-      mode = OLS_LOCAL;
-      pnlSystemMessage->Caption = "OLS5000 Enter Local Mode...";
-      WriteSystemLog(pnlSystemMessage->Caption);
-   }
-
-   // 10sec
-   time = 10000;
-   if(WaitOLS5000CMD(mode, time) == false) {
-      if(mode == true)
-         pnlSystemMessage->Caption = "OLS5000 Enter Remote Mode Fail!";
-      else
-         pnlSystemMessage->Caption = "OLS5000 Enter Local Mode Fail!";
-      WriteSystemLog(pnlSystemMessage->Caption);
-   }
-   else {
-      pnlSystemMessage->Caption = "OLS5000 Mode switch succ.";
-      WriteSystemLog(pnlSystemMessage->Caption);
-   }
-
-}
-//---------------------------------------------------------------------------
-// 2023 8 17 - chc OLS5000 Remote Mode
-//#define OLS_CONNECT     0
-//#define OLS_DISCONNECT  1
-//#define OLS_LOGIN       2
-//#define OLS_REMOTE      3
-//#define OLS_LOCAL       4
-//#define OLS_RDWIZ       5
-//#define OLS_EXEWIZ      6
-//#define OLS_GETSTS      7
-// Connect(1) - Login(72) - Remote(5)
-// false- No Wait, true- Wait
-bool __fastcall TMainForm::SetupOLS5000(bool mode)
-{
-int time;
-
-   // 1
-   pnlOLS5000UnitConnect->Caption = "CONNECT...";
-   btnOLS5000ConnectClick(this);
-   if(mode == true) {
-      pnlSystemMessage->Caption = "OLS5000 Enter Connect...";
-      WriteSystemLog(pnlSystemMessage->Caption);
-      // 3sec
-      time = 3000;
-      if(WaitOLS5000CMD(OLS_CONNECT, time) == false) {
-         pnlSystemMessage->Caption = "OLS5000 Enter Connect Fail!";
-         WriteSystemLog(pnlSystemMessage->Caption);
-         return false;
-      }
-      else {
-         pnlSystemMessage->Caption = "OLS5000 Enter Connect Succ.";
-         WriteSystemLog(pnlSystemMessage->Caption);
-      }
-   }
-
-   // 72
-   pnlOLS5000UnitConnect->Caption = "INITNRNL Admin,olympus...";
-   btnOLS5000LogInClick(this);
-   if(mode == true) {
-      pnlSystemMessage->Caption = "OLS5000 Enter Login...";
-      WriteSystemLog(pnlSystemMessage->Caption);
-      // 90sec
-      time = 150000;
-      if(WaitOLS5000CMD(OLS_LOGIN, time) == false) {
-         pnlSystemMessage->Caption = "OLS5000 Enter Login Fail!";
-         WriteSystemLog(pnlSystemMessage->Caption);
-         return false;
-      }
-      else {
-         pnlSystemMessage->Caption = "OLS5000 Enter Login Succ.";
-         WriteSystemLog(pnlSystemMessage->Caption);
-      }
-   }
-
-   // 5
-   pnlOLS5000UnitConnect->Caption = "CHMODE 1...";
-   pnlSystemMessage->Caption = pnlOLS5000UnitConnect->Caption;
-   WriteSystemLog(pnlSystemMessage->Caption);
-   btnOLS5000RemoteClick(this);
-   if(mode == true) {
-      pnlSystemMessage->Caption = "OLS5000 Enter Remote...";
-      WriteSystemLog(pnlSystemMessage->Caption);
-      // 10sec
-      time = 10000;
-      if(WaitOLS5000CMD(OLS_REMOTE, time) == false) {
-         pnlSystemMessage->Caption = "OLS5000 Enter Remote Fail!";
-         WriteSystemLog(pnlSystemMessage->Caption);
-         return false;
-      }
-      else {
-         pnlSystemMessage->Caption = "OLS5000 Enter Remote Succ.";
-         WriteSystemLog(pnlSystemMessage->Caption);
-      }
-   }
-
-   return true;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btnOLSToLocalClick(TObject *Sender)
-{
-
-   SetOLS5000Mode(false);
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btnAllSelect2Click(TObject *Sender)
-{
-TPanel *panel,*panel1;
-
-   for(int i=1 ; i<=25 ; i++) {
-      panel = (TPanel*)(FindComponent("pnlTray2_" + IntToStr(i)));
-      panel1 = (TPanel*)(FindComponent("pnlTray2_" + IntToStr(i) + "Select"));
-      // 使用指定Color
-      if(panel->Color == WaferColor_Select)
-         panel1->Color = WaferColor_Select;
-      else
-         panel1->Color = WaferColor_No;
-   }
-
-   // 2021 7 17 -  chc 記錄為Load後的第一片
-   boolFirstAfterLoad = true;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btnAllCancel2Click(TObject *Sender)
-{
-TPanel *panel,*panel1;
-
-   for(int i=1 ; i<=25 ; i++) {
-      panel = (TPanel*)(FindComponent("pnlTray2_" + IntToStr(i)));
-      panel1 = (TPanel*)(FindComponent("pnlTray2_" + IntToStr(i) + "Select"));
-      // 使用指定Color
-      if(panel->Color == WaferColor_Select)
-         panel1->Color = WaferColor_Exist;
-      else
-         panel1->Color = WaferColor_No;
-   }
-
-   // 2021 7 17 -  chc 記錄為Load後的第一片
-   boolFirstAfterLoad = true;
-}
-//---------------------------------------------------------------------------
-// 2023 8 17 - chc clear All slot's information
-// pnlLoadPort1Tray25 / pnlLoadPort1Tray25Select
-// pnlLoadPort2Tray25 / pnlLoadPort2Tray25Select
-void __fastcall TMainForm::ClearAllSlot(int portno)
-{
-TPanel *panel,*panel1,*panel2,*panel3;
-
-   for(int i=1 ; i<=25 ; i++) {
-      if(portno == LOADPORT_1) {
-         panel = (TPanel*)(FindComponent("pnlTray" + IntToStr(i)));
-         panel1 = (TPanel*)(FindComponent("pnlTray" + IntToStr(i) + "Select"));
-         panel2 = (TPanel*)(FindComponent("pnlLoadPort1Tray" + IntToStr(i)));
-         panel3 = (TPanel*)(FindComponent("pnlLoadPort1Tray" + IntToStr(i) + "Select"));
-      }
-      else {
-         panel = (TPanel*)(FindComponent("pnlTray2_" + IntToStr(i)));
-         panel1 = (TPanel*)(FindComponent("pnlTray2_" + IntToStr(i) + "Select"));
-         panel2 = (TPanel*)(FindComponent("pnlLoadPort2Tray" + IntToStr(i)));
-         panel3 = (TPanel*)(FindComponent("pnlLoadPort2Tray" + IntToStr(i) + "Select"));
-      }
-
-      panel->Color = WaferColor_No;
-      panel1->Color = WaferColor_No;
-      panel2->Color = WaferColor_No;
-      panel3->Color = WaferColor_No;
-      panel->Caption = "";
-      panel1->Caption = "";
-      panel2->Caption = "";
-      panel3->Caption = "";
-   }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::tmSetupOLS5000Timer(TObject *Sender)
-{
-
-   tmSetupOLS5000->Enabled = false;
-   WriteSystemLog("執行OLS5000控制...");
-   if(SetupOLS5000(true) == false) {
-      pnlSystemMessage->Caption = "Control Fail!";
-      pnlOLS5000UnitConnect->Caption = "Control Fail!";
-   }
-   else {
-      pnlSystemMessage->Caption = "Control Ready.";
-      pnlOLS5000UnitConnect->Caption = "Completed.";
-   }
-   WriteSystemLog("執行OLS5000控制 done.");
-
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::DeleteAllFiles()
-{
-AnsiString path,fname,filename;
-
-   TSearchRec sr;
-   int iAttributes = 0;
-   int rno = 0;
-   //faReadOnly	  $00000001	  Read-only files
-   //faHidden	  $00000002	  Hidden files
-   //faSysFile	  $00000004	  System files
-   //faVolumeID	  $00000008	  Volume ID files
-   //faDirectory  $00000010	  Directory files
-   //faArchive	  $00000020	  Archive files
-   //faAnyFile	  $0000003F	  Any file
-   path = edImagePath->Text;
-   fname = path + "\\*.bmp";
-   iAttributes |= faArchive;
-   if(FindFirst(fname, iAttributes, sr) == 0) {
-      do {
-         if((sr.Attr & iAttributes) == sr.Attr) {                               // 檔名在sr.Name
-            filename = path + "\\" + sr.Name;
-            if(FileExists(filename)) {
-               DeleteFile(filename.c_str());
-            }
-            rno++;
-         }
-      } while (FindNext(sr) == 0);
-   }
-   FindClose(sr);
-
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btnClearActiveClick(TObject *Sender)
-{
-
-   VieworksCCD->ClearActive();
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::DoMotionCCD()
-{
-
-   if(rgCCDSource->ItemIndex == 1) {
-      // ItemIndex變更, 不會自動呼叫
-      rgCCDSource->ItemIndex = 0;
-      rgCCDSourceChange(this,0);
-   }
-}
-//---------------------------------------------------------------------------
-bool __fastcall TMainForm::DoTiltCapture()
-{
-
-   if(rgCCDSource->ItemIndex == 0) {
-      // ItemIndex變更, 不會自動呼叫
-      rgCCDSource->ItemIndex = 1;
-      rgCCDSourceChange(this,1);
-   }
-
-   // Tilt Move and Capture
-   btnTriggerTestClick(this);
-   if(pnlTriggerTest->Color == clLime)
-      return true;
-   return false;
-
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::PutVieworksImage()
-{
-
-   //EImageAry.Save("E:\\test1.bmp",E_FILE_FORMAT_COLOR_BMP);
-   EImageAry.Draw(imVieworks->Canvas->Handle);
-   imVieworks->Refresh();
-
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btnRecipeLED1Click(TObject *Sender)
-{
-int value;
-
-   value = edRecipeLED1->Text.ToInt();
-
-   tbLED2CH1->Position = value;
-   pnlLED2CH1->Caption = IntToStr(tbLED2CH1->Position);
-   LED2CH1Value = tbLED2CH1->Position;
-   SetLED2Value(1,LED2CH1Value);
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::pnlRecipeLED2Click(TObject *Sender)
-{
-int value;
-
-   value = edRecipeLED2->Text.ToInt();
-
-   tbLED2CH2->Position = value;
-   pnlLED2CH2->Caption = IntToStr(tbLED2CH2->Position);
-   LED2CH2Value = tbLED2CH2->Position;
-   SetLED2Value(1,LED2CH2Value);
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::Label189Click(TObject *Sender)
-{
-
-   boolInTest = false;
-}
-//---------------------------------------------------------------------------
-// 2023 8 20 - chc 使用Timer來顯示
-// 是否DFK/Vieworks同時做.Draw造成異常??
-void __fastcall TMainForm::tmVieworksTimer(TObject *Sender)
-{
-
-   tmVieworks->Enabled = false;
-   if(boolInVieworksDisplay == false && cbTimerDisplay->Checked == true && VieworksCCD->boolVWLive == true && rgImageType->ItemIndex == 1) {
-      EImageAry.Draw(imVieworks->Canvas->Handle);
-      imVieworks->Refresh();
-   }
-   tmVieworks->Enabled = true;
-
-}
-//---------------------------------------------------------------------------
-// Wait
-void __fastcall TMainForm::WaitTimeOLS(int ms)
-{
-long StartTime,StopTime,Elapsedms;
-short StartTick,StopTick;
-
-   GetTimeTic(&StartTime,&StartTick);
-   while(1) {
-      Sleep(10);
-      Application->ProcessMessages();
-
-      GetTimeTic(&StopTime,&StopTick);
-      Elapsedms = ((StopTime*1000+StopTick) - (StartTime*1000+StartTick));
-      if(Elapsedms > ms) {
-         break;
-      }
-   }
-}
-//---------------------------------------------------------------------------
-// 2023 8 21 - chc DFK Trigger
-// Returns or sets the snap timeout value. This is the time in milliseconds the functions
-// ICImagingControl.MemorySnapImage and ICImagingControl.MemorySnapImageSequence wait until they abort.
-// TimeoutValue specifies the timeout value in milliseconds. Possible values are [0,+...] and -1. -1 means wait forever for the first frame.
-//
-// ICRGB32  32 bit color depth
-// ICRGB24  24 bit color depth
-// ICRGB565  16 bit color depth with red 5 green 6 blue 5 bit encoding
-// ICRGB555  16 bit color depth with red 5 green 5 blue 5 bit encoding
-// ICY8  8 bit grayscale, bottom up
-// ICUYVY  UYVY color format
-// eY800  8 bit Y format, top down
-// eYGB0  16 bit Y (10 bit valid) format
-// eYGB1  16 bit Y (10 bit valid) format
-// eBY8  8 bit bayer raw format. See Debayering for information on how to handle this format.
-//
-bool Tri_Switch = false;
-void __fastcall TMainForm::cbCCDTriggerClick(TObject *Sender)
-{
-int ccdno = 0;
-bool bfirst = true;
-
-   if(TiltCCDType == CCDTYPE_DFK) {
-      // 要Stop / Live
-      if(ICImagingControl2->LiveVideoRunning) {
-         WriteSystemLog("cbCCDTriggerClick: LiveStop...");
-         ICImagingControl2->LiveStop();
-         WriteSystemLog("cbCCDTriggerClick: LiveStop end.");
-      }
-      // Active但尚未設定
-      if((cbCCDTrigger->Checked == true && Tri_Switch == false) || (cbCCDTrigger->Checked == false && Tri_Switch == true)) {
-         Tri_Switch = cbCCDTrigger->Checked;
-         if(cbCCDTrigger->Checked == true)
-            WriteSystemLog("cbCCDTriggerClick: Set Trigger On");
-         else
-            WriteSystemLog("cbCCDTriggerClick: Set Trigger Off");
-         ICImagingControl2->DeviceTrigger = cbCCDTrigger->Checked;
-         WriteSystemLog("cbCCDTriggerClick: Set Trigger end.");
-         // ms
-         if(bfirst == true) {
-            WriteSystemLog("cbCCDTriggerClick: Set timeout...");
-//            ICImagingControl2->MemorySnapTimeout = edCCDTimeout->Text.ToInt();
-            WriteSystemLog("cbCCDTriggerClick: Set timeout end.");
-            bfirst = false;
-         }
-      }
-      WriteSystemLog("cbCCDTriggerClick: Wait...");
-      WaitTime(500);
-      WriteSystemLog("cbCCDTriggerClick: Wait end.");
-      if(!ICImagingControl2->LiveVideoRunning) {
-         WriteSystemLog("cbCCDTriggerClick: LiveCaptureContinuous = true...");
-         ICImagingControl2->LiveCaptureContinuous = true;
-         WriteSystemLog("cbCCDTriggerClick: LiveCaptureContinuous = true end.");
-         WriteSystemLog("cbCCDTriggerClick: LiveStart...");
-         ICImagingControl2->LiveStart();
-         WriteSystemLog("cbCCDTriggerClick: LiveStart end.");
-      }
-      WriteSystemLog("cbCCDTriggerClick: Leave.");
-   }
-
-   // 目前設定值
-   // deteremines whether frames are copied continuously to the internal ring buffer.
-   //ICImagingControl1->LiveCaptureContinuous = true;
-   // determines whether a live image is displayed.
-   //ICImagingControl1->LiveDisplay = false;
-   // Gray
-   //ICImagingControl1->MemoryCurrentGrabberColorformat = ICY8;
-   // Color
-   //ICImagingControl1->MemoryCurrentGrabberColorformat = ICRGB24;
-
-}
-//---------------------------------------------------------------------------
-// 2023 8 21 - chc DFK Trigger
-void __fastcall TMainForm::btnCCDSettingClick(TObject *Sender)
-{
-
-   ICImagingControl1->ShowDeviceSettingsDialog();
-   ICImagingControl1->ShowPropertyDialog();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btn45SaveImageClick(TObject *Sender)
-{
-AnsiString filename;
-
-   spCCDImage->InitialDir = BaslerBitmapDirectory;
-   // 設定filtet
-   spCCDImage->Filter = "BMP(*.bmp)|*.bmp";
-
-   if(spCCDImage->Execute()) {
-      // 改變副檔名
-      filename = ChangeFileExt(spCCDImage->FileName,".bmp");
-
-      // 2023 8 21 - chc 換DFK
-      if(TiltCCDType == CCDTYPE_DFK) {
-         int ccdno = 1;
-         usb_ImageROIAry[ccdno].Save(filename.c_str(),E_FILE_FORMAT_COLOR_BMP);
-      }
-      else
-
-         EImageAry.Save(filename.c_str(),E_FILE_FORMAT_COLOR_BMP);
-   }
-}
-//---------------------------------------------------------------------------
-// Tilt CCD: DFK
-void __fastcall TMainForm::tmISCCD2Timer(TObject *Sender)
-{
-static int cnt = 0;
-AnsiString path,fname;
-int start,interval,counter,position;
-
-   tmISCCD2->Enabled = false;
-   pnlISCCD2Capture->Color = clLime;
-   pnlISCCD2Capture->Refresh();
-
-   // Snap an image.
-   // Trigger要等到Timeout
-   ICImagingControl2->MemorySnapImage();
-   // Copy the last grabbed image to the PictureBox control
-
-   // Buffer Mode
-   // ->MemoryGetImageData() (B/G/R)
-   //unsigned char r,g,b;
-   //color = imVieworks->Canvas->Pixels[X][Y];
-   //b = (color & 0xff0000) >> 16;
-   //g = (color & 0x00ff00) >> 8;
-   //r = color & 0x0000ff;
-   unsigned char *buffer;
-   buffer = (unsigned char *)ICImagingControl2->ImageActiveBuffer->get_ImageDataPtr();
-   int bytesperpixel;
-   bytesperpixel = ICImagingControl2->ImageBitsPerPixel / 8;
-
-   //===========================
-int no;
-static int count = 0;
-AnsiString msg;
-int width,height,sx,sy,x,y,w,h;
-static bool bfirst = true;
-
-   // Index
-   pnlCCD2Status->Color = clSilver;
-   no = 1;
-   width = CCDInfoAry[no].Width;
-   height = CCDInfoAry[no].Height;
-
-   // 固定為1600*1600
-   int ccdwidth,ccdheight;
-   ccdwidth = 1600;
-   ccdheight = 1600;
-
-   //WriteSystemLog("Show-0: " + IntToStr(width) + "," + IntToStr(height) + "," + IntToStr(CCDInfoAry[no].Type));
-   w = imVieworks->Width;
-   h = imVieworks->Height;
-   // 在影像處理中
-   boolInGigaBufferAry[no] = true;
-
-   count++;
-   unsigned char *pt,*pt1;
-   int i;
-   int pointer;
-   // 記錄存檔中...
-   if(boolInGigaSaveAry[no] == true) {
-      lbGiga->Items->Add("In Saving3... Stop Refeshing Image");
-      pnlSystemMessage->Caption = "In Saving... Stop Refeshing Image";
-      boolInGigaBufferAry[no] = false;
-      return;
-   }
-   pnlCCD2Status->Color = clLime;
-
-   // 在Motion CCD就不做
-   if(rgCCDSource->ItemIndex != 1)
-      goto notdraw;
-
-   if(bfirst == true) {
-      bfirst = false;
-
-      if(CCDInfoAry[no].Type == CCD_BW) {
-         CCDImageAry[no].SetSize(width,height);
-         CCDImageROIAry[no].Detach();
-         CCDImageROIAry[no].Attach(&CCDImageAry[no]);
-      }
-      else {
-         usb_ImageAry[no].SetSize(width,height);
-         usb_ImageROIAry[no].Detach();
-         usb_ImageROIAry[no].Attach(&usb_ImageAry[no]);
-      }
-   }
-
-   // BW : CCDImageAry
-   if(CCDInfoAry[no].Type == CCD_BW) {
-      i = 0;
-      for(int row=height-1 ; row>=0 ; row--) {
-         pt = (unsigned char *)CCDImageAry[no].GetImagePtr(0,row);
-         // 由buffer到pt
-         memcpy(pt, &buffer[i],width);
-         // Gray
-         i += width;
-      }
-      //CCDImageROIAry[no].Detach();
-      //CCDImageROIAry[no].Attach(&CCDImageAry[no]);
-      // Full Image
-      if(cb45FullImage->Checked == true) {
-         sx = (width - ccdwidth) / 2;
-         sy = (height - ccdheight) / 2;
-         imVieworks->Picture->Bitmap->Width = ccdwidth;
-         imVieworks->Picture->Bitmap->Height = ccdheight;
-         CCDImageROIAry[no].SetPlacement(sx,sy,ccdwidth,ccdheight);
-      }
-      else {
-         sx = (width - w) / 2;
-         sy = (height - h) / 2;
-         // 要設Size
-         imVieworks->Picture->Bitmap->Width = w;
-         imVieworks->Picture->Bitmap->Height = h;
-         CCDImageROIAry[no].SetPlacement(sx,sy,w,h);
-      }
-      CCDImageROIAry[no].Draw(imVieworks->Canvas->Handle);
-      imVieworks->Refresh();
-   }
-   // Color
-   else {
-      // Color : usb_ImageAry
-      i = 0;
-      for(int row=height-1 ; row>=0 ; row--) {
-         pt = (unsigned char *)usb_ImageAry[no].GetImagePtr(0,row);
-         // 由buffer到pt
-         memcpy(pt, &buffer[i],width*3);
-         i += (width*3);
-      }
-
-      //usb_ImageROIAry[no].Detach();
-      //usb_ImageROIAry[no].Attach(&usb_ImageAry[no]);
-      // Full Image
-      if(cb45FullImage->Checked == true) {
-         sx = (width - ccdwidth) / 2;
-         sy = (height - ccdheight) / 2;
-         imVieworks->Picture->Bitmap->Width = ccdwidth;
-         imVieworks->Picture->Bitmap->Height = ccdheight;
-         usb_ImageROIAry[no].SetPlacement(sx,sy,ccdwidth,ccdheight);
-      }
-      else {
-         sx = (width - w) / 2;
-         sy = (height - h) / 2;
-         imVieworks->Picture->Bitmap->Width = w;
-         imVieworks->Picture->Bitmap->Height = h;
-         usb_ImageROIAry[no].SetPlacement(sx,sy,w,h);
-      }
-
-      // In Trigger & 到位置
-      if(boolInTrigger == true) {
-         // S/W
-         if(cbUseTrigger->Checked == false) {
-            start = edTriggerStart->Text.ToInt();
-            interval = edTriggerInterval->Text.ToInt();
-            counter = edCounterT->Text.ToInt();
-            position = start + interval * TriggerFrameNo;
-            if(counter >= position) {
-               TriggerFrameNo++;
-               pnlTriggerCaptureNo->Caption = IntToStr(TriggerFrameNo);
-               pnlTriggerCaptureNo->Refresh();
-               pnlTriggerNo->Caption = IntToStr(TriggerFrameNo);
-               pnlTriggerNo->Refresh();
-               path = SystemConfig.ImagePath;
-               if(!DirectoryExists(path))
-                  mkdir(path.c_str());
-               fname.sprintf("%s\\%03d.bmp",path.c_str(),TriggerFrameNo);
-               usb_ImageROIAry[no].Save(fname.c_str(),E_FILE_FORMAT_COLOR_BMP);
-               usb_ImageROIAry[no].Draw(imVieworks->Canvas->Handle);
-               imVieworks->Refresh();
-            }
-         }
-         // H/W
-         else {
-            TriggerFrameNo++;
-            pnlTriggerCaptureNo->Caption = IntToStr(TriggerFrameNo);
-            pnlTriggerCaptureNo->Refresh();
-            pnlTriggerNo->Caption = IntToStr(TriggerFrameNo);
-            pnlTriggerNo->Refresh();
-            path = SystemConfig.ImagePath;
-            if(!DirectoryExists(path))
-               mkdir(path.c_str());
-            fname.sprintf("%s\\%03d.bmp",path.c_str(),TriggerFrameNo);
-            usb_ImageROIAry[no].Save(fname.c_str(),E_FILE_FORMAT_COLOR_BMP);
-            usb_ImageROIAry[no].Draw(imVieworks->Canvas->Handle);
-            imVieworks->Refresh();
-         }
-      }
-      else {
-         usb_ImageROIAry[no].Draw(imVieworks->Canvas->Handle);
-         imVieworks->Refresh();
-      }
-
-   }
-   cnt++;
-   pnlCCDCount->Caption = IntToStr(cnt);
-
-// 2023 8 20a - chc 在Vieworks CCD就不做
-notdraw:
-
-   boolCCDImageLoadedAry[no] = true;
-   CCDCaptureNoAry[no]++;
-   if((count % 5) == 0) {
-      GetTimeTic(&CCDStopTimeAry[no],&CCDStopTickAry[no]);
-      CCDElapsedmsAry[no] = ((CCDStopTimeAry[no]*1000+CCDStopTickAry[no]) - (CCDStartTimeAry[no]*1000+CCDStartTickAry[no]));
-      double ratio;
-      AnsiString msg;
-      // Devide by zero
-      if(CCDElapsedmsAry[no] != 0) {
-         ratio = ((double)CCDCaptureNoAry[no] * 1000.0) / CCDElapsedmsAry[no];
-         msg.sprintf("%.1f",ratio);
-         pnlCapturedNo2->Caption = msg;
-      }
-   }
-
-   // 未在影像處理中
-   boolInGigaBufferAry[no] = false;
-   tmISCCD2->Enabled = true;
-   pnlISCCD2Capture->Color = clSilver;
-   pnlISCCD2Capture->Refresh();
-
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::Button1Click(TObject *Sender)
-{
-
-   ICImagingControl2->ShowDeviceSettingsDialog();
-   ICImagingControl2->ShowPropertyDialog();
-}
-//---------------------------------------------------------------------------
-// 2023 8 22 - chc CCD2 Shutter
-void __fastcall TMainForm::SetCCD2Shutter(int ishutter)
-{
-int us;
-double dus;
-
-   // 2016 12 8 - chc ImagingSource
-   if(pnlISCCD2Staus->Color != clLime)
-      return;
-
-   us = 1000000 / ishutter;
-
-   if(us < 60)
-      us = 60;
-   // 1/5sec
-   else if(us > 200000)
-      us = 200000;
-   // Set Exposure : us
-   ICImagingControl2->Exposure = us;
-   return;
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::btn45ShutterClick(TObject *Sender)
-{
-int shutter;
-
-   shutter = ed45Shutter->Text.ToInt();
-   SetCCD2Shutter(shutter);
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btnRecipeShutterClick(TObject *Sender)
-{
-
-   ed45Shutter->Text = edRecipeShutter->Text;
-   if(TiltCCDType == CCDTYPE_DFK) {
-      btn45ShutterClick(this);
-   }
-}
-//---------------------------------------------------------------------------
-#define MEASURE_INDEX           0
-#define MEASURE_ITEM            1
-#define MEASURE_VALUE           2
-void __fastcall TMainForm::MeasureDataTitle()
-{
-
-   sgMeasureData->ColCount = 3;
-   sgMeasureData->RowCount = 2;
-
-   sgMeasureData->Cells[MEASURE_INDEX][0]         = "No";
-   sgMeasureData->Cells[MEASURE_ITEM][0]          = "Item";
-   sgMeasureData->Cells[MEASURE_VALUE][0]         = "Value";
-   // 寬度
-   sgMeasureData->ColWidths[MEASURE_INDEX]        = 30;
-   sgMeasureData->ColWidths[MEASURE_ITEM]         = 40;
-   sgMeasureData->ColWidths[MEASURE_VALUE]        = 80;
-   // 清除sgResult
-   sgMeasureData->Cells[MEASURE_INDEX][1]         = "";
-   sgMeasureData->Cells[MEASURE_ITEM][1]          = "";
-   sgMeasureData->Cells[MEASURE_VALUE][1]         = "";
-
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::AddMeasureData(AnsiString item, AnsiString value)
-{
-AnsiString temp;
-
-   sgMeasureData->Cells[MEASURE_INDEX][sgMeasureData->RowCount-1]  = sgMeasureData->RowCount-1;
-   sgMeasureData->Cells[MEASURE_ITEM][sgMeasureData->RowCount-1]   = item;
-   sgMeasureData->Cells[MEASURE_VALUE][sgMeasureData->RowCount-1]  = value;
-
-   sgMeasureData->RowCount++;
-
-   // 清除最後一Row
-   sgMeasureData->Cells[MEASURE_INDEX][sgMeasureData->RowCount-1]  = "";
-   sgMeasureData->Cells[MEASURE_ITEM][sgMeasureData->RowCount-1]   = "";
-   sgMeasureData->Cells[MEASURE_VALUE][sgMeasureData->RowCount-1]  = "";
-
-   // 指到最後一筆
-   sgMeasureData->Row = sgMeasureData->RowCount-1;
-
-}
-//---------------------------------------------------------------------------
-
-
-
-
-void __fastcall TMainForm::mnDeletePointClick(TObject *Sender)
-{
-int no,tno,colcnt;
-
-   no = sgMeasureData->Row;
-   if(no < 1 || sgMeasureData->RowCount <= 2 || no == sgMeasureData->RowCount-1) {
-      return;
-   }
-
-   colcnt = sgMeasureData->ColCount;
-   tno = sgMeasureData->RowCount-1;
-   for(int i=no ; i<tno ; i++) {
-      for(int j=0 ; j<colcnt ; j++) {
-         sgMeasureData->Cells[j][i] = sgMeasureData->Cells[j][i+1];
-      }
-   }
-   sgMeasureData->RowCount--;
-
-   //重編各批編號
-   tno = sgMeasureData->RowCount-1;
-   for(int i=1 ; i<tno ; i++) {
-      sgMeasureData->Cells[0][i] = i;
-   }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::mnDeleteAllPointClick(TObject *Sender)
-{
-int no,tno,colcnt;
-
-   tno = sgMeasureData->RowCount;
-   sgMeasureData->RowCount = 2;
-   colcnt = sgMeasureData->ColCount;
-
-   for(int j=1 ; j<tno ; j++) {
-      for(int i=0 ; i<colcnt ; i++) {
-         sgMeasureData->Cells[i][j] = "";
-      }
-   }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::mnSavePointClick(TObject *Sender)
-{
-FILE *fp;
-AnsiString filename,temp;
-int tno;
-
-   DateTimeToString(temp,"yyyymmddhhnnss",Now());
-   filename = ExportDirectory + "\\" + temp + ".csv";
-   tno = sgMeasureData->RowCount;
-
-   DeleteFile(filename);
-   if((fp = fopen(filename.c_str(),"w+t")) != NULL) {
-      fprintf(fp,"Filename= [%s]\n",filename.c_str());
-      fprintf(fp,"No,Item,Value\n");
-      for(int j=1 ; j<tno ; j++) {
-         fprintf(fp,"%s,%s,%s\n",sgMeasureData->Cells[0][j],sgMeasureData->Cells[1][j],sgMeasureData->Cells[2][j]);
-      }
-      fclose(fp);
-   }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::btnReviewGrabClick(TObject *Sender)
-{
-
-   if(ICImagingControl1->LiveVideoRunning) {
-      WriteSystemLog("btnReviewGrabClick(1): LiveStop...");
-      ICImagingControl1->LiveStop();
-      WriteSystemLog("btnReviewGrabClick(1): LiveStop end.");
-   }
-
-   if(ICImagingControl2->LiveVideoRunning) {
-      WriteSystemLog("btnReviewGrabClick(2): LiveStop...");
-      ICImagingControl2->LiveStop();
-      WriteSystemLog("btnReviewGrabClick(2): LiveStop end.");
-   }
-}
-//---------------------------------------------------------------------------
-// 2023 8 24 - chc Send Data
-// 0-Init, 1-Start, 2-Done, 3-Error: Manual45Measure
-//int Manual45Measure = 0;
-void __fastcall TMainForm::btn45MeasuredClick(TObject *Sender)
-{
-
-   if(pnl45NiUp->Caption == "" || pnl45NiDown->Caption == "" || pnl45CuUp->Caption == "" || pnl45CuDown->Caption == "") {
-      pnlAlarmMessage->Caption = "Manual measurements not complete!";
-      WriteSystemLog("手動量測尚未完成!");
-      Manual45Measure = 1;
-   }
-   else {
-      btn45Measured->Visible = false;
-      // Send Data
-      if(WaitYuanliCmd(CMD_DATA,30000) != CMD_ACK_E) {
-         pnlSystemRun->Caption = "YuanLi Data failed!";
-         pnlAlarmMessage->Caption = "YuanLi Data failed, Stop.";
-         pnlSystemMessage->Caption = "";
-         WriteSystemLog(pnlAlarmMessage->Caption);
-         Manual45Measure = 3;
-      }
-      else
-         Manual45Measure = 2;
-   }
-}
-//---------------------------------------------------------------------------
-// 2023 8 24 - chc 若另一個Loadport已Ready且尚未做過就可以取片
-bool __fastcall TMainForm::CheckNextLoadportReady()
-{
-TPanel *panel,*panel1;
-
-   if(rgLoadPortSelect->ItemIndex == LOADPORT_1) {
-      // LP2 Ready?
-      if(btnCassette2Load->Caption == "UnLoad") {
-         for(int i=0 ; i<25 ; i++) {
-            panel = (TPanel*)(FindComponent("pnlTray2_" + IntToStr(i+1)));
-            panel1 = (TPanel*)(FindComponent("pnlTray2_" + IntToStr(i+1) + "Select"));
-            if(panel->Color != WaferColor_Select || panel1->Color != WaferColor_Select) {
-               WriteSystemLog("CheckNextLoadportReady: LP2已Load但有作業過");
-               return false;
-            }
-         }
-         WriteSystemLog("CheckNextLoadportReady: LP2已Load且未作業過");
-         return false;
-      }
-      WriteSystemLog("CheckNextLoadportReady: LP2尚未Load.");
-      return false;
-   }
-   else {
-      // LP1 Ready?
-      if(btnCassetteLoad->Caption == "UnLoad") {
-         for(int i=0 ; i<25 ; i++) {
-            panel = (TPanel*)(FindComponent("pnlTray" + IntToStr(i+1)));
-            panel1 = (TPanel*)(FindComponent("pnlTray" + IntToStr(i+1) + "Select"));
-            if(panel->Color != WaferColor_Select || panel1->Color != WaferColor_Select) {
-               WriteSystemLog("CheckNextLoadportReady: LP1已Load但有作業過");
-               return false;
-            }
-         }
-         WriteSystemLog("CheckNextLoadportReady: LP1已Load且未作業過");
-         return false;
-      }
-      WriteSystemLog("CheckNextLoadportReady: LP1尚未Load.");
-      return false;
-   }
-}
-//---------------------------------------------------------------------------
-// 2023 8 25 - chc PO Switch
-void __fastcall TMainForm::cbPOClick(TObject *Sender)
-{
-
-   pnlDOPolarizerClick(this);
 }
 //---------------------------------------------------------------------------
 

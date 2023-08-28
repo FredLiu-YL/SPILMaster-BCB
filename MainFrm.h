@@ -87,22 +87,14 @@
 #include <jpeg.hpp>
 #include "LMDBackPanel.hpp"
 #include "LMDSimplePanel.hpp"
-#include "LMDBaseImage.hpp"
-#include "LMDCustomLImage.hpp"
-#include "LMDLImage.hpp"
-#include "LMDCustomNImage.hpp"
-#include "LMDNImage.hpp"
 
 // 精度為0.1um
 #define X_RESOLUTION    0.1
 #define Y_RESOLUTION    0.1
 #define Z_RESOLUTION    0.1
 #define T_RESOLUTION    0.05
+#define L_RESOLUTION    8.2                                                     // 257 - 2856
 #define W_RESOLUTION    0.1
-
-// 2023 8 21 - chc 改成0.82
-//#define L_RESOLUTION    8.2                                                     // 257 - 2856
-#define L_RESOLUTION    0.82                                                     // 257 - 2856
 
 // 2021 12 9 - chc 錯了
 //#define MM_TO_UM        10000.0
@@ -909,13 +901,13 @@ __published:	// IDE-managed Components
         TLMDButton *btnDeleteRecipe;
         TPanel *Panel10;
         TShape *shDirRightTop;
-        TRadioGroup *rgCCDShutter;
+        TRadioGroup *rgBaslerShutter;
         TGroupBox *GroupBox35;
         TLabel *Label329;
         TLabel *Label330;
         TLabel *Label331;
-        TTrackBar *tbCCDGain;
-        TPanel *pnlCCDGain;
+        TTrackBar *tbBaslerGain;
+        TPanel *pnlBaslerGain;
         TShape *shPointSet1;
         TPanel *pnlPointSet1;
         TPanel *pnlPositionLength;
@@ -1067,6 +1059,10 @@ __published:	// IDE-managed Components
         TLabel *Label131;
         TLMDEdit *edJogFactor;
         TLMDEdit *edContinueFactor;
+        TLabel *Label318;
+        TLMDEdit *edRunLoop;
+        TLMDButton *btnRunStop;
+        TPanel *pnlRunDoneNo;
         TPanel *pnlElapsedTime;
         TPanel *pnlTableX;
         TLabel *Label134;
@@ -1198,6 +1194,10 @@ __published:	// IDE-managed Components
         TLMDButton *btnMatchToCenter;
         TTimer *tmJoystick;
         TTimer *tmTrigger;
+        TPanel *pnlJX;
+        TPanel *pnlJY;
+        TPanel *pnlJZ;
+        TLabel *Label312;
         TLMDRadioGroup *rgkmfDirection;
         TLMDGroupBox *LMDGroupBox39;
         TLabel *Label354;
@@ -1312,6 +1312,7 @@ __published:	// IDE-managed Components
         TLMDButton *btnLeftIn;
         TLMDButton *btnRightIn;
         TLMDButton *btnRightOut;
+        TPanel *pnlSpeed;
         TPanel *pnlFrontOut;
         TPanel *pnlFrontIn;
         TPanel *pnlRearIn;
@@ -1388,6 +1389,7 @@ __published:	// IDE-managed Components
         TPanel *Panel13;
         TLMDButton *btnToLastYes;
         TLMDButton *btnToLastNo;
+        TBitBtn *btnSaveImage;
         TShape *shMotionStatus;
         TLabel *Label26;
         TPanel *pnlCardNo;
@@ -2842,8 +2844,8 @@ __published:	// IDE-managed Components
         TPanel *pnlTray2_24Select;
         TPanel *pnlTray2_25Select;
         TPanel *Panel154;
-        TLMDButton *btnAllSelect2;
-        TLMDButton *btnAllCancel2;
+        TLMDButton *LMDButton1;
+        TLMDButton *LMDButton3;
         TPanel *pnlWaferRobotInformationLow1;
         TLMDButton *btnCassette2Load;
         TPanel *pnlCassette2Load;
@@ -3108,7 +3110,7 @@ __published:	// IDE-managed Components
         TLMDButton *btnSystemConfigSave;
         TGroupBox *GroupBox18;
         TLabel *Label649;
-        TEdit *edSECSPortSet;
+        TEdit *Edit1;
         TLabel *Label154;
         TLMDEdit *edZ1Limit;
         TLabel *Label171;
@@ -3257,7 +3259,7 @@ __published:	// IDE-managed Components
         TShape *shHorizontalVieworks;
         TCheckBox *cb45CrossLine;
         TShape *shVerticalVieworks;
-        TPageControl *pcRecipeParameter;
+        TPageControl *PageControl2;
         TTabSheet *tsRecipeSet;
         TLabel *Label303;
         TLabel *Label307;
@@ -3274,7 +3276,7 @@ __published:	// IDE-managed Components
         TLMDButton *btnRecipeReset;
         TLMDButton *btnReadkmfToPoint;
         TLMDButton *btnZAdjust;
-        TPanel *pnlGetRecipe;
+        TPanel *Panel74;
         TComboBox *comboOlympusVisionName1;
         TLMDEdit *edAreaNo;
         TLMDEdit *edAreaTNo;
@@ -3332,6 +3334,7 @@ __published:	// IDE-managed Components
         TPanel *pnlOLS5000Connect2;
         TCheckBox *cbResetBuzzer;
         TLMDEdit *ed45Gain;
+        TLabel *Label655;
         TButton *btn45Gain;
         TLabel *Label656;
         TButton *btn45Reset;
@@ -3369,115 +3372,6 @@ __published:	// IDE-managed Components
         TPanel *pnlCenterMessage;
         TButton *btnStopSave;
         TTimer *tmFindCenter;
-        TCheckBox *cb45ExposureAuto;
-        TLMDEdit *ed45TargetBrightness;
-        TButton *btn45TargetBrightness;
-        TLMDButton *btn45Save;
-        TEdit *edRorzeAlignerDegree;
-        TLabel *Label660;
-        TLabel *Label661;
-        TLabel *Label662;
-        TGroupBox *GroupBox6;
-        TLabel *Label663;
-        TEdit *edRecipePath;
-        TLabel *Label664;
-        TEdit *edMacroPath;
-        TPanel *pnlGetMacro;
-        TComboBox *comboOlympusMacroName;
-        TLMDButton *btnMacroTest;
-        TPanel *pnlMacroTest;
-        TMenuItem *mnSetLens0;
-        TMenuItem *mnSetCCD;
-        TMenuItem *mnSetLens45;
-        TBitBtn *btnSaveImage;
-        TPanel *pnlJX;
-        TPanel *pnlJY;
-        TPanel *pnlJZ;
-        TPanel *pnlSpeed;
-        TLabel *Label318;
-        TLMDEdit *edRunLoop;
-        TPanel *pnlRunDoneNo;
-        TLMDButton *btnRunStop;
-        TLMDButton *btnOLSToLocal;
-        TLabel *Label312;
-        TPanel *pnlOLS5000UnitConnect;
-        TCheckBox *cbOLS5000Wait;
-        TTimer *tmSetupOLS5000;
-        TLabel *Label667;
-        TEdit *edImagePath;
-        TPanel *pnlLP1ES;
-        TPanel *pnlLP1HOAVBL;
-        TPanel *pnlLP1Ready;
-        TPanel *pnlLP1UReq;
-        TPanel *pnlLP1LReq;
-        TPanel *pnlLP2LReq;
-        TPanel *pnlLP2UReq;
-        TPanel *pnlLP2Ready;
-        TPanel *pnlLP2HOAVBL;
-        TPanel *pnlLP2ES;
-        TLMDRadioGroup *rgOperationMode1;
-        TLMDRadioGroup *rgLightMode1;
-        TButton *btnClearActive;
-        TPanel *pnlDisplayCount;
-        TRadioGroup *rgPictureBitmap;
-        TGroupBox *GroupBox7;
-        TLabel *Label668;
-        TEdit *edMacroTimeout;
-        TLabel *Label670;
-        TLMDEdit *edRecipeLED1;
-        TLMDButton *btnRecipeLED1;
-        TCheckBox *cbLoadFirst;
-        TCheckBox *cbResetFirst;
-        TCheckBox *cbTimerDisplay;
-        TTimer *tmVieworks;
-        TCheckBox *cbGrabFirst;
-        TCheckBox *cbCCDTrigger;
-        TButton *btnCCDSetting;
-        TLMDEdit *edCCDTimeout;
-        TLabel *Label671;
-        TBitBtn *btn45SaveImage;
-        TICImagingControl *ICImagingControl2;
-        TPanel *pnlCCD2Status;
-        TPanel *pnlISCCD2Info;
-        TPanel *pnlISCCD2Staus;
-        TPanel *pnlISCCD2Capture;
-        TTimer *tmISCCD2;
-        TPanel *pnlCapturedNo2;
-        TPanel *pnlCaptureTime2;
-        TButton *Button1;
-        TLMDEdit *ed45Shutter;
-        TButton *btn45Shutter;
-        TPanel *Panel74;
-        TPanel *Panel85;
-        TPanel *pnlTriggerNo;
-        TEdit *edFactor;
-        TPanel *Panel87;
-        TStringGrid *sgMeasureData;
-        TPopupMenu *pmPoint;
-        TMenuItem *mnDeletePoint;
-        TMenuItem *mnDeleteAllPoint;
-        TMenuItem *mnSavePoint;
-        TCheckBox *cbUseTrigger;
-        TLabel *Label659;
-        TLMDButton *btn45Measured;
-        TTabSheet *tsRecipeTilt;
-        TGroupBox *GroupBox8;
-        TLabel *Label665;
-        TLabel *Label666;
-        TLabel *Label655;
-        TLMDEdit *edRecipeGain;
-        TLMDButton *btnRecipeGain;
-        TLMDEdit *edRecipeBrightness;
-        TLMDButton *btnRecipeBrightness;
-        TLMDEdit *edRecipeShutter;
-        TLMDButton *btnRecipeShutter;
-        TLabel *Label669;
-        TLMDEdit *edRecipeLED2;
-        TLMDButton *pnlRecipeLED2;
-        TGroupBox *GroupBox9;
-        TLabel *Label679;
-        TLMDEdit *edRecipeStart;
-        TCheckBox *cbPO;
 //
         void __fastcall FormShow(TObject *Sender);
 //
@@ -3660,8 +3554,8 @@ __published:	// IDE-managed Components
           TMouseButton Button, TShiftState Shift, int X, int Y);
 
         void __fastcall btnUpdateSystemParameterClick(TObject *Sender);
-        void __fastcall rgCCDShutterClick(TObject *Sender);
-        void __fastcall tbCCDGainChange(TObject *Sender);
+        void __fastcall rgBaslerShutterClick(TObject *Sender);
+        void __fastcall tbBaslerGainChange(TObject *Sender);
         void __fastcall tm500msTimer(TObject *Sender);
         void __fastcall shLeftMouseDown(TObject *Sender,
           TMouseButton Button, TShiftState Shift, int X, int Y);
@@ -4435,40 +4329,6 @@ __published:	// IDE-managed Components
         void __fastcall edSetValueKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
         void __fastcall tmFindCenterTimer(TObject *Sender);
-        void __fastcall btn45SaveClick(TObject *Sender);
-        void __fastcall btn45TargetBrightnessClick(TObject *Sender);
-        void __fastcall pnlGetRecipeClick(TObject *Sender);
-        void __fastcall pnlGetMacroClick(TObject *Sender);
-        void __fastcall btnMacroTestClick(TObject *Sender);
-        void __fastcall comboOlympusMacroNameClick(TObject *Sender);
-        void __fastcall cb45ExposureAutoClick(TObject *Sender);
-        void __fastcall btnRecipeGainClick(TObject *Sender);
-        void __fastcall btnRecipeBrightnessClick(TObject *Sender);
-        void __fastcall mnSetLens0Click(TObject *Sender);
-        void __fastcall mnSetCCDClick(TObject *Sender);
-        void __fastcall mnSetLens45Click(TObject *Sender);
-        void __fastcall btnOLSToLocalClick(TObject *Sender);
-        void __fastcall btnAllSelect2Click(TObject *Sender);
-        void __fastcall btnAllCancel2Click(TObject *Sender);
-        void __fastcall tmSetupOLS5000Timer(TObject *Sender);
-        void __fastcall btnClearActiveClick(TObject *Sender);
-        void __fastcall btnRecipeLED1Click(TObject *Sender);
-        void __fastcall pnlRecipeLED2Click(TObject *Sender);
-        void __fastcall Label189Click(TObject *Sender);
-        void __fastcall tmVieworksTimer(TObject *Sender);
-        void __fastcall cbCCDTriggerClick(TObject *Sender);
-        void __fastcall btnCCDSettingClick(TObject *Sender);
-        void __fastcall btn45SaveImageClick(TObject *Sender);
-        void __fastcall tmISCCD2Timer(TObject *Sender);
-        void __fastcall Button1Click(TObject *Sender);
-        void __fastcall btn45ShutterClick(TObject *Sender);
-        void __fastcall btnRecipeShutterClick(TObject *Sender);
-        void __fastcall mnDeletePointClick(TObject *Sender);
-        void __fastcall mnDeleteAllPointClick(TObject *Sender);
-        void __fastcall mnSavePointClick(TObject *Sender);
-        void __fastcall btnReviewGrabClick(TObject *Sender);
-        void __fastcall btn45MeasuredClick(TObject *Sender);
-        void __fastcall cbPOClick(TObject *Sender);
 //
 private:	// User declarations
 public:		// User declarations
@@ -4590,15 +4450,6 @@ public:		// User declarations
    int WStartVel ,WMaxVel ,WDistance ,WPosition ,WHomeVel,WReviewVel;
    double WTacc,WTdec,WUpLimit,WLowDistance;
 
-   // 2023 8 16 - chc 加入OperationMode, LightMode, Gain, Brightness
-   #define OPERATION_MODE               "Operation Mode"
-   #define OPERATION_0                  0
-   #define OPERATION_45                 1
-   #define OPERATION_ALL                2
-   #define LIGHT_MODE                   "Light Mode"
-   #define LIGHT_BF                     0
-   #define LIGHT_PO                     1
-
    #define MOTION_INFORMATION_SECTION           "Motion Information"
    #define BISS_INFORMATION_SECTION             "BiSS Information"
    #define HEIDENHAIN_INFORMATION_SECTION       "Heidenhain Information"
@@ -4633,10 +4484,6 @@ public:		// User declarations
       double Intensity;
       int Row;
       int Col;
-
-      // 2023 8 16 - chc 加入Macro
-      AnsiString Macro;
-
    };
    struct RECIPE_STRU   {
       AnsiString Name;
@@ -4700,21 +4547,6 @@ public:		// User declarations
 
       // 2023 1 28 - chc edY45Offset
       int Y45Offset;
-
-      // 2023 8 16 - chc 加入OperationMode, LightMode, Gain, Brightness
-      int OperationMode;
-      int LightMode;
-      int Gain;
-      int Brightness;                                                           // 0 - 255
-
-      // 2023 8 22 - chc Shutter;
-      int Shutter;
-
-      // 2023 8 19 - chc 加入LED
-      int LED1,LED2;
-
-      // 2023 8 24 - chc 加入Start
-      int Start;
 
    };
    struct RECIPE_STRU RecipeBuffer[RECIPE_MAX];
@@ -4799,7 +4631,7 @@ public:		// User declarations
    bool ExitYes;
 
    // 2016 4 16 - chc Laser Motion for Apple
-   void __fastcall TMainForm::SetupCCD();
+   void __fastcall TMainForm::SetupscA1300();
    // 定義Alarm Code
    struct ALARM_STRU    {
       bool boolCDA;
@@ -4834,14 +4666,14 @@ public:		// User declarations
    void __fastcall TMainForm::CaptureGigaFrame2(int no, int mode);
    void __fastcall TMainForm::CaptureGigaFrame3(int no, int mode);
    // 取像時間顯示
-   long CCDCaptureStartTimeAry[3],CCDCaptureStopTimeAry[3],CCDCaptureElapsedmsAry[3];
-   short CCDCaptureStartTickAry[3],CCDCaptureStopTickAry[3];
+   long BaslerCaptureStartTimeAry[3],BaslerCaptureStopTimeAry[3],BaslerCaptureElapsedmsAry[3];
+   short BaslerCaptureStartTickAry[3],BaslerCaptureStopTickAry[3];
    // 記錄Basler存檔中...
    bool boolInGigaSaveAry[3];
-   // CCD的影像顯示改由EImageBW8 - CPU效能問題!!!!
-   EImageBW8 CCDImageAry[3];
-   EROIBW8 CCDImageROIAry[3];
-   EROIBW8 CCDImageMarkROIAry[3];
+   // scA1300的影像顯示改由EImageBW8 - CPU效能問題!!!!
+   EImageBW8 scA1300ImageAry[3];
+   EROIBW8 scA1300ImageROIAry[3];
+   EROIBW8 scA1300ImageMarkROIAry[3];
    EImageC24 usb_ImageAry[3];
    EROIC24 usb_ImageROIAry[3];
    EROIC24 usb_ImageMarkROIAry[3];
@@ -4850,13 +4682,13 @@ public:		// User declarations
    EImageC24 EImageAry;
    EROIC24 EImageAryROI;
 
-   bool boolCCDImageLoadedAry[3];
-   bool boolCCDGrabbedAry[3];
-   int CCDCaptureNoAry[3];
-   long CCDStartTimeAry[3],CCDStopTimeAry[3],CCDElapsedmsAry[3];
-   short CCDStartTickAry[3],CCDStopTickAry[3];
-   #define CCD_BW                0
-   #define CCD_COLOR             1
+   bool boolBaslerImageLoadedAry[3];
+   bool boolBaslerGrabbedAry[3];
+   int BaslerCaptureNoAry[3];
+   long BaslerStartTimeAry[3],BaslerStopTimeAry[3],BaslerElapsedmsAry[3];
+   short BaslerStartTickAry[3],BaslerStopTickAry[3];
+   #define BASLER_CCD_BW                0
+   #define BASLER_CCD_COLOR             1
    int BaslerCCDType[3];
    // _BaslerGigECameraParams.h
    //		PixelFormat_RGB8Packed,  //!<Sets the pixel format to RGB 8 Packed
@@ -4866,7 +4698,7 @@ public:		// User declarations
    //     PixelType_RGB8packed      = PIXEL_COLOR | PIXEL_BIT_COUNT(24) | 0x0014,
    //     PixelType_BGR8packed      = PIXEL_COLOR | PIXEL_BIT_COUNT(24) | 0x0015,
    //     PixelType_RGB8planar      = PIXEL_COLOR | PIXEL_BIT_COUNT(24) | 0x0021,
-   int CCDShutterAry[3],CCDGainAry[3],CCDGrayAry[3];
+   int scA1300ShutterAry[3],scA1300GainAry[3],scA1300GrayAry[3];
    void __fastcall TMainForm::GetImageXY(int width,int height,int sx,int sy,int w,int h,int *x,int *y);
    AnsiString BaslerBitmapDirectory;
    AnsiString CCDSN;
@@ -5314,23 +5146,14 @@ public:		// User declarations
    AnsiString ISCCDName, ISCCDSerialNo;
    // 2016 11 28 - chc Init ImagingSource CCD
    void __fastcall TMainForm::MakeDeviceSettings();
-   void __fastcall TMainForm::MakeDeviceSettings_2();
-
-   // 2023 8 21 - chc 加入多CCD
-   AnsiString ISCCD2Name, ISCCD2SerialNo;
-   AnsiString ISCCD3Name, ISCCD3SerialNo;
 
    // 2016 11 29 - chc Output DO
    #define STAGE_LOCK               0x01
-   #define STAGE_VACUUM             0x02                                        // 8"
+   #define STAGE_VACUUM             0x02
    #define HIGH_SPEED_LIGHT         0x04
 
    // 2021 6 3 - chc Vacuum1 - Bit7
-   #define STAGE_VACUUM1             0x80                                       // 12"
-
-   // 2023 8 25 - chc DI
-   #define STAGE_WAFER               0x80
-   #define DOOR_LOCK                 0x2000
+   #define STAGE_VACUUM1             0x80
 
    // 2016 12 12 - chc MaxTraceSpeed
    #define MAX_TRACE_SPEED              "Max Trace Speed"
@@ -5445,6 +5268,8 @@ public:		// User declarations
 
    // 2019 11 12 - chc 設定各軸RDY
    int XRDY,YRDY,ZRDY;
+   // 2019 11 12 - chc Vision64
+   bool boolVision64;
    int XSvon,YSvon,ZSvon;
 
    // 2019 11 18 - chc 也顯示在軸控頁面, 也要切換顯示值
@@ -5537,7 +5362,7 @@ public:		// User declarations
    int MoveIgnoreAxis,MoveIgnoreDirection;
 
    // 2020 2 28 - chc CCD
-   bool boolCCD,boolCCD2,boolCCD3;
+   bool boolCCD;
    // 2020 2 28 - chc 取消不顯示
    void __fastcall TMainForm::NonVisible();
 
@@ -5818,12 +5643,7 @@ public:		// User declarations
    void TMainForm::AddYuanliMessage(AnsiString msg);
 
 // Sockeet
-// 2023 8 16 - chc 加入Done
-//#define CMD_MAX                 12
-// 2023 8 24 - chc 加入Data
-//#define CMD_MAX                 14                                              // [彰化]
-#define CMD_MAX                 15                                              // [彰化]
-
+#define CMD_MAX                 12
 // to YUANLI: YuanLi, Init, SetRecipe, Mode, Start, InPos, Stop, Busy, Invalid
 #define CMD_YUANLI              0
 #define CMD_MODE                1
@@ -5838,28 +5658,14 @@ public:		// User declarations
 // 2021 12 18 - chc 傳送RFID(CST ID)
 #define CMD_RFID                9
 
-// 2023 8 16 - chc 加入Done
-#define CMD_DONE                10
-
-// 2023 8 24 - chc 加入Data
-#define CMD_DATA                11
-
 // to Motin: Motion, ReadRecipe, GetErr
 // 2021 12 18 - chc 傳送RFID(CST ID)
 //#define CMD_MOTION              9
 //#define CMD_READ_RECIPE         10
 //#define CMD_GET_ERR             11
-// 2023 8 16 - chc 加入Done
-//#define CMD_MOTION              10
-//#define CMD_READ_RECIPE         11
-//#define CMD_GET_ERR             12
-// 2023 8 24 - chc 加入Data
-//#define CMD_MOTION              11
-//#define CMD_READ_RECIPE         12
-//#define CMD_GET_ERR             13
-#define CMD_MOTION              12
-#define CMD_READ_RECIPE         13
-#define CMD_GET_ERR             14
+#define CMD_MOTION              10
+#define CMD_READ_RECIPE         11
+#define CMD_GET_ERR             12
 
    AnsiString CmdSet[CMD_MAX];
    void __fastcall TMainForm::SetCmdSet();
@@ -5926,7 +5732,7 @@ public:		// User declarations
    //int __fastcall TMainForm::FindEdge(int mode);
    int __fastcall TMainForm::FindEdge(int mode, int *x, int *y);
 
-   // CCDCaptureNoAry[no]
+   // BaslerCaptureNoAry[no]
    bool __fastcall TMainForm::WaitMoreFrame(int frameno, int timeout);
 
    #define ROBOT_STAGE_LP1            0
@@ -6023,7 +5829,7 @@ public:		// User declarations
    #define SYSTEM_MOTION_ERROR          "001"
    bool __fastcall TMainForm::GoRobotWAxis(int mode);
    AnsiString WorkingWaferID;
-   int __fastcall TMainForm::WaitYuanliCmd(int mode, int timeout);
+   int __fastcall TMainForm::WaitYuanliCmd(int mode);
    #define CMD_ACK_WAIT              0
    #define CMD_ACK_E                 1
    #define CMD_ACK_X                 2
@@ -6209,15 +6015,6 @@ struct SYSTEM_STRU {
    int LampLife;
    // 加入SECS Port: edSECSPort
    int SECSPort;
-
-   // 2023 8 16 - chc Path
-   AnsiString RecipePath;
-   AnsiString MacroPath;
-   AnsiString ImagePath;
-
-   // 2023 8 19 - chc Macro Timeout: edMacroTimeout
-   int MacroTimeout;
-
 };
    struct SYSTEM_STRU SystemConfig;
    AnsiString SystemConfigName;
@@ -6278,71 +6075,6 @@ struct SYSTEM_STRU {
    // 暫不用
    //bool __fastcall TMainForm::FindEdgeFun(int no,int *retx,int *rety);
    void __fastcall TMainForm::CalculateCenter(int x1,int y1,int x2,int y2,int x3,int y3,int *rcx,int *rcy);
-
-   // 2023 8 15 - chc Trigger Parameters
-   struct TRIGGER_STRU {
-      int LiveMode;
-      int Source;
-      int Mode;
-      int Timens;
-      int StartPulse;
-      int Frames;
-      int Interval;
-      int Speed;
-      int Type;
-      int Gain;
-      int TargetBrightness;
-      bool boolExposureAuto;
-      bool boolDownToUp;
-
-      // 2023 8 20 - chc Load & Reset
-      bool boolLoadFirst;
-      bool boolResetFirst;
-
-   };
-   AnsiString TriggerINIFilename;
-   struct TRIGGER_STRU TriggerParameter;
-   #define TRIGGER_INI_FILENAME             "\\Trigger.ini"
-   #define TRIGGER_PARAMETER_SECTION        "Trigger Parameter"
-   void __fastcall TMainForm::LoadTrigger();
-   double RorzeAlignerDegree;
-   // 2023 8 6 - chc MoveToXYZT不用改變Z/Z1
-   bool boolMoveToXYZT_DoZ;
-   void __fastcall TMainForm::CreateRecipeMacro(int mode);
-   // 2023 8 16 - chc Macro
-   bool __fastcall TMainForm::SetMacroName(AnsiString macroname);
-   bool __fastcall TMainForm::WaitOLS5000CMD(int mode, int time);
-   // 2023 8 16 - chc 切換45度設定: Gain/Brightness/LightMode
-   void __fastcall TMainForm::   SetTiltConfig();
-   // 2023 8 17 - chc OLS5000 Remote Mode
-   void __fastcall TMainForm::SetOLS5000Mode(bool mode);
-   bool __fastcall TMainForm::SetupOLS5000(bool mode);
-
-   // 2023 8 17 - chc SECS指定PortNo
-   int SECSAssignPortNo;
-   void __fastcall TMainForm::ClearAllSlot(int portno);
-   void __fastcall TMainForm::DeleteAllFiles();
-   // 2023 8 18 - chc Macro: "EXEWIZ: +"
-   bool __fastcall TMainForm::ExecuteMacro();
-   bool __fastcall TMainForm::DoTiltCapture();
-   void __fastcall TMainForm::PutVieworksImage();
-   void __fastcall TMainForm::DoMotionCCD();
-   #define OPERATION_0                  0
-   #define OPERATION_45                 1
-   #define OPERATION_0_AND_45           2
-
-   // 2023 8 20 - chc true: 由MainForm 的timer來做
-   bool boolInVieworksDisplay;
-   void __fastcall TMainForm::WaitTimeOLS(int ms);
-   int TriggerFrameNo;
-   // 2023 8 22 - chc CCD2 Shutter
-   void __fastcall TMainForm::SetCCD2Shutter(int ishutter);
-   bool boolInTrigger;
-   void __fastcall TMainForm::MeasureDataTitle();
-   void __fastcall TMainForm::AddMeasureData(AnsiString item, AnsiString value);
-
-   // 2023 8 24 - chc 若另一個Loadport已Ready且尚未做過就可以取片
-   bool __fastcall TMainForm::CheckNextLoadportReady();
 
 
 };
