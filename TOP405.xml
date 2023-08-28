@@ -1,0 +1,29 @@
+<SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<SOAP-ENV:Body>
+<a1:PropsTOP405 id="ref-1" xmlns:a1="http://schemas.microsoft.com/clr/nsassem/PhotonDomain/LaserControl%2C%20Version%3D0.1.2.3%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<PortPreference xsi:type="xsd:anyType" xsi:null="1"/>
+<SaveUponExit>true</SaveUponExit>
+<WindowFont href="#ref-4"/>
+<FormSize xsi:type="a3:Size" xmlns:a3="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">
+<width>252</width>
+<height>657</height>
+</FormSize>
+<FormPosition xsi:type="a3:Point" xmlns:a3="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">
+<x>182</x>
+<y>182</y>
+</FormPosition>
+<Caption id="ref-5">TOP405</Caption>
+<PctShutterX>80</PctShutterX>
+<PctShutterY>90</PctShutterY>
+<PctPower>70</PctPower>
+<TriggerMode xsi:type="a1:TopticaTriggerModes" xmlns:a1="http://schemas.microsoft.com/clr/nsassem/PhotonDomain/LaserControl%2C%20Version%3D0.1.2.3%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">Unknown</TriggerMode>
+<PctPowerDiode>100</PctPowerDiode>
+</a1:PropsTOP405>
+<a3:Font id="ref-4" xmlns:a3="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">
+<Name id="ref-6">Microsoft Sans Serif</Name>
+<Size>8.25</Size>
+<Style xsi:type="a3:FontStyle" xmlns:a3="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">Regular</Style>
+<Unit xsi:type="a3:GraphicsUnit" xmlns:a3="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">Point</Unit>
+</a3:Font>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

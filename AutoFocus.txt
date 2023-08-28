@@ -1,0 +1,379 @@
+//---------------------------------------------------------------------------
+// 2013 9 24 - chc 已移到AOI中心點 - 測厚(上下200um之間找最佳值) : 要設定Z => edAOIZ->Text
+// 目前位置: edAOIZ->Text
+// 精度: 0.1um/p
+// 影像處理: 小區域Sobel, 再計算亮點(Gray > 30)數量
+// Sobel
+void __fastcall TMainForm::AutoThickness()
+{
+int currpos,uplimit,downlimit,gray,value,bestposition,diff,gap,cnt,failcnt,oldvalue;
+F64 Dist,StartVel,MaxVel,Tacc,Tdec,Posi,HomeVel;
+F64 ReviewVel,UpLimit,Position,CurrPosition,posi;
+AnsiString msg;
+int bestvalue;
+
+   // 2013 10 18 - chc 記錄在測厚中
+   boolInThickness = true;
+
+   diff = 40;                                                                   // 正負40um(400pulse)
+
+   // 2013 10 25 - chc 為加速改成10Pulse - 1um
+   //gap = 5;                                                                   // 每次5Pulse = 0.5um
+   gap = 10;
+
+   currpos = edAOIZ->Text.ToInt();                                              // 目前高度
+   uplimit = currpos - diff * 10;
+   downlimit = currpos + diff * 10;
+   value = -1;
+   bestposition = -1;
+
+   // 2013 10 25 - chc 記錄最佳值
+   bestvalue = 0;
+
+   // 到目前高度
+   CurrentAxisNo = Z_AXIS;
+   GetAxisData(CurrentAxisNo,&Dist,&StartVel,&MaxVel,&Tacc,&Tdec,&HomeVel,&ReviewVel,&UpLimit);
+   GetPosition(CurrentAxisNo, &Position);
+   CurrPosition = Position;
+
+   // 未做Scan => 通知Alignment
+   boolScanMove = false;
+   boolDoAlignment = false;
+
+   boolDoContrast = true;
+   // 往上找
+   failcnt = 0;
+   oldvalue = -1;
+   for(int i=currpos ; i>uplimit ; i-=gap) {
+      // 計算Sobel值
+      cnt = 0;
+      while(1) {
+         if(boolDoContrast == false)
+            break;
+
+         // 2014 3 8 - chc 改成SleepEx
+         Sleep(1);
+         //SleepEx(1,true);
+
+         cnt++;
+         if(cnt > 1000)
+            break;
+      }
+      msg.sprintf("UZ=%.0f : %d",CurrPosition,ContrastValue);
+      pnlSystemMessage->Caption = msg;
+      mmCassetteTest->Lines->Add(msg);
+
+      // 2013 11 1 - chc 啟動智慧對焦
+      if(cbFocusValue->Checked == true) {
+         // 2013 11 11 - chc 較設定值為佳也可以!
+         if(abs(edFocusValue->Text.ToInt() - ContrastValue) < 20 || ContrastValue > edFocusValue->Text.ToInt())
+            bestvalue = ContrastValue;
+            bestposition = i;
+            msg.sprintf("[智慧]DZ=%.0f : %d, %d",i,ContrastValue,edFocusValue->Text.ToInt());
+            pnlSystemMessage->Caption = msg;
+            mmCassetteTest->Lines->Add(msg);
+            goto bestfound;
+      }
+
+      // 較佳
+      if(ContrastValue > value) {
+         value = ContrastValue;
+         bestposition = i;
+         failcnt = 0;
+
+         // 2013 10 25 - chc 記錄最佳值
+         bestvalue = ContrastValue;
+
+      }
+      // 較差
+      else {
+         // 連續3次較差就停止
+         if(oldvalue > ContrastValue) {
+            failcnt++;
+            if(failcnt > 3)
+               break;
+         }
+         else
+            failcnt = 0;
+      }
+      oldvalue = ContrastValue;
+
+      // 移動高度
+      posi = 0 - gap;
+      CurrPosition -= gap;
+      if(CurrPosition < 0) {
+         CurrPosition = 0;
+         break;
+      }
+
+      // 等待對位完成再移動
+      if(RunMode == RUN_MODE_TEST && cbScanAlignment->Checked == true) {
+         while(1) {
+            if(boolDoAlignment == false)
+               break;
+
+            // 2014 3 8 - chc 改成SleepEx
+            Sleep(1);
+            //SleepEx(1,true);
+
+            Application->ProcessMessages();
+         }
+      }
+      boolScanMove = true;
+
+      boolDoContrast = true;
+      DoAxisTrMove(CurrentAxisNo, posi, StartVel, MaxVel, Tacc, Tdec);
+      WaitMotionDoneZ(3,500);
+
+      // 記錄已完成移動
+      boolScanMove = false;
+
+   }
+
+   // 回中心點
+   DoAxisTaMove(CurrentAxisNo, Position, StartVel, MaxVel, Tacc, Tdec);
+   WaitMotionDoneZ(3,1000);
+   CurrPosition = Position;
+
+   // 往下找
+   failcnt = 0;
+   oldvalue = -1;
+   for(int i=currpos+gap ; i<downlimit ; i+=gap) {
+
+      // 移動高度
+      posi = gap;
+      CurrPosition += gap;
+      // Z軸要管控
+      if(CurrPosition > UpLimit) {
+         CurrPosition = UpLimit;
+         break;
+      }
+
+      // 等待對位完成再移動
+      if(RunMode == RUN_MODE_TEST && cbScanAlignment->Checked == true) {
+         while(1) {
+            if(boolDoAlignment == false)
+               break;
+
+            // 2014 3 8 - chc 改成SleepEx
+            Sleep(1);
+            //SleepEx(1,true);
+
+            Application->ProcessMessages();
+         }
+      }
+      boolScanMove = true;
+
+      boolDoContrast = true;
+      DoAxisTrMove(CurrentAxisNo, posi, StartVel, MaxVel, Tacc, Tdec);
+      WaitMotionDoneZ(3,500);
+
+      // 記錄已完成移動
+      boolScanMove = false;
+
+      // 計算Sobel值
+      cnt = 0;
+      while(1) {
+         if(boolDoContrast == false)
+            break;
+
+         // 2014 3 8 - chc 改成SleepEx
+         Sleep(1);
+         //SleepEx(1,true);
+
+         cnt++;
+         if(cnt > 1000)
+            break;
+      }
+      msg.sprintf("DZ=%.0f : %d",CurrPosition,ContrastValue);
+      pnlSystemMessage->Caption = msg;
+      mmCassetteTest->Lines->Add(msg);
+      // 較佳
+      if(ContrastValue > value) {
+         value = ContrastValue;
+         bestposition = i;
+         failcnt = 0;
+
+         // 2013 10 25 - chc 記錄最佳值
+         bestvalue = ContrastValue;
+
+      }
+      // 較差
+      else {
+         // 連續3次較差就停止
+         if(oldvalue > ContrastValue) {
+            failcnt++;
+            if(failcnt > 3)
+               break;
+         }
+         else
+            failcnt = 0;
+      }
+      oldvalue = ContrastValue;
+   }
+
+bestfound:
+
+   // 2015 4 28 - chc 不可與預定值差異過大! AOIZLoadValue
+   int adjust;
+   if(abs(AOIZLoadValue - bestposition) > 20) {
+      if(bestposition > AOIZLoadValue)
+         adjust = 10;
+      else
+         adjust = -10;
+      bestposition = AOIZLoadValue + adjust + (bestposition - AOIZLoadValue) / 15;
+   }
+
+   // 移到最佳點: position
+   posi = bestposition;
+   DoAxisTaMove(CurrentAxisNo, posi, StartVel, MaxVel, Tacc, Tdec);
+   WaitMotionDoneZ(3,500);
+   mmCassetteTest->Lines->Add(">>最佳Z位置: " + IntToStr(bestposition));
+   edAOIZ->Text = bestposition;
+
+   // 2013 10 25 - chc 設定最佳高度值
+   pnlFocusValue->Caption = IntToStr(bestvalue);
+
+   // 記錄已完成移動
+   boolScanMove = false;
+
+   // 2013 10 18 - chc 記錄在測厚中
+   boolInThickness = false;
+}
+//---------------------------------------------------------------------------
+// 2013 9 24 - chc 影像對焦演算法: Sobel
+// 由ScrollBarAdjustCCD1()呼叫
+// Return: ContrastValue
+void __fastcall TMainForm::DoSobel(int frameno)
+{
+int x1,y1,x2,y2,width,height,w,h,dx,dy,row,col,data,std,sum;
+EBW8 *ptr,*ptr1,*ptr2,*ptr3,*ptr4,*sptr,*dptr;
+double xx,yy,zz,amp;
+int d[25];
+bool boolrobert = true;
+static int sx[9] = {-1, 0, 1,
+                    -2, 1, 2,
+                    -1, 0, 1};
+static int sy[9] = {-1,-2,-1,
+                     0, 0, 0,
+                     1, 2, 1};
+// Roberts
+static int rx[9] = { 0, 0, 0,
+                     0, 1, 0,
+                     0, 0,-1};
+static int ry[9] = { 0, 0, 0,
+                     0, 0, 1,
+                     0, -1,0};
+
+   amp = 1.0;
+   sum = 0;
+   dx = 400;
+   dy = 400;
+   w = l_m_SizeX;
+   h = l_m_SizeY;
+   x1 = (w/2) - dx/2;
+   y1 = (h/2) - dy/2;
+   x2 = x1 + dx;
+   y2 = y1 + dy;
+   width = (x2 - x1) + 1;
+   height = (y2 - y1) + 1;
+   //ProcessImage.SetSize(width,height);
+
+   if(boolrobert == true)
+      goto dorobert;
+
+   // Sobel: 30
+   std = 30;
+   for(row=y1+1 ; row<y2 ; row+=2) {
+      //ptr  = ProcessImage.GetImagePtr(0,row);                                   // 取得Buffer位置
+      ptr1 = l_Image[frameno].GetImagePtr(x1,row-1);                            // 取得Buffer位置
+      ptr2 = l_Image[frameno].GetImagePtr(x1,row);                              // 取得Buffer位置
+      ptr3 = l_Image[frameno].GetImagePtr(x1,row+1);                            // 取得Buffer位置
+      for(col=1 ; col<width ; col+=2) {
+         d[0] = ptr1[col-1];
+         d[1] = ptr1[col];
+         d[2] = ptr1[col+1];
+         d[3] = ptr2[col-1];
+         d[4] = ptr2[col];
+         d[5] = ptr2[col+1];
+         d[6] = ptr3[col-1];
+         d[7] = ptr3[col];
+         d[8] = ptr3[col+1];
+         xx = (double)(sx[0]*d[0] + sx[1]*d[1] + sx[2]*d[2]
+                     + sx[3]*d[3] + sx[4]*d[4] + sx[5]*d[5]
+                     + sx[6]*d[6] + sx[7]*d[7] + sx[8]*d[8]);
+         yy = (double)(sy[0]*d[0] + sy[1]*d[1] + sy[2]*d[2]
+                     + sy[3]*d[3] + sy[4]*d[4] + sy[5]*d[5]
+                     + sy[6]*d[6] + sy[7]*d[7] + sy[8]*d[8]);
+         zz = (double)(amp*sqrt(xx*xx+yy*yy));
+         data = (int)zz;
+         if(data > 255)
+            data = 255;
+         //ptr[col] = (char)data;
+         if(data > std)
+            sum++;
+      }
+
+      // 2013 12 2 - chc 要加入, 否則可能無法做tmMotionPolling!!
+      if((row % 50) == 0) {
+
+         // 2014 3 8 - chc 改成SleepEx
+         Sleep(1);
+         //SleepEx(1,true);
+
+         Application->ProcessMessages();
+      }
+
+   }
+   ContrastValue = sum;
+   boolDoContrast = false;
+   return;
+
+dorobert:
+   // Robert: 12
+   std = 12;
+   for(row=y1+1 ; row<y2 ; row+=2) {
+      //ptr  = ProcessImage.GetImagePtr(0,row);                                   // 取得Buffer位置
+      ptr1 = l_Image[frameno].GetImagePtr(x1,row-1);                            // 取得Buffer位置
+      ptr2 = l_Image[frameno].GetImagePtr(x1,row);                              // 取得Buffer位置
+      ptr3 = l_Image[frameno].GetImagePtr(x1,row+1);                            // 取得Buffer位置
+      for(col=1 ; col<width ; col+=2) {
+         d[0] = ptr1[col-1];
+         d[1] = ptr1[col];
+         d[2] = ptr1[col+1];
+         d[3] = ptr2[col-1];
+         d[4] = ptr2[col];
+         d[5] = ptr2[col+1];
+         d[6] = ptr3[col-1];
+         d[7] = ptr3[col];
+         d[8] = ptr3[col+1];
+         xx = (float)(rx[0]*d[0] + rx[1]*d[1] + rx[2]*d[2]
+                    + rx[3]*d[3] + rx[4]*d[4] + rx[5]*d[5]
+                    + rx[6]*d[6] + rx[7]*d[7] + rx[8]*d[8]);
+         yy = (float)(ry[0]*d[0] + ry[1]*d[1] + ry[2]*d[2]
+                    + ry[3]*d[3] + ry[4]*d[4] + ry[5]*d[5]
+                    + ry[6]*d[6] + ry[7]*d[7] + ry[8]*d[8]);
+         zz = (float)(amp*sqrt(xx*xx+yy*yy));
+         data = (int)zz;
+         if(data > 255)
+            data = 255;
+         //ptr[col] = (char)data;
+         if(data > std)
+            sum++;
+      }
+
+      // 2013 12 2 - chc 要加入, 否則可能無法做tmMotionPolling!!
+      if((row % 50) == 0) {
+
+         // 2014 3 8 - chc 改成SleepEx
+         Sleep(1);
+         //SleepEx(1,true);
+
+         Application->ProcessMessages();
+      }
+
+   }
+
+   ContrastValue = sum;
+   boolDoContrast = false;
+}

@@ -1,0 +1,491 @@
+PCI-8154 setup disk update history
+[2016/07/07] Version : R3.4
+	A.[DLL]					V:160412             
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				V:2.0
+	D.[MotionCreatorPro]			No Update     		V:1.40
+	E.[MotionCreator]			No Update 	        V:1.3
+	F.[TriggerMaster_DB50]			No Update		V:1.4 
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update
+        N.[Others]
+           Fix auto installing driver after rebooting issue.  
+=================================================================================
+[2016/04/11] Version : R3.3
+	A.[DLL]					From V:160321 to V:160412
+             1) Enable DIO EX in _8154_initial, add DIO EX
+             2) Use different way to determine FW version depends on PCI or PCIe
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				V:2.0
+             1) Add "PCIe-8154 Extended DIO User Manual.pdf"
+	D.[MotionCreatorPro]			No Update     		V:1.40
+	E.[MotionCreator]			No Update 	        V:1.3
+	F.[TriggerMaster_DB50]			No Update		V:1.4 
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+             1) Add executable sample file in VB6, VB.NET(2005), VC++
+             2) Add DIO_EX sample in VC.NET(2005)
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2016/03/21] Version : R3.2
+	A.[DLL]					From V:151230 to V:160321
+             1) Add OS version (win 8) in "i_check_os_version"
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			No Update     		V:1.40
+	E.[MotionCreator]			No Update 	        V:1.3
+	F.[TriggerMaster_DB50]			No Update		V:1.4 
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2015/12/30] Version : R3.1
+	A.[DLL]					From V:120507 to V:151230
+             1) Fix sync issue: add i_set_sync_option in _8154_home_move/_8154_home_search
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			No Update     		V:1.40
+	E.[MotionCreator]			No Update 	        V:1.3
+	F.[TriggerMaster_DB50]			No Update		V:1.4 
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2015/01/07] Version : R3.0
+	A.[DLL]					V:120507(version didn't update)
+             1) Fix speed override issue
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			No Update     		V:1.40
+	E.[MotionCreator]			No Update 	        V:1.3
+	F.[TriggerMaster_DB50]			No Update		V:1.4
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2013/07/12] Version : R2.9       
+	A.[DLL]					No Update		V:120507
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			No Update     		V:1.40
+	E.[MotionCreator]			No Update 	        V:1.3
+	F.[TriggerMaster_DB50]			From V:1.3 to V:1.4 
+             1) Fix main vard identification issue
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2012/09/21] Version : R2.8       
+	A.[DLL]					No Update		V:120507
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			No Update     		V:1.40
+	E.[MotionCreator]			From	V:1.2	to 	V:1.3
+            1.Modify get error counter's value method 
+	F.[TriggerMaster_DB50]			No Update       	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2012/05/07] Version : R2.7       
+	A.[DLL]					From V:120329	to	V:120507
+          Fix these functions
+          _8154_set_gpio_output
+          _8154_get_gpio_output
+          _8154_get_gpio_input
+          _8154_set_gpio_input_function
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			From V:1.39   to        V:1.40
+          1. Modify Operate54.vb and Operate58.vb files 
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			No Update       	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2012/03/29] Version : R2.6       
+	A.[DLL]					From V:120106	to	V:120329
+           1.Fixed Di interrupt
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			No Update               V:1.32
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			No Update       	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2012/01/06] Version : R2.5       
+	A.[DLL]					From V:110714	to	V:120106
+           1.Fixed security relation functions
+           2.Fixed function _8154_set_do_cmp_output_selection
+           3.Fixed function _8154_start_ta_helical
+           4.Fixed function _8154_db51_HSL_auto_start
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			No Update               V:1.32
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			No Update       	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2011/07/19] Version : R2.4       
+	A.[DLL]					From V:110603	to	V:110714
+        1.Add new function : _8154_escape_home()
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			No Update               V:1.32
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			No Update       	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2011/06/07] Version : R2.3       
+	A.[DLL]					From V:101208	to	V:110603
+        1.Add new function : _8154_reset_counter_after_home()
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			From V:1.31	to	V:1.32
+	 1.Fix: 8144,8154,8158,8164 4-axis Form
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			No Update       	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2010/12/23] Version : R2.2       
+	A.[DLL]					No Update 	        V:101208
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			From V:1.31	to	V:1.32
+	 1.Fix: 8144,8154,8158,8164 4-axis Form
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			No Update       	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2010/12/10] Version : R2.1       
+	A.[DLL]					From V:101110	to	V:101208
+	 1.Fix: DB8152
+	B.[Driver]		 		No Update 	        V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			From V:1.30	to	V:1.31
+	 1.Modify: DB8152
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			No Update       	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2010/11/19] Version : R2.0       
+	A.[DLL]					From V:100805	to	V:101110
+	B.[Driver]		 		From V:100407	to	V:101007
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			From V:1.29	to	V:1.30
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			No Update       	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2010/08/05] Version : R1.9       
+	A.[DLL]					From V:100325	to	V:100805
+	 1.New: _8154_set_ring_counter 
+	 2.New: _8154_get_ring_counter
+	 3.New: _8154_set_sync_stop_mode
+	 4.New: _8154_set_sync_option
+	 5.New: _8154_set_sync_signal_source
+	 6.New: _8154_set_sync_signal_mode 
+	 7.Fix: _8154_tv_move, can't work after move all functions.
+	 8.Fix: _8154_sv_move, can't work after move all functions.
+	B.[Driver]		 		From V:90123	to	V:100407
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			No Update		V:1.29
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			From V:1.2	to	V:1.3
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2010/03/26] Version : R1.8       
+	A.[DLL]					From V:90617	to	V:100325
+	 1.Modify:Modify to support Windows7.
+	B.[Driver]		 		No Update 		V:90123
+	C.[Manual]				No Update 		V:2.0
+	D.[MotionCreatorPro]			From V:1.27	to	V:1.29
+	 1.Modify:Modify to support Windows7.
+	E.[MotionCreator]			No Update 		V:1.2
+	F.[TriggerMaster_DB50]			No Update 		V:1.2
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+=================================================================================
+[2009/07/10] Version : R1.7     
+	A.[DLL]					From V:81009	to	V:90617
+	 1. Fix motionnet R/W intermittent error
+	 2. Increase Motionnet handshake performance
+	 3. Add Motionnet v change function on velocity mode
+	 4. Shorten Motionnet one axis move communication time
+	 5. Support continuous move mode to change dimension.
+	 6. Add new function to shorten compare status reading
+	 7. Add new function for speed override
+	 8. Add new function for softlimit status check
+	 9. Fix speed profile function may affect move function
+	 10. Fix home function's max speed may affect by previous command
+	 11. New speed override supports direction change in velocity mode
+	 12. Fix BCB compatiblity problem when setting acc/dec parameters
+	B.[Driver]		 		From V:80729	to	V:90123
+	 1. Continuous DO output
+	C.[Manual]				No Update 		V:2.0
+	D.[Utility_MotionCreatorPro]		From V:1.25	to	V:1.27
+	 1. Enhance stability when switching page
+	 2. Fix servo on logic on PCI-8102/54/58/74
+	E.[Utility_MotionCreator]		From V:1.1	to	V:1.2
+	F.[TriggerMaster_DB50]			From V:1.1 	to 	V:1.2
+	 1. Add trigger out logic setting
+	G.[LinkerMaster_DB51]			No Update 		V:3.63
+	H.[MNETMaster_DB53] 	                No Update 		V:1.1
+	I.[Samples]				No Update
+	J.[Samples_DB50]			No Update
+	K.[Samples_DB51]			No Update
+	L.[Samples_DB52]			No Update
+	M.[Samples_DB53]			No Update 
+
+=================================================================================
+
+[2008/12/15] Version : V: R1.6      
+	A.[DLL]					No update V:81009
+	B.[Driver]		 		No update V:80729
+	C.[Mamual]				No update V:2.0
+	D.[Samples]				No update V:70123
+	E.[Samples_DB50]			No update V:80613
+	F.[Samples_DB51]			No update V:71207
+	G.[Samples_DB52]			No update V:71207
+	H.[Samples_DB53]			No update V:71207
+	I.[Utility_MotionCreatorPro]		No update V:1.25
+	J.[Utility_MotionCreator]		From V:1.0 to V:1.1
+		1.Fix:Modifying the parameter of wait-interrupt code solves
+		  the display of status of card.
+	K.[TriggerMaster_DB50]			From V:1.0 to V:1.1
+		1.Fix:Fixing the problem of not found 58/54.dll.
+	L.[LinkerMaster_DB51]			No update V:3.63
+	M.[MNETMaster_DB53] 	                No update V:1.1
+
+
+===============================================================================
+[2008/10/09] Version : V: R1.5       ********************************************
+				     *Notice:                                   *
+				     *	1.Supporting dual core & vista32 system.*
+				     *	2.Adding signature                      *
+                                     ********************************************
+	A.[DLL]					From V:80527 to V:81009
+		1.Fix: Porting to dual core & vista32 system.
+		2.Fix: Export _8154_db51_HSL_M_move_t_distance
+		3.Fix: Export _8154_db53_M_get_AxisNo_mapto_SlaveNo
+		4.New: MNET supports multiple AP
+		5.New: _8154_db53_M_start_tr_line2
+		6.New: _8158_db53_M_check_compare_data
+		7.New: _8158_db53_M_check_compare_status
+		8.Fix: System crash under VISTA if use interrupt function
+	B.[Driver]		 		From V:80527 to V:80729
+		1.Fix: Porting to dual core & vista32 system.
+	C.[Mamual]				No update V:2.0
+		1.ADD: Adding new manual for DB-8150 V2.0
+		2.ADD: Adding new manual for DB-8151 V2.0
+		3.ADD: Adding new manual for DB-8152 V2.0
+		4.ADD: Adding new manual for DB-8153 V2.0
+	D.[Samples]				No update V:70123
+	E.[Samples_DB50]			No update V:80613
+	F.[Samples_DB51]			No update V:71207
+	G.[Samples_DB52]			V:71207
+		1.ADD:Adding Samles for DB52
+	H.[Samples_DB53]			No update V:71207
+	I.[Utility_MotionCreatorPro]		From V:1.18 to V:1.25
+	J.[Utility_MotionCreator]		V:1.0
+		1.ADD:Adding MotionCreator
+	K.[TriggerMaster_DB50]			No update V:1.0
+	L.[LinkerMaster_DB51]			No update V:1.0
+	M.[MNETMaster_DB53] 	                No update V:1.0
+	
+=================================================================================
+
+[2008/06/16] Version : V: R1.4
+	A.[DLL-(8154.dll)]			No update V:80527
+	B.[Doc-manual]				No update V2.0
+	C.[Driver]		 		No update V:80527
+	D.[Samples]				No update V:70123
+	E.[Samples_DB51]			No update V:71207
+	F.[Samples_DB53]			No update V:71207
+	G.[Samples_DB50]			No update V:80613
+	H.[Utility_MotionCreatorPro]		From V:1.17 to V:1.18
+		1.Fix: Modify the inverse of +-EL & +-SD on 8144 
+	I.[LinkerMaster_DB51]			No update V:1.0
+	J.[MNETMaster_DB53] 	                No update V:1.0
+	H.[TriggerMaster_DB50]			No update V:1.0
+		
+===============================================================================
+[2008/06/12] Version : V: R1.3
+	A.[DLL-(8154.dll)]	From V:71206 to V:80527
+		1.Fix: four axes interpolation function.
+			Error speed move when user use four axes interpolation move to negative direction
+		2.Fix: _8154_disable_pulser_input
+			Can not enable axis move besides 0 and 1 axis number  
+		3.New: add DB-8150 function
+		4.New: add DB-8150 function completely
+	B.[Doc-manual]				No update V2.0
+	C.[Driver]				From V:70801 to V:80527
+		1.ADD: Adding DB8150 Interrupt
+		2.Fix: Modify DB8150 Interrupt by using DBType
+	D.[Samples]				No update V:70123
+	E.[Samples_DB51]			No update V:71207
+	F.[Samples_DB53]			No update V:71207
+	G.[Samples_DB50]			V:80613
+		1.ADD DB50 Sample programs
+	H.[Utility_MotionCreatorPro]		No update V:1.17
+	I.[LinkerMaster_DB51]			No update V:1.0
+	J.[MNETMaster_DB53] 	                No update V:1.0
+	H.[TriggerMaster_DB50]			V:1.0
+		1.ADD Utility for DB8150
+
+===============================================================================
+[2007/12/7] Version : V: R1.2
+	A.[DLL-(8154.dll)]	From V:71018 to V:71206
+		1.New: add DB-8153 function
+	B.[Doc-manual]		No update V2.0
+	C.[Driver]		No update V:70801
+	D.[Samples]		No update V:70123
+	E.[Samples_DB51]	V:71207
+		1.ADD DB51 Sample Programs
+	F.[Samples_DB53]	V:71207
+		1.ADD DB53 Sample Programs
+	G.[Utility]		From V:1.12 to V:1.17
+	H.[LinkerMaster_DB51]	V1.0
+		1.Utility for DB8151
+	I.[MNETMaster_DB53]	V1.0
+		1.Utility for DB8153
+
+===============================================================================
+[2007/4/4] Version : V: R1.0
+	A.[DLL-(8154.dll)]	From V:70314 to V:71018
+		1.New: add DB-8151 function completely
+	B.[Doc-manual]		No update V2.0
+	C.[Driver]		From V:70314 to V:70801
+		1. New: add DB8151 Interrupt
+	D.[Samples]		No update V:70123
+	E.[Utility]		No update V:1.12
+
+===============================================================================
+[2007/4/4] Version : V: 2.1
+	A.[DLL-(8154.dll)]		No update  V:70314
+	B.[Doc-manual]		No update V2.0
+	C.[Driver]			No update V:70314
+	D.[Samples]		No update V:70123
+	E.[Utility]			From V:1.11 update to V:1.12
+		1. Trim single axis thread issue
+		2. Trim show of velocity form issue
+
+================================================================================
+[2007/3/19] Version : V: 2.0
+	A.[DLL-(8154.dll)]		From V:70119 update to V:70314
+		1.Fix : _8154_close function
+		2.New : add helical motion function
+    				_8154_start_tr_helical
+    				_8154_start_ta_helical
+    				_8154_start_sr_helical
+    				_8154_start_sa_helical
+    	3.Fix :  _8154_set_pulser_ratio function => error count
+   		4.New : add DB-8152 function => _8154_db52_******
+	B.[Doc-manual]		From V:1.0 update to V2.0
+	C.[Driver]		From V:70117 update to V:70314
+		1.New : added DB-8152 interrupt
+	D.[Samples]		No update V:70123
+	E.[Utility]		No update V:1.11
+
+=============================================================
+[2007/2/5] Version : V:1.0 Beta
+	A.[DLL-(8154.dll)]		V:70119
+		1.New released
+	B.[Doc-manual]		V1.0
+		1.New released
+	C.[Driver]		V:70117
+		1.New released
+	D.[Samples]		V:	70123
+		1.New released
+			VB 5 samples
+			VC 5 samples
+			VB.net 5 samples
+	E.[Utility]		V:1.11
+		1.New released

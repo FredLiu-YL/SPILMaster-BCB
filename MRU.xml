@@ -1,0 +1,16 @@
+<SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<SOAP-ENV:Body>
+<a1:MRUlist id="ref-1" xmlns:a1="http://schemas.microsoft.com/clr/nsassem/PhotonDomain/LaserControl%2C%20Version%3D0.1.2.3%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<Items href="#ref-3"/>
+<MRUorder id="ref-4">fcbade</MRUorder>
+</a1:MRUlist>
+<SOAP-ENC:Array id="ref-3" SOAP-ENC:arrayType="xsd:string[26]">
+<item id="ref-5">C:\Users\Sean\Documents\Visual Studio 2010\Projects\LaserControl\bin\Debug\TOP405.xml</item>
+<item id="ref-6">C:\Users\Sean\Documents\Visual Studio 2010\Projects\LaserControl\bin\Debug\GRNlo4shot.xml</item>
+<item id="ref-7">C:\Users\Sean\Documents\Visual Studio 2010\Projects\LaserControl\bin\Debug\IRlo5shot.xml</item>
+<item id="ref-8">C:\Users\Sean\Documents\Visual Studio 2010\Projects\LaserControl\bin\Debug\UVlo3shot.xml</item>
+<item id="ref-9">C:\Users\Sean\Documents\Visual Studio 2010\Projects\LaserControl\bin\Debug\test.xml</item>
+<item id="ref-10">F:\WindowsAP\PDI\LaserControl\bin\Debug\IRlo5shot.xml</item>
+</SOAP-ENC:Array>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

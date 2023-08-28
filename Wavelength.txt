@@ -1,0 +1,8 @@
+GRN-High
+IR-Low
+IR-High
+NA-Low
+NA-High
+UV-Low
+UV-High
+GRN-Low

@@ -1,0 +1,46 @@
+Robot
+---------
+  Protocol: COM1/19200/7/E/1/None
+  異常Reset: ClearAlarm & 原點
+  [Command]: GP 點位, GP 點位 ( 0 0 高度 0)
+             GP 810, GP 880 ( 0 0 20 0)
+             第3片: (3-1) * 10 = 20
+  [原點 Command]: GP 1(X回原點) & GP 0(T回原點)
+  異常訊息: Robot Status
+
+  Loadport
+    取片點位: 880/881/882/883
+    退片點位: 680/681/682/683
+
+  Aligner
+    取片點位: 810/811/812/813
+    退片點位: 610/611/612/613
+
+  Chuck
+    取片點位: 1810/1811/1812/1813
+    退片點位: 1610/1611/1612/1613
+
+Loadport
+-------------
+  Protocol: COM3/9600/8/N/1/None
+  異常Reset: Reset & UnLoad
+  異常訊息: LoadPort Status
+  [Load Command]: MOV:FPML;
+  [UnLoad Command]: MOV:ORGN;
+  [Get Status Command]: GET:STAS;
+  [Reset Command]: SET:RSET;
+
+Aligner
+----------
+  Protocol: COM2/19200/8/N/1/None
+  異常Reset: Reset & 原點
+  異常訊息: Aligner Status
+  Wafer角度: 可指定取片及退片的角度(0.0 ~ 360.0度)
+  [原點Command]: MOV:ORGN;
+  [Get Status Command]: GET:STAS;
+
+Chuck
+---------
+  頂Pin高度: 下/上(取放片高度)/破真空點(350um)
+
+

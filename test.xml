@@ -1,0 +1,36 @@
+<SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<SOAP-ENV:Body>
+<a1:PropsEthos id="ref-1" xmlns:a1="http://schemas.microsoft.com/clr/nsassem/PhotonDomain/LaserControl%2C%20Version%3D0.1.2.3%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<PortPreference id="ref-4">COM3</PortPreference>
+<SaveUponExit>true</SaveUponExit>
+<WindowFont href="#ref-5"/>
+<FormSize xsi:type="a2:Size" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">
+<width>253</width>
+<height>731</height>
+</FormSize>
+<FormPosition xsi:type="a2:Point" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">
+<x>104</x>
+<y>104</y>
+</FormPosition>
+<Caption id="ref-6">GRNlo4shot</Caption>
+<PctShutterX>50</PctShutterX>
+<PctShutterY>60</PctShutterY>
+<PctPower>60</PctPower>
+<BurstCount>5</BurstCount>
+<ShotMode xsi:type="a1:FlashLampShotModes" xmlns:a1="http://schemas.microsoft.com/clr/nsassem/PhotonDomain/LaserControl%2C%20Version%3D0.1.2.3%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">Burst</ShotMode>
+<WavelengthRange href="#ref-7"/>
+<PctSpotMarker>70</PctSpotMarker>
+</a1:PropsEthos>
+<a2:Font id="ref-5" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">
+<Name id="ref-8">Microsoft Sans Serif</Name>
+<Size>8.25</Size>
+<Style xsi:type="a2:FontStyle" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">Regular</Style>
+<Unit xsi:type="a2:GraphicsUnit" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/System.Drawing/System.Drawing%2C%20Version%3D4.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db03f5f7f11d50a3a">Point</Unit>
+</a2:Font>
+<a1:RangeDef id="ref-7" xmlns:a1="http://schemas.microsoft.com/clr/nsassem/PhotonDomain/LaserControl%2C%20Version%3D0.1.2.3%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<wl xsi:type="a1:Wavelength" xmlns:a1="http://schemas.microsoft.com/clr/nsassem/PhotonDomain/LaserControl%2C%20Version%3D0.1.2.3%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">IR</wl>
+<pr xsi:type="a1:PowerRange" xmlns:a1="http://schemas.microsoft.com/clr/nsassem/PhotonDomain/LaserControl%2C%20Version%3D0.1.2.3%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">Low</pr>
+<id>1</id>
+</a1:RangeDef>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

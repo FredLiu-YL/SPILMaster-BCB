@@ -1,0 +1,13 @@
+﻿Date,Time,Ra,Rp,Rq,Rt,Rv,Rz,RPc,Trace 1 Width,Trace 1 Height,Space 1 Width,Trace 2 Width,Trace 2 Height,Space 2 Width
+,,µm,µm,µm,µm,µm,µm,1/Micrometer,µm,µm,µm,µm,µm,µm
+R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A
+M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A
+Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always
+Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+Meta Data,Meta Data,Basic Stats,Basic Stats,Basic Stats,Basic Stats,Basic Stats,Rz Analysis,Stylus Analysis:Average,Trace Analysis,Trace Analysis,Trace Analysis,Trace Analysis,Trace Analysis,Trace Analysis
+
+1/17/2020,3:15:38 PM,6.0433064049336,14.4462869816895,6.63953584077715,27.9927239210587,-13.5464369393692,26.4227550795822,0.109778773356941,16.6851978302002,15.4157075881958,25.9312076568604,23.4319438934326,16.2902393341064,
+1/17/2020,3:16:04 PM,6.33675933418795,13.963314631628,6.92872452595017,28.8115841215782,-14.8482694899502,26.6868531259689,0.106494792957375,17.4533748626709,15.9882392883301,25.1905670166016,23.0514602661133,16.9413585662842,
+1/17/2020,3:16:28 PM,5.94185972434191,14.1165042699795,6.59687435767158,28.1993516647167,-14.0828473947372,27.2851228596039,0.094401404819288,16.9807720184326,15.3175039291382,25.7747173309326,22.5286254882813,16.4977760314941,

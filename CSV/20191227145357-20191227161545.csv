@@ -1,0 +1,22 @@
+﻿Date,Time,Ra,Rp,Rq,Rt,Rv,Rz,RPc,Trace 1 Width,Trace 1 Height,Space 1 Width,Trace 2 Width,Trace 2 Height,Space 2 Width
+,,µm,µm,µm,µm,µm,µm,1/Millimeter,µm,µm,µm,µm,µm,µm
+R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A,R: N/A
+M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A,M: N/A
+Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always
+Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always,Always
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+Meta Data,Meta Data,Basic Stats,Basic Stats,Basic Stats,Basic Stats,Basic Stats,Rz Analysis,Stylus Analysis:Average,Trace Analysis,Trace Analysis,Trace Analysis,Trace Analysis,Trace Analysis,Trace Analysis
+
+12/27/2019,4:15:21 PM,,,,,,,,,,,,,
+12/27/2019,4:15:29 PM,0.298610821099475,1.48942587938404,0.409318118144042,2.35517277146244,-0.8657468920784,1.68589905267477,0,,,,,,
+12/27/2019,4:15:52 PM,,,,,,,,,,,,,
+12/27/2019,4:16:00 PM,,,,,,0,NaN,,,,,,
+12/27/2019,4:16:27 PM,,,,,,,,,,,,,
+12/27/2019,4:16:36 PM,0.412978358135647,1.79846390893865,0.550000174262379,3.31369391675592,-1.51523000781727,2.72518765815496,0.156380019026981,,,,,,
+12/27/2019,4:16:59 PM,,,,,,,,,,,,,
+12/27/2019,4:17:07 PM,,,,,,0,NaN,,,,,,
+12/27/2019,4:17:35 PM,,,,,,,,,,,,,
+12/27/2019,4:17:44 PM,0.124446697757789,0.505061677536607,0.15745413912245,0.927802171543479,-0.422740494006872,0.75427761675024,0,,,,,,
+12/27/2019,4:18:07 PM,,,,,,,,,,,,,
+12/27/2019,4:18:16 PM,,,,,,0,NaN,,,,,,

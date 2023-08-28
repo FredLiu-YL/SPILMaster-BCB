@@ -1,0 +1,42 @@
+1. 系統組態
+   a. 電腦: 1pc(Intel i5, 4GB, Win10中文版)
+   b. 顯示: 1920*1200, 22"
+   c. 軸控: 3-Axis(Z/T/L), DIO16in/16out
+        精度: Z(0.1um), T(0.000015915度), L(1um)
+        行程:
+        速度: 
+   d. EFEM: Robot/LoadPort/Aligner
+   e. Wafer尺寸: 12"
+
+2. 開機作業
+   a. 總點源: On
+   b. 軸控電源: On(綠色按鈕)
+   c. 電腦: 自動啟動進入Win10 & 系統程式
+   d. 系統執行程序:
+         原點復歸(手動) - EFEM初始 - 軸控到原點
+
+3. 關機作業
+   a. 關閉程式: 若Cassette在Load位置, 會做Unload動作
+   b. 關閉Win10作業系統
+   c. 軸控電源: Off(自動; 紅色按鈕)
+   d. 總點源: Off
+
+4. 作業
+   a. Load Cassette
+   b. 選擇作業Wafer
+   c. 選擇取片次序
+   d. 是否自動計數片號
+   e. 取片 - 量測(水平量測點/傾斜量測點) - 退片(到原點)
+   f. Unload Cassette
+ 
+5. 主要設備元件狀態
+   a. Robot Status
+   b. LoadPort Status
+   c. Aligner Status
+
+6. Wafer角度定義
+   a. 取片角度(0.0 - 360.0度)
+   b. 退片角度(0.0 - 360.0度)
+
+
+                                                                                                                漢登科技股份有限公司
