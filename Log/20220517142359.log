@@ -1,0 +1,45 @@
+2022/05/17 14:23:59:572->>Log Ok
+2022/05/17 14:23:59:716->>Version : C05
+2022/05/17 14:23:59:716->>LoadSystemParameter()
+2022/05/17 14:23:59:775->>LoadUserPosition()
+2022/05/17 14:24:20:270-LoadWPosition(): F:\WindowsAP\Olympus\矽品\WVOlympusRV12\RobotW.ini
+2022/05/17 14:24:20:271-1: WPosition=541646
+2022/05/17 14:24:20:272-2: WPosition=9200
+2022/05/17 14:24:20:273-3: WPosition=9200
+2022/05/17 14:24:20:274-4: WPosition=9200
+2022/05/17 14:24:20:282->>LoadLensPosition()
+2022/05/17 14:24:20:300->>LoadCalibrationFactor()
+2022/05/17 14:24:20:301->>ReadLEDValue()
+2022/05/17 14:24:20:902->>InitLampControl2()
+2022/05/17 14:24:23:261->>After Parameter Loaded: Motion
+2022/05/17 14:24:24:202->Motion : Init
+2022/05/17 14:24:24:207->>Motion Initial失敗!
+2022/05/17 14:24:24:207->>Register Motion Card Error!
+2022/05/17 14:24:24:207->Motion Completed.
+2022/05/17 14:24:24:207-Setup CCD...
+2022/05/17 14:24:24:207-Setup CCD: 1
+2022/05/17 14:24:24:209-Setup CCD: 2
+2022/05/17 14:24:24:210-Setup CCD: [DFK 33G274 [HD-002]], [11124360]
+2022/05/17 14:24:33:178-關閉作業頁面1.
+2022/05/17 14:24:37:955-MotionStatus: 設定tsRorzeEFEM為true
+2022/05/17 14:24:37:982-Logged. Set boolWaitLog to true.
+2022/05/17 14:24:37:991-boolWaitLog = true Done.
+2022/05/17 14:24:37:992-End Log1.
+2022/05/17 14:24:37:992-End Log2.
+2022/05/17 14:24:37:997-End Log3.
+2022/05/17 14:24:37:997-End Log.
+2022/05/17 14:33:37:083-關閉作業頁面1.
+2022/05/17 14:33:43:990-Logged. Set boolWaitLog to true.
+2022/05/17 14:33:43:995-boolWaitLog = true Done.
+2022/05/17 14:33:43:995-End Log1.
+2022/05/17 14:33:43:996-End Log2.
+2022/05/17 14:33:44:001-End Log3.
+2022/05/17 14:33:44:001-End Log.
+2022/05/17 14:33:53:755-關閉作業頁面1.
+2022/05/17 14:33:56:258-MotionStatus: 設定tsRorzeEFEM為true
+2022/05/17 14:33:56:270-Logged. Set boolWaitLog to true.
+2022/05/17 14:33:56:286-boolWaitLog = true Done.
+2022/05/17 14:33:56:286-End Log1.
+2022/05/17 14:33:56:286-End Log2.
+2022/05/17 14:33:56:291-End Log3.
+2022/05/17 14:33:56:292-End Log.

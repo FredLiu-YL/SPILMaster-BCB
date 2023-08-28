@@ -1,0 +1,177 @@
+2023/08/15 16:36:36:998->>Log Ok
+2023/08/15 16:36:37:078->>Version : C13
+2023/08/15 16:36:37:088->>LoadSystemParameter()
+2023/08/15 16:36:37:238->>LoadUserPosition()
+2023/08/15 16:36:37:318-LoadWPosition(): D:\Fred\SPIL 矽品\WVOlympusR-Auto-V12\RobotW.ini
+2023/08/15 16:36:37:338-1: WPosition=541646
+2023/08/15 16:36:37:338-2: WPosition=9200
+2023/08/15 16:36:37:338-3: WPosition=9200
+2023/08/15 16:36:37:338-4: WPosition=9200
+2023/08/15 16:36:37:358->>LoadLensPosition()
+2023/08/15 16:36:37:398->>LoadCalibrationFactor()
+2023/08/15 16:36:37:418->>ReadLEDValue()
+2023/08/15 16:36:38:058->>InitLampControl2()
+2023/08/15 16:36:38:578->>After Parameter Loaded: Motion
+2023/08/15 16:36:41:240-InitJoystick Fail!
+2023/08/15 16:36:41:250->Motion : Init
+2023/08/15 16:36:41:260->>Motion Initial失敗!
+2023/08/15 16:36:41:260->>Register Motion Card Error!
+2023/08/15 16:36:41:260->Motion Completed.
+2023/08/15 16:36:41:270-Setup CCD...
+2023/08/15 16:36:41:270-OLS5000 connecting...
+2023/08/15 16:36:41:785-Set OLS5000 IP, Port: 192.168.0.1,50100
+2023/08/15 16:36:41:795-OLS5000 Socket Error!
+2023/08/15 16:36:41:795-csOLS5000 Error!
+2023/08/15 16:36:42:289-Setup CCD: 1
+2023/08/15 16:36:42:289-Setup CCD: 2
+2023/08/15 16:36:42:289-Setup CCD: [DFK 33G274 [HD-002]], [11124360]
+2023/08/15 16:36:42:289-Setup Database...
+2023/08/15 16:36:42:289-Load User.ini...
+2023/08/15 16:36:42:329-Check License...
+2023/08/15 16:36:42:339-Init CCD Buffer...
+2023/08/15 16:36:42:339-未偵測到CCD! 強制設為Color CCD: 1280*1014
+2023/08/15 16:36:44:579-Setup NCC...
+2023/08/15 16:36:44:582-Init: Do SetMotionStatus(). - False
+2023/08/15 16:36:44:582-MotionStatus: 設定tsRorzeEFEM為false
+2023/08/15 16:36:44:587->>[Timer]: tmSystem
+2023/08/15 16:36:44:587->>[Timer]: tm500ms
+2023/08/15 16:36:44:587->>[Timer]: tm250ms
+2023/08/15 16:36:44:587->>[Timer]: tm400ms
+2023/08/15 16:36:44:587-FormShow Completed.
+2023/08/15 16:36:44:592-FormShow完成: 檢查Vacuum, CDA
+2023/08/15 16:36:44:592-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:36:46:275-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58
+2023/08/15 16:36:46:356-SetupEFEM() Enter...
+2023/08/15 16:36:46:356-SetupEFEM() Rorze...
+2023/08/15 16:37:02:472-Error Alarm: Power
+2023/08/15 16:37:02:472-Error Alarm: Stage Door
+2023/08/15 16:37:02:600-Error Alarm: Power
+2023/08/15 16:37:02:600-Error Alarm: Stage Door
+2023/08/15 16:37:03:595-Error Alarm: Power
+2023/08/15 16:37:03:595-Error Alarm: Stage Door
+2023/08/15 16:37:04:595-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:04:595-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:04:595-Error Alarm: Power
+2023/08/15 16:37:04:595-Error Alarm: Stage Door
+2023/08/15 16:37:05:597-Error Alarm: Power
+2023/08/15 16:37:05:597-Error Alarm: Stage Door
+2023/08/15 16:37:06:597-Error Alarm: Power
+2023/08/15 16:37:06:597-Error Alarm: Stage Door
+2023/08/15 16:37:07:597-Error Alarm: Power
+2023/08/15 16:37:07:597-Error Alarm: Stage Door
+2023/08/15 16:37:08:600-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:08:600-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:08:600-Error Alarm: Power
+2023/08/15 16:37:08:600-Error Alarm: Stage Door
+2023/08/15 16:37:09:599-Error Alarm: Power
+2023/08/15 16:37:09:599-Error Alarm: Stage Door
+2023/08/15 16:37:10:599-Error Alarm: Power
+2023/08/15 16:37:10:599-Error Alarm: Stage Door
+2023/08/15 16:37:11:599-Error Alarm: Power
+2023/08/15 16:37:11:599-Error Alarm: Stage Door
+2023/08/15 16:37:12:599-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:12:599-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:12:599-Error Alarm: Power
+2023/08/15 16:37:12:599-Error Alarm: Stage Door
+2023/08/15 16:37:13:602-Error Alarm: Power
+2023/08/15 16:37:13:602-Error Alarm: Stage Door
+2023/08/15 16:37:14:604-Error Alarm: Power
+2023/08/15 16:37:14:604-Error Alarm: Stage Door
+2023/08/15 16:37:15:595-Error Alarm: Power
+2023/08/15 16:37:15:595-Error Alarm: Stage Door
+2023/08/15 16:37:16:602-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:16:602-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:16:602-Error Alarm: Power
+2023/08/15 16:37:16:602-Error Alarm: Stage Door
+2023/08/15 16:37:17:602-Error Alarm: Power
+2023/08/15 16:37:17:602-Error Alarm: Stage Door
+2023/08/15 16:37:18:602-Error Alarm: Power
+2023/08/15 16:37:18:602-Error Alarm: Stage Door
+2023/08/15 16:37:19:602-Error Alarm: Power
+2023/08/15 16:37:19:602-Error Alarm: Stage Door
+2023/08/15 16:37:20:052-關閉作業頁面1.
+2023/08/15 16:37:20:598-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:20:598-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:20:598-Error Alarm: Power
+2023/08/15 16:37:20:598-Error Alarm: Stage Door
+2023/08/15 16:37:21:608-Error Alarm: Power
+2023/08/15 16:37:21:608-Error Alarm: Stage Door
+2023/08/15 16:37:22:598-Error Alarm: Power
+2023/08/15 16:37:22:598-Error Alarm: Stage Door
+2023/08/15 16:37:23:599-Error Alarm: Power
+2023/08/15 16:37:23:599-Error Alarm: Stage Door
+2023/08/15 16:37:23:884-Logged. Set boolWaitLog to true.
+2023/08/15 16:37:23:944-boolWaitLog = true Done.
+2023/08/15 16:37:23:944-End Log1.
+2023/08/15 16:37:23:944-End Log2.
+2023/08/15 16:37:23:953-End Log3.
+2023/08/15 16:37:23:953-End Log.
+2023/08/15 16:37:24:597-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:24:597-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:24:597-Error Alarm: Power
+2023/08/15 16:37:24:597-Error Alarm: Stage Door
+2023/08/15 16:37:25:598-Error Alarm: Power
+2023/08/15 16:37:25:598-Error Alarm: Stage Door
+2023/08/15 16:37:26:595-Error Alarm: Power
+2023/08/15 16:37:26:595-Error Alarm: Stage Door
+2023/08/15 16:37:27:604-Error Alarm: Power
+2023/08/15 16:37:27:604-Error Alarm: Stage Door
+2023/08/15 16:37:28:609-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:28:609-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:28:609-Error Alarm: Power
+2023/08/15 16:37:28:609-Error Alarm: Stage Door
+2023/08/15 16:37:29:600-Error Alarm: Power
+2023/08/15 16:37:29:600-Error Alarm: Stage Door
+2023/08/15 16:37:30:597-Error Alarm: Power
+2023/08/15 16:37:30:597-Error Alarm: Stage Door
+2023/08/15 16:37:31:144-關閉作業頁面1.
+2023/08/15 16:37:31:598-Error Alarm: Power
+2023/08/15 16:37:31:598-Error Alarm: Stage Door
+2023/08/15 16:37:31:598-SECS Socket重連線...
+2023/08/15 16:37:32:612-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:32:612-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:32:612-Error Alarm: Power
+2023/08/15 16:37:32:612-Error Alarm: Stage Door
+2023/08/15 16:37:36:424->>Error(btnSECSReConnectClick): Windows socket error: 一次只能用一個通訊端位址 (通訊協定/網路位址/連接埠)。 (10048), on API 'bind'
+2023/08/15 16:37:36:432-SECS Socket重連線.
+2023/08/15 16:37:36:442-Error Alarm: Power
+2023/08/15 16:37:36:442-Error Alarm: Stage Door
+2023/08/15 16:37:36:612-Error Alarm: Power
+2023/08/15 16:37:36:612-Error Alarm: Stage Door
+2023/08/15 16:37:37:611-Error Alarm: Power
+2023/08/15 16:37:37:611-Error Alarm: Stage Door
+2023/08/15 16:37:38:601-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:38:601-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:38:601-Error Alarm: Power
+2023/08/15 16:37:38:601-Error Alarm: Stage Door
+2023/08/15 16:37:39:606-Error Alarm: Power
+2023/08/15 16:37:39:606-Error Alarm: Stage Door
+2023/08/15 16:37:40:599-Error Alarm: Power
+2023/08/15 16:37:40:599-Error Alarm: Stage Door
+2023/08/15 16:37:41:356-MotionStatus: 設定tsRorzeEFEM為true
+2023/08/15 16:37:41:380-Logged. Set boolWaitLog to true.
+2023/08/15 16:37:41:450-boolWaitLog = true Done.
+2023/08/15 16:37:41:450-End Log1.
+2023/08/15 16:37:41:450-End Log2.
+2023/08/15 16:37:41:451-End Log3.
+2023/08/15 16:37:41:451-End Log.
+2023/08/15 16:37:41:595-Error Alarm: Power
+2023/08/15 16:37:41:595-Error Alarm: Stage Door
+2023/08/15 16:37:42:595-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:42:595-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:42:595-Error Alarm: Power
+2023/08/15 16:37:42:595-Error Alarm: Stage Door
+2023/08/15 16:37:43:595-Error Alarm: Power
+2023/08/15 16:37:43:595-Error Alarm: Stage Door
+2023/08/15 16:37:44:595-Error Alarm: Power
+2023/08/15 16:37:44:595-Error Alarm: Stage Door
+2023/08/15 16:37:45:595-Error Alarm: Power
+2023/08/15 16:37:45:595-Error Alarm: Stage Door
+2023/08/15 16:37:46:595-Error: 連續5秒未執行Motion及IO更新!
+2023/08/15 16:37:46:595-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/15 16:37:46:595-Error Alarm: Power
+2023/08/15 16:37:46:595-Error Alarm: Stage Door
+2023/08/15 16:37:47:595-Error Alarm: Power
+2023/08/15 16:37:47:595-Error Alarm: Stage Door
+2023/08/15 16:37:48:595-Error Alarm: Power
+2023/08/15 16:37:48:595-Error Alarm: Stage Door

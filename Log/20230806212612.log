@@ -1,0 +1,34 @@
+2023/08/06 21:26:12:062->>Log Ok
+2023/08/06 21:26:12:263->>Version : C13
+2023/08/06 21:26:12:263->>LoadSystemParameter()
+2023/08/06 21:26:12:404->>LoadUserPosition()
+2023/08/06 21:26:12:453-LoadWPosition(): F:\WindowsAP\Olympus\矽品-Auto\WVOlympusR-Auto-V12\RobotW.ini
+2023/08/06 21:26:12:456-1: WPosition=541646
+2023/08/06 21:26:12:458-2: WPosition=9200
+2023/08/06 21:26:12:459-3: WPosition=9200
+2023/08/06 21:26:12:461-4: WPosition=9200
+2023/08/06 21:26:12:481->>LoadLensPosition()
+2023/08/06 21:26:12:506->>LoadCalibrationFactor()
+2023/08/06 21:26:12:507->>ReadLEDValue()
+2023/08/06 21:26:13:111->>InitLampControl2()
+2023/08/06 21:26:13:611->>After Parameter Loaded: Motion
+2023/08/06 21:26:14:427-InitJoystick Fail!
+2023/08/06 21:26:14:446->Motion : Init
+2023/08/06 21:26:14:449->>Motion Initial失敗!
+2023/08/06 21:26:14:449->>Register Motion Card Error!
+2023/08/06 21:26:14:449->Motion Completed.
+2023/08/06 21:26:14:460-Setup CCD...
+2023/08/06 21:26:14:464-Setup CCD: ViewWorks...
+2023/08/06 21:27:07:767-關閉作業頁面1.
+2023/08/06 21:27:10:336-MotionStatus: 設定tsRorzeEFEM為true
+2023/08/06 21:27:10:366-Logged. Set boolWaitLog to true.
+2023/08/06 21:27:10:398-boolWaitLog = true Done.
+2023/08/06 21:27:10:398-End Log1.
+2023/08/06 21:27:10:398-End Log2.
+2023/08/06 21:27:10:408-End Log3.
+2023/08/06 21:27:10:410-End Log.
+2023/08/06 21:44:45:924-tsMotion->Enabled == false
+2023/08/06 21:44:45:925-pcMotion->Enabled == false
+2023/08/06 23:54:13:590-Close All Timer...
+2023/08/06 23:54:13:850-Close All Timer.
+2023/08/06 23:54:13:850-Close Done.

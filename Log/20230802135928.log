@@ -1,0 +1,41 @@
+2023/08/02 13:59:28:166->>Log Ok
+2023/08/02 13:59:28:345->>Version : C13
+2023/08/02 13:59:28:345->>LoadSystemParameter()
+2023/08/02 13:59:28:454->>LoadUserPosition()
+2023/08/02 13:59:28:494-LoadWPosition(): F:\WindowsAP\Olympus\矽品-Auto\WVOlympusR-Auto-V11\RobotW.ini
+2023/08/02 13:59:28:496-1: WPosition=541646
+2023/08/02 13:59:28:497-2: WPosition=9200
+2023/08/02 13:59:28:499-3: WPosition=9200
+2023/08/02 13:59:28:503-4: WPosition=9200
+2023/08/02 13:59:28:518->>LoadLensPosition()
+2023/08/02 13:59:28:541->>LoadCalibrationFactor()
+2023/08/02 13:59:28:543->>ReadLEDValue()
+2023/08/02 13:59:29:146->>InitLampControl2()
+2023/08/02 13:59:29:646->>After Parameter Loaded: Motion
+2023/08/02 13:59:30:414-InitJoystick Fail!
+2023/08/02 13:59:30:426->Motion : Init
+2023/08/02 13:59:30:430->>Motion Initial失敗!
+2023/08/02 13:59:30:430->>Register Motion Card Error!
+2023/08/02 13:59:30:430->Motion Completed.
+2023/08/02 13:59:30:437-Setup CCD...
+2023/08/02 13:59:30:443-Setup CCD: ViewWorks...
+2023/08/02 13:59:30:469-Setup CCD: ViewWorks fail: 8
+2023/08/02 14:00:09:725-Setup CCD: 1
+2023/08/02 14:00:09:733-Setup CCD: 2
+2023/08/02 14:00:09:734-Setup CCD: [DFK 33G274 [HD-002]], [11124360]
+2023/08/02 14:00:09:736-Setup Database...
+2023/08/02 14:00:09:744-Load User.ini...
+2023/08/02 14:00:09:773-Check License...
+2023/08/02 14:00:09:786-Init CCD Buffer...
+2023/08/02 14:00:09:787-未偵測到CCD! 強制設為Color CCD: 1280*1014
+2023/08/02 14:00:10:885-Setup NCC...
+2023/08/02 14:00:10:893-Init: Do SetMotionStatus(). - False
+2023/08/02 14:00:10:893-MotionStatus: 設定tsRorzeEFEM為false
+2023/08/02 14:00:10:897->>[Timer]: tmSystem
+2023/08/02 14:00:10:897->>[Timer]: tm500ms
+2023/08/02 14:00:10:897->>[Timer]: tm250ms
+2023/08/02 14:00:10:897->>[Timer]: tm400ms
+2023/08/02 14:00:10:898-FormShow Completed.
+2023/08/02 14:00:10:909-FormShow完成: 檢查Vacuum, CDA
+2023/08/02 14:00:10:909-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/02 14:00:13:332-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58

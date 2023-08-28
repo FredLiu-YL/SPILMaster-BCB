@@ -1,0 +1,22 @@
+2022/05/17 14:17:03:582->>Log Ok
+2022/05/17 14:17:03:745->>Version : C05
+2022/05/17 14:17:03:745->>LoadSystemParameter()
+2022/05/17 14:17:03:817->>LoadUserPosition()
+2022/05/17 14:17:03:853-LoadWPosition(): F:\WindowsAP\Olympus\ª¿«~\WVOlympusRV12\RobotW.ini
+2022/05/17 14:17:03:855-1: WPosition=541646
+2022/05/17 14:17:03:855-2: WPosition=9200
+2022/05/17 14:17:03:856-3: WPosition=9200
+2022/05/17 14:17:03:857-4: WPosition=9200
+2022/05/17 14:17:03:862->>LoadLensPosition()
+2022/05/17 14:17:03:875->>LoadCalibrationFactor()
+2022/05/17 14:17:03:876->>ReadLEDValue()
+2022/05/17 14:17:04:485->>InitLampControl2()
+2022/05/17 14:17:24:511->>After Parameter Loaded: Motion
+2022/05/17 14:17:25:487->Motion : Init
+2022/05/17 14:17:25:493->>Motion Initial¥¢±Ñ!
+2022/05/17 14:17:25:493->>Register Motion Card Error!
+2022/05/17 14:17:25:493->Motion Completed.
+2022/05/17 14:17:25:493-Setup CCD...
+2022/05/17 14:17:25:493-Setup CCD: 1
+2022/05/17 14:17:25:496-Setup CCD: 2
+2022/05/17 14:17:25:497-Setup CCD: [DFK 33G274 [HD-002]], [11124360]

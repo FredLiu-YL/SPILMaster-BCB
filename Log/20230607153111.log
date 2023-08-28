@@ -1,0 +1,57 @@
+2023/06/07 15:31:11:043->>Log Ok
+2023/06/07 15:31:11:185->>Version : C13
+2023/06/07 15:31:11:186->>LoadSystemParameter()
+2023/06/07 15:31:11:253->>LoadUserPosition()
+2023/06/07 15:31:11:269-LoadWPosition(): F:\WindowsAP\Olympus\矽品-Auto\WVOlympusR-Auto-V10\RobotW.ini
+2023/06/07 15:31:11:270-1: WPosition=541646
+2023/06/07 15:31:11:271-2: WPosition=9200
+2023/06/07 15:31:11:271-3: WPosition=9200
+2023/06/07 15:31:11:272-4: WPosition=9200
+2023/06/07 15:31:11:274->>LoadLensPosition()
+2023/06/07 15:31:11:285->>LoadCalibrationFactor()
+2023/06/07 15:31:11:286->>ReadLEDValue()
+2023/06/07 15:31:11:889->>InitLampControl2()
+2023/06/07 15:31:12:390->>After Parameter Loaded: Motion
+2023/06/07 15:31:12:996->Motion : Init
+2023/06/07 15:31:13:000->>Motion Initial失敗!
+2023/06/07 15:31:13:000->>Register Motion Card Error!
+2023/06/07 15:31:13:000->Motion Completed.
+2023/06/07 15:31:13:001-Setup CCD...
+2023/06/07 15:31:18:228-Setup CCD: 1
+2023/06/07 15:31:18:233-Setup CCD: 2
+2023/06/07 15:31:18:233-Setup CCD: [DFK 33G274 [HD-002]], [11124360]
+2023/06/07 15:31:18:233-Setup Database...
+2023/06/07 15:31:18:237-Load User.ini...
+2023/06/07 15:31:18:253-Check License...
+2023/06/07 15:31:18:259-Init CCD Buffer...
+2023/06/07 15:31:18:259-未偵測到CCD! 強制設為Color CCD: 1280*1014
+2023/06/07 15:31:19:258-Setup NCC...
+2023/06/07 15:31:19:261-Init: Do SetMotionStatus(). - False
+2023/06/07 15:31:19:261-MotionStatus: 設定tsRorzeEFEM為false
+2023/06/07 15:31:19:263->>[Timer]: tmSystem
+2023/06/07 15:31:19:263->>[Timer]: tm500ms
+2023/06/07 15:31:19:263->>[Timer]: tm250ms
+2023/06/07 15:31:19:263->>[Timer]: tm400ms
+2023/06/07 15:31:19:263-FormShow Completed.
+2023/06/07 15:31:19:270-FormShow完成: 檢查Vacuum, CDA
+2023/06/07 15:31:19:270-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/06/07 15:31:21:334-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58
+2023/06/07 15:31:21:600-Error Alarm: Power
+2023/06/07 15:31:21:601-Error Alarm: Stage Door
+2023/06/07 15:31:21:603-SetupEFEM() Enter...
+2023/06/07 15:31:21:603-SetupEFEM() Rorze...
+2023/06/07 15:31:22:535-Error Alarm: Power
+2023/06/07 15:31:22:536-Error Alarm: Stage Door
+2023/06/07 15:31:23:309-Error Alarm: Power
+2023/06/07 15:31:23:309-Error Alarm: Stage Door
+2023/06/07 15:31:24:323-Error Alarm: Power
+2023/06/07 15:31:24:323-Error Alarm: Stage Door
+2023/06/07 15:31:25:336-Error Alarm: Power
+2023/06/07 15:31:25:336-Error Alarm: Stage Door
+2023/06/07 15:31:26:351-Error: 連續5秒未執行Motion及IO更新!
+2023/06/07 15:31:26:353-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/06/07 15:31:26:354-Error Alarm: Power
+2023/06/07 15:31:26:354-Error Alarm: Stage Door
+2023/06/07 15:31:27:098-Close All Timer...
+2023/06/07 15:31:27:225-Close All Timer.
+2023/06/07 15:31:27:225-Close Done.

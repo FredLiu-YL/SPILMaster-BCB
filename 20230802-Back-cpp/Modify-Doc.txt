@@ -1,0 +1,42 @@
+
+珇-Auto
+---------
+
+Load/Unload
+=> ok
+
+Get/Put: robo翴 & slot竚(LP1/Lp2)
+=> ok
+
+穝BeforeLoadPortLoadUnloadFun => Port把计
+=> ok
+
+pnlWaferRobotInformation / pnlWaferRobotInformationLow
+=> ok
+
+浪琩pnlWaferRobotInformation->Color == clLime
+=> ok
+
+CassetteBuffer[i](ASCII): 琌だLP1/LP2
+=> ok
+
+WaferBuffer[i].Status(Value): 琌だLP1/LP2
+=> パSECS弄Priority/Recipe...珿璶ㄢ舱
+=> ok
+
+WorkingBuffer[](char): 琌だLP1/LP2
+
+LoadPortStatus[]: 琌だLP1/LP2
+
+LoadPortLED[]: 琌だLP1/LP2
+
+/癶计ㄓ方: LP1/LP2
+
+edAOIX / CenterX		=> edTilt
+edLoadX	/LoadX			=> edZeo
+edOriginalX / OriginalX		=> edLoad
+edRealCenterX RealCenterX	=> 
+edCCDX / CCDX			=> 
+edLastX / LastX			=> 
+	
+

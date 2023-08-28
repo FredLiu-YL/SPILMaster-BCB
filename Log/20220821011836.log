@@ -1,0 +1,80 @@
+2022/08/21 01:18:36:680->>Log Ok
+2022/08/21 01:18:36:850->>Version : C07
+2022/08/21 01:18:36:851->>LoadSystemParameter()
+2022/08/21 01:18:36:928->>LoadUserPosition()
+2022/08/21 01:18:36:957-LoadWPosition(): F:\WindowsAP\Olympus\矽品\WVOlympusRV12\RobotW.ini
+2022/08/21 01:18:36:958-1: WPosition=541646
+2022/08/21 01:18:36:959-2: WPosition=9200
+2022/08/21 01:18:36:960-3: WPosition=9200
+2022/08/21 01:18:36:961-4: WPosition=9200
+2022/08/21 01:18:36:965->>LoadLensPosition()
+2022/08/21 01:18:36:980->>LoadCalibrationFactor()
+2022/08/21 01:18:36:981->>ReadLEDValue()
+2022/08/21 01:18:37:598->>InitLampControl2()
+2022/08/21 01:18:38:098->>After Parameter Loaded: Motion
+2022/08/21 01:18:39:120->Motion : Init
+2022/08/21 01:18:39:126->>Motion Initial失敗!
+2022/08/21 01:18:39:126->>Register Motion Card Error!
+2022/08/21 01:18:39:126->Motion Completed.
+2022/08/21 01:18:39:126-Setup CCD...
+2022/08/21 01:18:39:126-Setup CCD: 1
+2022/08/21 01:18:39:128-Setup CCD: 2
+2022/08/21 01:18:39:129-Setup CCD: [DFK 33G274 [HD-002]], [11124360]
+2022/08/21 01:18:39:129-Setup Database...
+2022/08/21 01:18:39:132-Load User.ini...
+2022/08/21 01:18:39:159-Check License...
+2022/08/21 01:18:39:171-Init CCD Buffer...
+2022/08/21 01:18:39:171-未偵測到CCD! 強制設為Color CCD: 1280*1014
+2022/08/21 01:18:40:609-Setup NCC...
+2022/08/21 01:18:40:619-Init: Do SetMotionStatus(). - False
+2022/08/21 01:18:40:619-MotionStatus: 設定tsRorzeEFEM為false
+2022/08/21 01:18:40:623->>[Timer]: tmSystem
+2022/08/21 01:18:40:623->>[Timer]: tm500ms
+2022/08/21 01:18:40:623->>[Timer]: tm250ms
+2022/08/21 01:18:40:623->>[Timer]: tm400ms
+2022/08/21 01:18:40:623-FormShow Completed.
+2022/08/21 01:18:40:636-FormShow完成: 檢查Vacuum, CDA
+2022/08/21 01:18:40:637-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2022/08/21 01:18:42:697-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58
+2022/08/21 01:18:50:455-SetupEFEM() Enter...
+2022/08/21 01:18:50:455-SetupEFEM() Rorze...
+2022/08/21 01:18:54:299-SetupEFEM() Rorze.
+2022/08/21 01:18:54:314-Error Alarm: Power
+2022/08/21 01:18:54:314-Error Alarm: Stage Door
+2022/08/21 01:18:54:819-Error Alarm: Power
+2022/08/21 01:18:54:819-Error Alarm: Stage Door
+2022/08/21 01:18:55:303-SetupEFEM(): 測試SECS Socket...
+2022/08/21 01:18:55:303-SECS未連線, 重連線中...
+2022/08/21 01:18:55:833-Error Alarm: Power
+2022/08/21 01:18:55:833-Error Alarm: Stage Door
+2022/08/21 01:18:56:079-關閉作業頁面1.
+2022/08/21 01:18:56:847-Error Alarm: Power
+2022/08/21 01:18:56:847-Error Alarm: Stage Door
+2022/08/21 01:18:57:860-Error Alarm: Power
+2022/08/21 01:18:57:860-Error Alarm: Stage Door
+2022/08/21 01:18:58:875-Error: 連續5秒未執行Motion及IO更新!
+2022/08/21 01:18:58:875-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2022/08/21 01:18:58:876-Error Alarm: Power
+2022/08/21 01:18:58:876-Error Alarm: Stage Door
+2022/08/21 01:18:59:890-Error Alarm: Power
+2022/08/21 01:18:59:891-Error Alarm: Stage Door
+2022/08/21 01:19:00:205-MotionStatus: 設定tsRorzeEFEM為true
+2022/08/21 01:19:00:236-Logged. Set boolWaitLog to true.
+2022/08/21 01:19:00:239-boolWaitLog = true Done.
+2022/08/21 01:19:00:239-End Log1.
+2022/08/21 01:19:00:240-End Log2.
+2022/08/21 01:19:00:246-End Log3.
+2022/08/21 01:19:00:250-End Log.
+2022/08/21 01:19:00:903-Error Alarm: Power
+2022/08/21 01:19:00:903-Error Alarm: Stage Door
+2022/08/21 01:19:01:917-Error Alarm: Power
+2022/08/21 01:19:01:917-Error Alarm: Stage Door
+2022/08/21 01:19:02:930-Error Alarm: Power
+2022/08/21 01:19:02:930-Error Alarm: Stage Door
+2022/08/21 01:19:03:945-Error Alarm: Power
+2022/08/21 01:19:03:945-Error Alarm: Stage Door
+2022/08/21 01:19:04:959-Error: 連續5秒未執行Motion及IO更新!
+2022/08/21 01:19:04:960-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2022/08/21 01:19:04:960-Error Alarm: Power
+2022/08/21 01:19:04:961-Error Alarm: Stage Door
+2022/08/21 01:19:05:691-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58

@@ -1,0 +1,19 @@
+2023/06/07 15:30:24:522->>Log Ok
+2023/06/07 15:30:24:692->>Version : C13
+2023/06/07 15:30:24:692->>LoadSystemParameter()
+2023/06/07 15:30:24:741->>LoadUserPosition()
+2023/06/07 15:30:24:759-LoadWPosition(): F:\WindowsAP\Olympus\ª¿«~-Auto\WVOlympusR-Auto-V10\RobotW.ini
+2023/06/07 15:30:24:760-1: WPosition=541646
+2023/06/07 15:30:24:760-2: WPosition=9200
+2023/06/07 15:30:24:761-3: WPosition=9200
+2023/06/07 15:30:24:762-4: WPosition=9200
+2023/06/07 15:30:24:764->>LoadLensPosition()
+2023/06/07 15:30:24:774->>LoadCalibrationFactor()
+2023/06/07 15:30:24:774->>ReadLEDValue()
+2023/06/07 15:30:25:376->>InitLampControl2()
+2023/06/07 15:30:25:876->>After Parameter Loaded: Motion
+2023/06/07 15:30:26:512->Motion : Init
+2023/06/07 15:30:26:519->>Motion Initial¥¢±Ñ!
+2023/06/07 15:30:26:519->>Register Motion Card Error!
+2023/06/07 15:30:26:519->Motion Completed.
+2023/06/07 15:30:26:519-Setup CCD...

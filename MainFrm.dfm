@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = -7
-  Top = 15
+  Left = -37
+  Top = 20
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Measure Motion'

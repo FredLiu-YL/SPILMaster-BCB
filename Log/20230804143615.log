@@ -1,0 +1,45 @@
+2023/08/04 14:36:15:056->>Log Ok
+2023/08/04 14:36:15:258->>Version : C13
+2023/08/04 14:36:15:258->>LoadSystemParameter()
+2023/08/04 14:36:15:390->>LoadUserPosition()
+2023/08/04 14:36:15:434-LoadWPosition(): F:\WindowsAP\Olympus\矽品-Auto\WVOlympusR-Auto-V12\RobotW.ini
+2023/08/04 14:36:15:436-1: WPosition=541646
+2023/08/04 14:36:15:437-2: WPosition=9200
+2023/08/04 14:36:15:439-3: WPosition=9200
+2023/08/04 14:36:15:442-4: WPosition=9200
+2023/08/04 14:36:15:458->>LoadLensPosition()
+2023/08/04 14:36:15:485->>LoadCalibrationFactor()
+2023/08/04 14:36:15:486->>ReadLEDValue()
+2023/08/04 14:36:16:097->>InitLampControl2()
+2023/08/04 14:36:16:597->>After Parameter Loaded: Motion
+2023/08/04 14:36:17:649-InitJoystick Fail!
+2023/08/04 14:36:17:671->Motion : Init
+2023/08/04 14:36:17:675->>Motion Initial失敗!
+2023/08/04 14:36:17:675->>Register Motion Card Error!
+2023/08/04 14:36:17:676->Motion Completed.
+2023/08/04 14:36:17:694-Setup CCD...
+2023/08/04 14:36:17:698-Setup CCD: ViewWorks...
+2023/08/04 14:36:17:818-Setup CCD: ViewWorks fail: 8
+2023/08/04 14:36:18:378-Setup CCD: 1
+2023/08/04 14:36:18:389-Setup CCD: 2
+2023/08/04 14:36:18:390-Setup CCD: [DFK 33G274 [HD-002]], [11124360]
+2023/08/04 14:36:18:392-Setup Database...
+2023/08/04 14:36:18:402-Load User.ini...
+2023/08/04 14:36:18:528-Check License...
+2023/08/04 14:36:18:559-Init CCD Buffer...
+2023/08/04 14:36:18:559-未偵測到CCD! 強制設為Color CCD: 1280*1014
+2023/08/04 14:36:20:610-Setup NCC...
+2023/08/04 14:36:20:615-Init: Do SetMotionStatus(). - False
+2023/08/04 14:36:20:616-MotionStatus: 設定tsRorzeEFEM為false
+2023/08/04 14:36:20:618->>[Timer]: tmSystem
+2023/08/04 14:36:20:619->>[Timer]: tm500ms
+2023/08/04 14:36:20:619->>[Timer]: tm250ms
+2023/08/04 14:36:20:619->>[Timer]: tm400ms
+2023/08/04 14:36:20:619-FormShow Completed.
+2023/08/04 14:36:20:637-FormShow完成: 檢查Vacuum, CDA
+2023/08/04 14:36:20:638-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/08/04 14:36:23:092-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58
+2023/08/04 14:36:23:745-Error Alarm: Power
+2023/08/04 14:36:23:745-Error Alarm: Stage Door
+2023/08/04 14:36:23:751-SetupEFEM() Enter...
+2023/08/04 14:36:23:751-SetupEFEM() Rorze...

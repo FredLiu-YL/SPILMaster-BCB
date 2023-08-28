@@ -1,0 +1,42 @@
+2023/06/07 15:27:31:214->>Log Ok
+2023/06/07 15:27:31:362->>Version : C13
+2023/06/07 15:27:31:363->>LoadSystemParameter()
+2023/06/07 15:27:31:418->>LoadUserPosition()
+2023/06/07 15:27:31:438-LoadWPosition(): F:\WindowsAP\Olympus\矽品-Auto\WVOlympusR-Auto-V10\RobotW.ini
+2023/06/07 15:27:31:439-1: WPosition=541646
+2023/06/07 15:27:31:440-2: WPosition=9200
+2023/06/07 15:27:31:440-3: WPosition=9200
+2023/06/07 15:27:31:441-4: WPosition=9200
+2023/06/07 15:27:31:447->>LoadLensPosition()
+2023/06/07 15:27:31:458->>LoadCalibrationFactor()
+2023/06/07 15:27:31:460->>ReadLEDValue()
+2023/06/07 15:27:32:063->>InitLampControl2()
+2023/06/07 15:27:32:563->>After Parameter Loaded: Motion
+2023/06/07 15:27:33:257->Motion : Init
+2023/06/07 15:27:33:263->>Motion Initial失敗!
+2023/06/07 15:27:33:264->>Register Motion Card Error!
+2023/06/07 15:27:33:264->Motion Completed.
+2023/06/07 15:27:33:264-Setup CCD...
+2023/06/07 15:27:54:897-Setup CCD: 1
+2023/06/07 15:27:54:910-Setup CCD: 2
+2023/06/07 15:27:54:910-Setup CCD: [DFK 33G274 [HD-002]], [11124360]
+2023/06/07 15:27:54:911-Setup Database...
+2023/06/07 15:27:54:916-Load User.ini...
+2023/06/07 15:27:54:940-Check License...
+2023/06/07 15:27:54:947-Init CCD Buffer...
+2023/06/07 15:27:54:948-未偵測到CCD! 強制設為Color CCD: 1280*1014
+2023/06/07 15:27:55:920-Setup NCC...
+2023/06/07 15:27:55:923-Init: Do SetMotionStatus(). - False
+2023/06/07 15:27:55:924-MotionStatus: 設定tsRorzeEFEM為false
+2023/06/07 15:27:55:928->>[Timer]: tmSystem
+2023/06/07 15:27:55:929->>[Timer]: tm500ms
+2023/06/07 15:27:55:929->>[Timer]: tm250ms
+2023/06/07 15:27:55:929->>[Timer]: tm400ms
+2023/06/07 15:27:55:930-FormShow Completed.
+2023/06/07 15:27:55:938-FormShow完成: 檢查Vacuum, CDA
+2023/06/07 15:27:55:938-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/06/07 15:27:58:197-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58
+2023/06/07 15:27:58:484-Error Alarm: Power
+2023/06/07 15:27:58:485-Error Alarm: Stage Door
+2023/06/07 15:27:58:488-SetupEFEM() Enter...
+2023/06/07 15:27:58:489-SetupEFEM() Rorze...

@@ -1,0 +1,43 @@
+2023/07/28 11:04:47:915->>Log Ok
+2023/07/28 11:04:48:042->>Version : C13
+2023/07/28 11:04:48:043->>LoadSystemParameter()
+2023/07/28 11:04:48:104->>LoadUserPosition()
+2023/07/28 11:04:48:124-LoadWPosition(): F:\WindowsAP\Olympus\矽品-Auto\WVOlympusR-Auto-V11\RobotW.ini
+2023/07/28 11:04:48:125-1: WPosition=541646
+2023/07/28 11:04:48:125-2: WPosition=9200
+2023/07/28 11:04:48:126-3: WPosition=9200
+2023/07/28 11:04:48:127-4: WPosition=9200
+2023/07/28 11:04:48:136->>LoadLensPosition()
+2023/07/28 11:04:48:147->>LoadCalibrationFactor()
+2023/07/28 11:04:48:148->>ReadLEDValue()
+2023/07/28 11:04:48:750->>InitLampControl2()
+2023/07/28 11:04:49:250->>After Parameter Loaded: Motion
+2023/07/28 11:04:49:896-InitJoystick Fail!
+2023/07/28 11:04:49:896->Motion : Init
+2023/07/28 11:04:49:899->>Motion Initial失敗!
+2023/07/28 11:04:49:899->>Register Motion Card Error!
+2023/07/28 11:04:49:899->Motion Completed.
+2023/07/28 11:04:49:903-Setup CCD...
+2023/07/28 11:04:55:703-Setup CCD: 1
+2023/07/28 11:04:55:706-Setup CCD: 2
+2023/07/28 11:04:55:707-Setup CCD: [DFK 33G274 [HD-002]], [11124360]
+2023/07/28 11:04:55:715-Setup Database...
+2023/07/28 11:04:55:722-Load User.ini...
+2023/07/28 11:04:55:742-Check License...
+2023/07/28 11:04:55:749-Init CCD Buffer...
+2023/07/28 11:04:55:749-未偵測到CCD! 強制設為Color CCD: 1280*1014
+2023/07/28 11:04:56:797-Setup NCC...
+2023/07/28 11:04:56:803-Init: Do SetMotionStatus(). - False
+2023/07/28 11:04:56:803-MotionStatus: 設定tsRorzeEFEM為false
+2023/07/28 11:04:56:806->>[Timer]: tmSystem
+2023/07/28 11:04:56:807->>[Timer]: tm500ms
+2023/07/28 11:04:56:807->>[Timer]: tm250ms
+2023/07/28 11:04:56:807->>[Timer]: tm400ms
+2023/07/28 11:04:56:807-FormShow Completed.
+2023/07/28 11:04:56:816-FormShow完成: 檢查Vacuum, CDA
+2023/07/28 11:04:56:817-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/07/28 11:04:59:237-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58
+2023/07/28 11:04:59:561-Error Alarm: Power
+2023/07/28 11:04:59:561-Error Alarm: Stage Door
+2023/07/28 11:04:59:566-SetupEFEM() Enter...
+2023/07/28 11:04:59:566-SetupEFEM() Rorze...

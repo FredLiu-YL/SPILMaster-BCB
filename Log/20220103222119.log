@@ -1,0 +1,110 @@
+2022/01/03 22:21:19:185->>Log Ok
+2022/01/03 22:21:19:387->>Version : C01
+2022/01/03 22:21:19:387->>LoadSystemParameter()
+2022/01/03 22:21:19:458->>LoadUserPosition()
+2022/01/03 22:21:19:481-LoadWPosition(): F:\WindowsAP\Olympus\矽品\WVOlympusRV12\RobotW.ini
+2022/01/03 22:21:19:482-1: WPosition=30001
+2022/01/03 22:21:19:482-2: WPosition=30002
+2022/01/03 22:21:19:483-3: WPosition=30003
+2022/01/03 22:21:19:483-4: WPosition=30004
+2022/01/03 22:21:19:487->>LoadLensPosition()
+2022/01/03 22:21:19:502->>LoadCalibrationFactor()
+2022/01/03 22:21:19:503->>ReadLEDValue()
+2022/01/03 22:21:20:107->>InitLampControl2()
+2022/01/03 22:21:20:607->>After Parameter Loaded: Motion
+2022/01/03 22:21:21:693->Motion : Init
+2022/01/03 22:21:21:704->>Motion Initial失敗!
+2022/01/03 22:21:21:704->>Register Motion Card Error!
+2022/01/03 22:21:21:705->Motion Completed.
+2022/01/03 22:21:21:705-Setup CCD...
+2022/01/03 22:21:21:705-Setup CCD: 1
+2022/01/03 22:21:21:710-Setup CCD: 2
+2022/01/03 22:21:21:711-Setup CCD: [DFK 33GP1300], [44614266]
+2022/01/03 22:21:21:711-Setup Database...
+2022/01/03 22:21:21:715-Load User.ini...
+2022/01/03 22:21:21:730-Check License...
+2022/01/03 22:21:21:735-Init CCD Buffer...
+2022/01/03 22:21:21:735-未偵測到CCD! 強制設為Color CCD: 1280*1014
+2022/01/03 22:21:23:882-Setup NCC...
+2022/01/03 22:21:23:893-Init: Do SetMotionStatus(). - False
+2022/01/03 22:21:23:894-MotionStatus: 設定tsRorzeEFEM為false
+2022/01/03 22:21:23:900->>[Timer]: tmSystem
+2022/01/03 22:21:23:901->>[Timer]: tm500ms
+2022/01/03 22:21:23:901->>[Timer]: tm250ms
+2022/01/03 22:21:23:901->>[Timer]: tm400ms
+2022/01/03 22:21:23:901-FormShow Completed.
+2022/01/03 22:21:23:929-FormShow完成: 檢查Vacuum, CDA
+2022/01/03 22:21:23:929-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2022/01/03 22:21:26:097-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58
+2022/01/03 22:21:26:387-Error Alarm: Power
+2022/01/03 22:21:26:387-Error Alarm: Stage Door
+2022/01/03 22:21:26:390-SetupEFEM() Enter...
+2022/01/03 22:21:26:390-SetupEFEM() Rorze...
+2022/01/03 22:21:29:665-SetupEFEM() Rorze.
+2022/01/03 22:21:29:681-Error Alarm: Power
+2022/01/03 22:21:29:681-Error Alarm: Stage Door
+2022/01/03 22:21:29:975-Error Alarm: Power
+2022/01/03 22:21:29:975-Error Alarm: Stage Door
+2022/01/03 22:21:30:666-SetupEFEM(): 測試SECS Socket...
+2022/01/03 22:21:30:666-SECS未連線, 重連線中...
+2022/01/03 22:21:30:988-Error Alarm: Power
+2022/01/03 22:21:30:989-Error Alarm: Stage Door
+2022/01/03 22:21:32:001-Error Alarm: Power
+2022/01/03 22:21:32:001-Error Alarm: Stage Door
+2022/01/03 22:21:33:017-Error: 連續5秒未執行Motion及IO更新!
+2022/01/03 22:21:33:018-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2022/01/03 22:21:33:018-Error Alarm: Power
+2022/01/03 22:21:33:018-Error Alarm: Stage Door
+2022/01/03 22:21:34:029-Error Alarm: Power
+2022/01/03 22:21:34:029-Error Alarm: Stage Door
+2022/01/03 22:21:35:043-Error Alarm: Power
+2022/01/03 22:21:35:043-Error Alarm: Stage Door
+2022/01/03 22:21:35:810-boolSendSCESCommand: 2
+2022/01/03 22:21:35:810-rgSecsCommandSetClick...
+2022/01/03 22:21:35:817-btnSECSSendClick SECS送出: eRCPM^1^bCM60930A0_0023$
+2022/01/03 22:21:36:057-Error Alarm: Power
+2022/01/03 22:21:36:057-Error Alarm: Stage Door
+2022/01/03 22:21:37:072-Error Alarm: Power
+2022/01/03 22:21:37:072-Error Alarm: Stage Door
+2022/01/03 22:21:38:086-Error Alarm: Power
+2022/01/03 22:21:38:086-Error Alarm: Stage Door
+2022/01/03 22:21:39:101-Error: 連續5秒未執行Motion及IO更新!
+2022/01/03 22:21:39:102-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2022/01/03 22:21:39:102-Error Alarm: Power
+2022/01/03 22:21:39:102-Error Alarm: Stage Door
+2022/01/03 22:21:40:120-Error Alarm: Power
+2022/01/03 22:21:40:120-Error Alarm: Stage Door
+2022/01/03 22:21:41:129-Error Alarm: Power
+2022/01/03 22:21:41:129-Error Alarm: Stage Door
+2022/01/03 22:21:42:144-Error Alarm: Power
+2022/01/03 22:21:42:144-Error Alarm: Stage Door
+2022/01/03 22:21:42:789-SECS通訊失敗!
+2022/01/03 22:21:42:790-SetupEFEM() Check Socket and COM Port Result...
+2022/01/03 22:21:42:790-SetupEFEM() Socket or COM port異常!
+2022/01/03 22:21:42:790-SetupEFEM() Leave.
+2022/01/03 22:21:43:291-MotionHome: 設定pcRobot為false
+2022/01/03 22:21:43:841-SetupEFEM完成(tmSetupEFEM): 檢查Vacuum, CDA
+2022/01/03 22:21:43:902-Error Alarm: Power
+2022/01/03 22:21:43:902-Error Alarm: Stage Door
+2022/01/03 22:21:44:170-Error Alarm: Power
+2022/01/03 22:21:44:170-Error Alarm: Stage Door
+2022/01/03 22:21:45:184-Error: 連續5秒未執行Motion及IO更新!
+2022/01/03 22:21:45:184-SystemCDA Error!
+2022/01/03 22:21:45:184-SystemVacuum Error!
+2022/01/03 22:21:45:184-EFEMCDA Error!
+2022/01/03 22:21:45:185-EFEMVacuum Error!
+2022/01/03 22:21:45:187-Error Alarm: Power
+2022/01/03 22:21:45:188-Error Alarm: Stage Door
+2022/01/03 22:21:46:197-Error Alarm: Power
+2022/01/03 22:21:46:197-Error Alarm: Stage Door
+2022/01/03 22:21:47:211-Error Alarm: Power
+2022/01/03 22:21:47:211-Error Alarm: Stage Door
+2022/01/03 22:21:48:227-Error Alarm: Power
+2022/01/03 22:21:48:227-Error Alarm: Stage Door
+2022/01/03 22:21:49:239-Error Alarm: Power
+2022/01/03 22:21:49:239-Error Alarm: Stage Door
+2022/01/03 22:21:50:253-Error Alarm: Power
+2022/01/03 22:21:50:253-Error Alarm: Stage Door
+2022/01/03 22:21:50:334-Close All Timer...
+2022/01/03 22:21:50:466-Close All Timer.
+2022/01/03 22:21:50:466-Close Done.

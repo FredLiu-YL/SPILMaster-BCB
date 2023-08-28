@@ -1,0 +1,232 @@
+2023/07/25 09:46:47:081->>Log Ok
+2023/07/25 09:46:47:218->>Version : C13
+2023/07/25 09:46:47:219->>LoadSystemParameter()
+2023/07/25 09:46:47:271->>LoadUserPosition()
+2023/07/25 09:46:47:289-LoadWPosition(): F:\WindowsAP\Olympus\矽品-Auto\WVOlympusR-Auto-V11\RobotW.ini
+2023/07/25 09:46:47:290-1: WPosition=541646
+2023/07/25 09:46:47:291-2: WPosition=9200
+2023/07/25 09:46:47:291-3: WPosition=9200
+2023/07/25 09:46:47:292-4: WPosition=9200
+2023/07/25 09:46:47:294->>LoadLensPosition()
+2023/07/25 09:46:47:303->>LoadCalibrationFactor()
+2023/07/25 09:46:47:304->>ReadLEDValue()
+2023/07/25 09:46:47:906->>InitLampControl2()
+2023/07/25 09:46:48:407->>After Parameter Loaded: Motion
+2023/07/25 09:46:49:097-InitJoystick Fail!
+2023/07/25 09:46:49:097->Motion : Init
+2023/07/25 09:46:49:102->>Motion Initial失敗!
+2023/07/25 09:46:49:102->>Register Motion Card Error!
+2023/07/25 09:46:49:103->Motion Completed.
+2023/07/25 09:46:49:106-Setup CCD...
+2023/07/25 09:47:38:198-Setup CCD: 1
+2023/07/25 09:47:38:211-Setup CCD: 2
+2023/07/25 09:47:38:212-Setup CCD: [DFK 33G274 [HD-002]], [11124360]
+2023/07/25 09:47:38:213-Setup Database...
+2023/07/25 09:47:38:218-Load User.ini...
+2023/07/25 09:47:38:245-Check License...
+2023/07/25 09:47:38:252-Init CCD Buffer...
+2023/07/25 09:47:38:252-未偵測到CCD! 強制設為Color CCD: 1280*1014
+2023/07/25 09:47:39:169-Setup NCC...
+2023/07/25 09:47:39:173-Init: Do SetMotionStatus(). - False
+2023/07/25 09:47:39:174-MotionStatus: 設定tsRorzeEFEM為false
+2023/07/25 09:47:39:176->>[Timer]: tmSystem
+2023/07/25 09:47:39:176->>[Timer]: tm500ms
+2023/07/25 09:47:39:177->>[Timer]: tm250ms
+2023/07/25 09:47:39:177->>[Timer]: tm400ms
+2023/07/25 09:47:39:177-FormShow Completed.
+2023/07/25 09:47:39:184-FormShow完成: 檢查Vacuum, CDA
+2023/07/25 09:47:39:185-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/07/25 09:47:41:346-realr,diew,dieh,nox,noy=294000.0,5000,5000,58,58
+2023/07/25 09:47:41:630-SetupEFEM() Enter...
+2023/07/25 09:47:41:630-SetupEFEM() Rorze...
+2023/07/25 09:47:45:882-SetupEFEM() Rorze.
+2023/07/25 09:47:45:905-Error Alarm: Power
+2023/07/25 09:47:45:905-Error Alarm: Stage Door
+2023/07/25 09:47:46:271-Error Alarm: Power
+2023/07/25 09:47:46:271-Error Alarm: Stage Door
+2023/07/25 09:47:46:884-SetupEFEM(): 測試SECS Socket...
+2023/07/25 09:47:46:884-SECS is no connected, Connecting...
+2023/07/25 09:47:47:285-Error Alarm: Power
+2023/07/25 09:47:47:285-Error Alarm: Stage Door
+2023/07/25 09:47:48:123-關閉作業頁面1.
+2023/07/25 09:47:48:298-Error Alarm: Power
+2023/07/25 09:47:48:298-Error Alarm: Stage Door
+2023/07/25 09:47:49:312-Error Alarm: Power
+2023/07/25 09:47:49:312-Error Alarm: Stage Door
+2023/07/25 09:47:50:049-MotionStatus: 設定tsRorzeEFEM為true
+2023/07/25 09:47:50:081-Logged. Set boolWaitLog to true.
+2023/07/25 09:47:50:086-boolWaitLog = true Done.
+2023/07/25 09:47:50:086-End Log1.
+2023/07/25 09:47:50:086-End Log2.
+2023/07/25 09:47:50:094-End Log3.
+2023/07/25 09:47:50:096-End Log.
+2023/07/25 09:47:50:326-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:47:50:327-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/07/25 09:47:50:327-Error Alarm: Power
+2023/07/25 09:47:50:327-Error Alarm: Stage Door
+2023/07/25 09:47:51:341-Error Alarm: Power
+2023/07/25 09:47:51:341-Error Alarm: Stage Door
+2023/07/25 09:47:52:355-Error Alarm: Power
+2023/07/25 09:47:52:355-Error Alarm: Stage Door
+2023/07/25 09:47:53:370-Error Alarm: Power
+2023/07/25 09:47:53:370-Error Alarm: Stage Door
+2023/07/25 09:47:54:384-Error Alarm: Power
+2023/07/25 09:47:54:384-Error Alarm: Stage Door
+2023/07/25 09:47:55:397-Error Alarm: Power
+2023/07/25 09:47:55:398-Error Alarm: Stage Door
+2023/07/25 09:47:56:412-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:47:56:412-CheckCDAVacuum: 尚未做過DIO更新, 不執行.
+2023/07/25 09:47:56:413-Error Alarm: Power
+2023/07/25 09:47:56:414-Error Alarm: Stage Door
+2023/07/25 09:47:57:425-Error Alarm: Power
+2023/07/25 09:47:57:425-Error Alarm: Stage Door
+2023/07/25 09:47:58:440-Error Alarm: Power
+2023/07/25 09:47:58:441-Error Alarm: Stage Door
+2023/07/25 09:47:59:452-Error Alarm: Power
+2023/07/25 09:47:59:452-Error Alarm: Stage Door
+2023/07/25 09:48:00:466-Error Alarm: Power
+2023/07/25 09:48:00:467-Error Alarm: Stage Door
+2023/07/25 09:48:00:548-SECS communication failed!
+2023/07/25 09:48:00:548-SetupEFEM() Check Socket and COM Port Result...
+2023/07/25 09:48:00:549-SetupEFEM() Socket or COM port異常!
+2023/07/25 09:48:00:550-SetupEFEM() Leave.
+2023/07/25 09:48:01:567-SetupEFEM完成(tmSetupEFEM): 檢查Vacuum, CDA
+2023/07/25 09:48:01:583-Error Alarm: Power
+2023/07/25 09:48:01:584-Error Alarm: Stage Door
+2023/07/25 09:48:02:494-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:48:02:494-SystemCDA Error!
+2023/07/25 09:48:02:495-SystemVacuum Error!
+2023/07/25 09:48:02:498-Error Alarm: Power
+2023/07/25 09:48:02:499-Error Alarm: Stage Door
+2023/07/25 09:48:03:508-Error Alarm: Power
+2023/07/25 09:48:03:508-Error Alarm: Stage Door
+2023/07/25 09:48:04:522-Error Alarm: Power
+2023/07/25 09:48:04:522-Error Alarm: Stage Door
+2023/07/25 09:48:05:536-Error Alarm: Power
+2023/07/25 09:48:05:536-Error Alarm: Stage Door
+2023/07/25 09:48:06:550-Error Alarm: Power
+2023/07/25 09:48:06:550-Error Alarm: Stage Door
+2023/07/25 09:48:07:564-Error Alarm: Power
+2023/07/25 09:48:07:564-Error Alarm: Stage Door
+2023/07/25 09:48:08:578-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:48:08:578-SystemCDA Error!
+2023/07/25 09:48:08:578-SystemVacuum Error!
+2023/07/25 09:48:08:580-Error Alarm: Power
+2023/07/25 09:48:08:580-Error Alarm: Stage Door
+2023/07/25 09:48:09:592-Error Alarm: Power
+2023/07/25 09:48:09:592-Error Alarm: Stage Door
+2023/07/25 09:48:10:607-Error Alarm: Power
+2023/07/25 09:48:10:607-Error Alarm: Stage Door
+2023/07/25 09:48:11:621-Error Alarm: Power
+2023/07/25 09:48:11:621-Error Alarm: Stage Door
+2023/07/25 09:48:12:635-Error Alarm: Power
+2023/07/25 09:48:12:635-Error Alarm: Stage Door
+2023/07/25 09:48:13:649-Error Alarm: Power
+2023/07/25 09:48:13:649-Error Alarm: Stage Door
+2023/07/25 09:48:14:663-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:48:14:663-SystemCDA Error!
+2023/07/25 09:48:14:664-SystemVacuum Error!
+2023/07/25 09:48:14:665-Error Alarm: Power
+2023/07/25 09:48:14:666-Error Alarm: Stage Door
+2023/07/25 09:48:15:677-Error Alarm: Power
+2023/07/25 09:48:15:677-Error Alarm: Stage Door
+2023/07/25 09:48:16:207-SECS Socket重連線...
+2023/07/25 09:48:16:692-Error Alarm: Power
+2023/07/25 09:48:16:692-Error Alarm: Stage Door
+2023/07/25 09:48:17:705-Error Alarm: Power
+2023/07/25 09:48:17:706-Error Alarm: Stage Door
+2023/07/25 09:48:17:708-SECS Socket重連線.
+2023/07/25 09:48:18:718-Error Alarm: Power
+2023/07/25 09:48:18:718-Error Alarm: Stage Door
+2023/07/25 09:48:19:732-Error Alarm: Power
+2023/07/25 09:48:19:732-Error Alarm: Stage Door
+2023/07/25 09:48:20:746-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:48:20:746-SystemCDA Error!
+2023/07/25 09:48:20:746-SystemVacuum Error!
+2023/07/25 09:48:20:748-Error Alarm: Power
+2023/07/25 09:48:20:748-Error Alarm: Stage Door
+2023/07/25 09:48:21:760-Error Alarm: Power
+2023/07/25 09:48:21:761-Error Alarm: Stage Door
+2023/07/25 09:48:22:774-Error Alarm: Power
+2023/07/25 09:48:22:774-Error Alarm: Stage Door
+2023/07/25 09:48:23:812-Error Alarm: Power
+2023/07/25 09:48:23:812-Error Alarm: Stage Door
+2023/07/25 09:48:24:802-Error Alarm: Power
+2023/07/25 09:48:24:802-Error Alarm: Stage Door
+2023/07/25 09:48:25:816-Error Alarm: Power
+2023/07/25 09:48:25:816-Error Alarm: Stage Door
+2023/07/25 09:48:26:830-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:48:26:831-SystemCDA Error!
+2023/07/25 09:48:26:831-SystemVacuum Error!
+2023/07/25 09:48:26:833-Error Alarm: Power
+2023/07/25 09:48:26:833-Error Alarm: Stage Door
+2023/07/25 09:48:27:845-Error Alarm: Power
+2023/07/25 09:48:27:845-Error Alarm: Stage Door
+2023/07/25 09:48:28:859-Error Alarm: Power
+2023/07/25 09:48:28:859-Error Alarm: Stage Door
+2023/07/25 09:48:29:873-Error Alarm: Power
+2023/07/25 09:48:29:874-Error Alarm: Stage Door
+2023/07/25 09:48:30:887-Error Alarm: Power
+2023/07/25 09:48:30:888-Error Alarm: Stage Door
+2023/07/25 09:48:31:901-Error Alarm: Power
+2023/07/25 09:48:31:902-Error Alarm: Stage Door
+2023/07/25 09:48:32:915-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:48:32:915-SystemCDA Error!
+2023/07/25 09:48:32:916-SystemVacuum Error!
+2023/07/25 09:48:32:918-Error Alarm: Power
+2023/07/25 09:48:32:918-Error Alarm: Stage Door
+2023/07/25 09:48:33:929-Error Alarm: Power
+2023/07/25 09:48:33:929-Error Alarm: Stage Door
+2023/07/25 09:48:34:943-Error Alarm: Power
+2023/07/25 09:48:34:943-Error Alarm: Stage Door
+2023/07/25 09:48:35:957-Error Alarm: Power
+2023/07/25 09:48:35:957-Error Alarm: Stage Door
+2023/07/25 09:48:36:971-Error Alarm: Power
+2023/07/25 09:48:36:971-Error Alarm: Stage Door
+2023/07/25 09:48:37:984-Error Alarm: Power
+2023/07/25 09:48:37:984-Error Alarm: Stage Door
+2023/07/25 09:48:38:998-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:48:38:998-SystemCDA Error!
+2023/07/25 09:48:38:998-SystemVacuum Error!
+2023/07/25 09:48:39:000-Error Alarm: Power
+2023/07/25 09:48:39:000-Error Alarm: Stage Door
+2023/07/25 09:48:40:012-Error Alarm: Power
+2023/07/25 09:48:40:012-Error Alarm: Stage Door
+2023/07/25 09:48:41:026-Error Alarm: Power
+2023/07/25 09:48:41:026-Error Alarm: Stage Door
+2023/07/25 09:48:42:040-Error Alarm: Power
+2023/07/25 09:48:42:040-Error Alarm: Stage Door
+2023/07/25 09:48:43:054-Error Alarm: Power
+2023/07/25 09:48:43:054-Error Alarm: Stage Door
+2023/07/25 09:48:44:068-Error Alarm: Power
+2023/07/25 09:48:44:068-Error Alarm: Stage Door
+2023/07/25 09:48:45:083-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:48:45:083-SystemCDA Error!
+2023/07/25 09:48:45:083-SystemVacuum Error!
+2023/07/25 09:48:45:085-Error Alarm: Power
+2023/07/25 09:48:45:085-Error Alarm: Stage Door
+2023/07/25 09:48:46:097-Error Alarm: Power
+2023/07/25 09:48:46:097-Error Alarm: Stage Door
+2023/07/25 09:48:47:111-Error Alarm: Power
+2023/07/25 09:48:47:111-Error Alarm: Stage Door
+2023/07/25 09:48:47:143-SECS Socket重連線...
+2023/07/25 09:48:48:125-Error Alarm: Power
+2023/07/25 09:48:48:125-Error Alarm: Stage Door
+2023/07/25 09:48:48:644-SECS Socket重連線.
+2023/07/25 09:48:49:139-Error Alarm: Power
+2023/07/25 09:48:49:139-Error Alarm: Stage Door
+2023/07/25 09:48:50:153-Error Alarm: Power
+2023/07/25 09:48:50:153-Error Alarm: Stage Door
+2023/07/25 09:48:51:167-Error: 連續5秒未執行Motion及IO更新!
+2023/07/25 09:48:51:167-SystemCDA Error!
+2023/07/25 09:48:51:167-SystemVacuum Error!
+2023/07/25 09:48:51:169-Error Alarm: Power
+2023/07/25 09:48:51:170-Error Alarm: Stage Door
+2023/07/25 09:48:52:181-Error Alarm: Power
+2023/07/25 09:48:52:181-Error Alarm: Stage Door
+2023/07/25 09:48:53:195-Error Alarm: Power
+2023/07/25 09:48:53:195-Error Alarm: Stage Door
+2023/07/25 09:48:54:209-Error Alarm: Power
+2023/07/25 09:48:54:209-Error Alarm: Stage Door
+2023/07/25 09:48:55:223-Error Alarm: Power
+2023/07/25 09:48:55:223-Error Alarm: Stage Door
